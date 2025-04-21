@@ -96,7 +96,7 @@ const ProjectSection = () => {
             <div className="embla__container flex">
               {projects.map((project, index) => (
                 // Ensure consistent padding for spacing
-                (<div key={index} className="embla__slide flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.33%] pl-4"> {/* Adjusted md width back, use padding */}
+                (<div key={index} className="mb-8 embla__slide flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.33%] pl-4"> {/* Adjusted md width back, use padding */}
                   <Card className="flex flex-col h-full min-h-[320px]"> {/* Added min-height */}
                     <CardHeader>
                       <div className="flex items-center gap-3 mb-2">

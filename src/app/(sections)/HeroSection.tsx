@@ -15,7 +15,7 @@ const HeroSection = () => {
       <div className={cn(
         "w-full md:w-auto px-4 md:px-0",
         "order-2 md:order-none",
-        "mt-8 md:mt-0",
+        "mt-12 md:mt-0",
         "md:absolute md:top-20 md:left-16 lg:left-24 z-10"
       )}>
         <div className="z-50 space-y-3 text-center md:text-left">
@@ -32,10 +32,10 @@ const HeroSection = () => {
             <Image
               src="/images/location.png"
               alt="Location"
-              width={29}
-              height={28}
+              width={24}
+              height={23}
             />
-            <span>Stockholm, Sweden</span>
+            <span> &nbsp;Stockholm, Sweden</span>
           </div>
         </div>
       </div>
@@ -43,15 +43,15 @@ const HeroSection = () => {
       <div className={cn(
         "w-full md:w-auto px-4 md:px-0",
         "order-3 md:order-none",
-        "mt-7 md:mt-0",
+        "mt-15 md:mt-0",
         "text-center md:text-left",
         "space-y-2 md:space-y-3 font-heading",
-        "md:absolute md:top-1/2 md:-translate-y-1/2 md:left-16 lg:left-24 z-10"
+        "md:absolute md:bottom-1/4 md:left-16 lg:left-24 z-10" // Changed top-1/2 -translate-y-1/2 to bottom-1/4
       )}>
-        <p className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-semibold text-shadow-[1px_1px_5px_rgba(0,0,0,0.4)]">
+        <p className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-semibold text-shadow-[1px_1px_6px_rgba(0,0,0,0.6)]">
           CURRENTLY RESEARCHING
         </p>
-        <p className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-semibold text-shadow-[1px_1px_5px_rgba(0,0,0,0.4)]">
+        <p className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-semibold text-shadow-[1px_1px_6px_rgba(0,0,0,0.6)]">
           THE INTERSECTION OF
         </p>
         <div className="flex items-center justify-center md:justify-start space-x-2 text-xl sm:text-2xl md:text-2xl lg:text-3xl font-semibold">
@@ -62,7 +62,7 @@ const HeroSection = () => {
             height={28}
             className="inline-block"
           />
-          <span className="text-white font-bold [-webkit-text-stroke:1px_#B91C1C]">HEALTHCARE</span>
+          <span className="text-white font-bold [-webkit-text-stroke:3px_#B91C1C] [paint-order:stroke_fill]">HEALTHCARE</span>
         </div>
         <div className="flex items-center justify-center md:justify-start space-x-2 text-xl sm:text-2xl md:text-2xl lg:text-3xl font-semibold">
           <Image
@@ -72,7 +72,7 @@ const HeroSection = () => {
             height={22}
             className="inline-block"
           />
-          <span className="text-white font-bold [-webkit-text-stroke:1px_#1D4ED8]">&nbsp;DATA AND AI</span>
+          <span className="text-white font-bold [-webkit-text-stroke:3px_#1D4ED8] [paint-order:stroke_fill] ">&nbsp;DATA AND AI</span>
         </div>
         <div className="pt-4 md:pt-2 text-center md:text-left">
           <Button
@@ -94,7 +94,7 @@ const HeroSection = () => {
         "z-10 w-full px-4",
         "order-1 md:order-none",
         "text-center md:text-right",
-        "md:absolute md:top-1/2 md:-translate-y-1/2 md:right-16 lg:right-24 md:w-auto md:px-0"
+        "md:absolute md:bottom-1/4 md:right-16 lg:right-24 md:w-auto md:px-0" // Changed top-1/2 -translate-y-1/2 to bottom-1/4
       )}>
         <div className="mb-1 md:hidden">
           <Image

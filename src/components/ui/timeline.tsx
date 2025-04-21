@@ -21,11 +21,19 @@ const TimelineEntry: React.FC<TimelineEntryProps> = ({
           className="object-cover" // Removed rounded-full, border-2, border-muted
         />
       </div>
-      <div className="text-center md:text-left flex-1"> {/* Added flex-1 to allow text div to grow */}
-        <h3 className="text-xl font-semibold font-heading mb-1">
-          {title} ({year})
-        </h3>
-        <p className="text-sm text-muted-foreground leading-relaxed">
+      {/* Text Div - Modified Structure */}
+      <div className="text-center md:text-left flex-1 flex flex-col"> {/* Make the text div a flex column */}
+        {/* Top part: Title and Year */}
+        <div>
+          <h3 className="text-2xl font-semibold font-heading"> {/* Removed ({year}) and mb-1 */}
+            {title}
+          </h3>
+          <p className="text-gray-400 font-heading text-2sm"> {/* Year with title font, description color */}
+            {year}
+          </p>
+        </div>
+        {/* Bottom part: Description */}
+        <p className="text-md text-muted-foreground leading-5 mt-2"> {/* Add margin-top for separation */}
           {description}
         </p>
       </div>

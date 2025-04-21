@@ -21,7 +21,7 @@ export const lifeTimelineData: TimelineEntryData[] = [
   {
     id: 2,
     year: "2016-2020", // Adjust Year
-    title: "Bangalore Bound: B.Eng CSE",
+    title: "Bangalore Bound (B.Eng CSE)",
     description: "Off to Bangalore for a CS degree! Knew I loved tech, just needed to find my quest...",
     imageSrc: "/images/8bit-college.png", // Assumes existing image is for college
     altText: "Pixel art version of me during Bachelors in Bangalore",
@@ -29,7 +29,7 @@ export const lifeTimelineData: TimelineEntryData[] = [
   {
     id: 3,
     year: "2020", // Adjust Year
-    title: "Joined Quantiphi",
+    title: "AI Consulting at Quantiphi",
     description: "Leveled up into the corporate world at Quantiphi. Learned the rules of the game!",
     imageSrc: "/images/8bit-consultant-me.png", // Placeholder image path
     altText: "Pixel art version of me starting at Quantiphi",
