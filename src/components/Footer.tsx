@@ -12,7 +12,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
         <div className="mb-4 md:mb-0">
           <p className="text-sm text-muted-foreground">
-            &copy; {currentYear} Arvind Guruprasad. All rights reserved.
+            &copy; {currentYear} <Link href="/" className="hover:underline">lifeofaguru.com</Link>. All rights reserved.
           </p>
         </div>
 
@@ -36,7 +36,7 @@ const Footer = () => {
             </Link>
           </Button>
           <Button variant="ghost" size="icon" asChild>
-            <Link href="#" target="_blank" rel="noopener noreferrer"> {/* TODO: Add GitHub URL */}
+            <Link href="https://github.com/arvind0212" target="_blank" rel="noopener noreferrer">
               <Github className="h-5 w-5" />
               <span className="sr-only">GitHub</span> {/* Screen reader text */}
             </Link>
