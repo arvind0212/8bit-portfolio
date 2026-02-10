@@ -54,7 +54,7 @@ export const lifeTimelineData: TimelineEntryData[] = [
     id: 6,
     year: "Present", // Adjust Year (Start of Masters)
     title: "Stockholm Chapter: M.Sc.",
-    description: "New chapter unlocked: Stockholm! Pursuing a Masters in Biostatistics & Data Science, blending health and tech expertise.",
+    description: "New chapter unlocked: Stockholm. Pursuing an MSc in Biostatistics & Data Science while building production, agentic healthcare AI systems from the ground up.",
     imageSrc: "/images/8bit-current-me.png", // Assumes existing image is for current phase
     altText: "Pixel art version of me pursuing Masters in Stockholm",
   },
