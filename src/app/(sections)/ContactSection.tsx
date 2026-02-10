@@ -180,7 +180,7 @@ const ContactSection = () => {
           {/* Added text-center items-center for mobile, md:text-left md:items-start for larger screens */}
           <div className="flex flex-col justify-center items-center text-center space-y-6 pt-4 md:pt-0 md:items-start md:text-left">
             <p className="text-lg leading-relaxed text-muted-foreground"> {/* Relaxed leading, muted color */}
-              Have a question, a project idea, or just want to connect? Feel free to reach out directly or use the form. I'm always open to discussing new opportunities and collaborations.
+              Have a question, a project idea, or just want to connect? Feel free to reach out directly or use the form. I&apos;m always open to discussing new opportunities and collaborations.
             </p>
             {/* Added items-center for mobile centering of links, md:items-start for larger screens */}
             <div className="flex flex-col items-center space-y-3 md:items-start">
