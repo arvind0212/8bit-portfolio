@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { BarChart, ArrowDown } from 'lucide-react';
+import { ArrowDown, Bot, Stethoscope, Zap } from 'lucide-react';
 
 const HeroSection = () => {
   return (
@@ -19,7 +19,7 @@ const HeroSection = () => {
         "md:absolute md:top-20 md:left-16 lg:left-24 z-10"
       )}>
         <div className="z-50 space-y-3 text-center md:text-left">
-          <div className="flex items-center justify-center md:justify-start gap-2 font-heading text-xl md:text-2xl text-white text-shadow-[1px_1px_3px_rgba(0,0,0,0.4)]">
+          <div className="flex items-center justify-center md:justify-start gap-2 font-heading text-xl md:text-2xl text-white text-shadow-[1px_1px_2px_rgba(0,0,0,0.6)]">
             <Image
               src="/images/grad_hat.png"
               alt="Degree"
@@ -28,7 +28,7 @@ const HeroSection = () => {
             />
             <span>MSc Biostatistics & Data Science</span>
           </div>
-          <div className="flex items-center justify-center md:justify-start gap-2 font-heading text-xl md:text-2xl text-white text-shadow-[1px_1px_3px_rgba(0,0,0,0.4)]">
+          <div className="flex items-center justify-center md:justify-start gap-2 font-heading text-xl md:text-2xl text-white text-shadow-[1px_1px_2px_rgba(0,0,0,0.6)]">
             <Image
               src="/images/location.png"
               alt="Location"
@@ -48,31 +48,28 @@ const HeroSection = () => {
         "space-y-2 md:space-y-3 font-heading",
         "md:absolute md:bottom-1/4 md:left-16 lg:left-24 z-10" // Changed top-1/2 -translate-y-1/2 to bottom-1/4
       )}>
-        <p className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-semibold text-shadow-[1px_1px_6px_rgba(0,0,0,0.6)]">
-          CURRENTLY RESEARCHING
+        <p className="mx-auto md:mx-0 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold uppercase tracking-[0.10em] leading-tight [-webkit-text-stroke:0.75px_rgba(0,0,0,0.5)] [paint-order:stroke_fill] text-shadow-[1px_1px_2px_rgba(0,0,0,0.7),_2px_2px_6px_rgba(0,0,0,0.4)]">
+          FOUNDING AI ENGINEER
         </p>
-        <p className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-semibold text-shadow-[1px_1px_6px_rgba(0,0,0,0.6)]">
-          THE INTERSECTION OF
-        </p>
-        <div className="flex items-center justify-center md:justify-start space-x-2 text-xl sm:text-2xl md:text-2xl lg:text-3xl font-semibold">
-          <Image
-            src="/images/Healthcare.png"
-            alt="Healthcare Icon"
-            width={28}
-            height={28}
-            className="inline-block"
-          />
-          <span className="text-white font-bold [-webkit-text-stroke:3px_#B91C1C] [paint-order:stroke_fill]">HEALTHCARE</span>
-        </div>
-        <div className="flex items-center justify-center md:justify-start space-x-2 text-xl sm:text-2xl md:text-2xl lg:text-3xl font-semibold">
-          <Image
-            src="/images/Data and AI.png"
-            alt="Data and AI Icon"
-            width={22}
-            height={22}
-            className="inline-block"
-          />
-          <span className="text-white font-bold [-webkit-text-stroke:3px_#1D4ED8] [paint-order:stroke_fill] ">&nbsp;DATA AND AI</span>
+        <div className="flex flex-col items-center md:items-start gap-2 pt-2">
+          <div className="inline-flex items-center gap-2 rounded-full bg-rose-800/30 border border-rose-400/20 px-4 py-2 backdrop-blur-sm">
+            <Stethoscope className="h-4 w-4 text-rose-300" aria-hidden="true" />
+            <span className="text-base sm:text-lg md:text-xl font-semibold text-white/95 text-shadow-[1px_1px_3px_rgba(0,0,0,0.5)]">
+              Healthcare AI
+            </span>
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-full bg-violet-800/30 border border-violet-400/20 px-4 py-2 backdrop-blur-sm">
+            <Bot className="h-4 w-4 text-violet-300" aria-hidden="true" />
+            <span className="text-base sm:text-lg md:text-xl font-semibold text-white/95 text-shadow-[1px_1px_3px_rgba(0,0,0,0.5)]">
+              Multi-Agent Orchestration
+            </span>
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-full bg-amber-800/30 border border-amber-400/20 px-4 py-2 backdrop-blur-sm">
+            <Zap className="h-4 w-4 text-amber-300" aria-hidden="true" />
+            <span className="text-base sm:text-lg md:text-xl font-semibold text-white/95 text-shadow-[1px_1px_3px_rgba(0,0,0,0.5)]">
+              Shipping Production AI
+            </span>
+          </div>
         </div>
         <div className="pt-4 md:pt-2 text-center md:text-left">
           <Button
