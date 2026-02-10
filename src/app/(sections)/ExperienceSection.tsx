@@ -4,6 +4,21 @@ import ExperienceCard from "@/components/ExperienceCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
+const parseMonthYear = (value: string): number => {
+  if (!value) return Number.NEGATIVE_INFINITY;
+  const v = value.trim();
+  if (v === 'Present') return Number.POSITIVE_INFINITY;
+
+  const normalized = v.replace(/\./g, '');
+  const direct = Date.parse(`${normalized} 01`);
+  if (!Number.isNaN(direct)) return direct;
+
+  const fallback = Date.parse(normalized);
+  if (!Number.isNaN(fallback)) return fallback;
+
+  return Number.NEGATIVE_INFINITY;
+};
+
 // Helper function to render timeline items
 const renderTimelineItems = (items: typeof experienceData) => {
   return (
@@ -23,9 +38,13 @@ const renderTimelineItems = (items: typeof experienceData) => {
 
 export default function ExperienceSection() {
   const sortedExperience = [...experienceData].sort((a, b) => {
-    if (a.endDate === 'Present' && b.endDate !== 'Present') return -1;
-    if (a.endDate !== 'Present' && b.endDate === 'Present') return 1;
-    return b.startDate.localeCompare(a.startDate);
+    const aEnd = parseMonthYear(a.endDate);
+    const bEnd = parseMonthYear(b.endDate);
+    if (aEnd !== bEnd) return bEnd - aEnd;
+
+    const aStart = parseMonthYear(a.startDate);
+    const bStart = parseMonthYear(b.startDate);
+    return bStart - aStart;
   });
 
   const academicItems = sortedExperience.filter((item) => item.type === 'academic');

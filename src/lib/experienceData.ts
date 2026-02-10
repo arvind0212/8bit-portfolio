@@ -15,16 +15,44 @@ export const experienceData: ExperienceItem[] = [
   // Work Experience (Newest First)
   {
     type: 'work',
+    title: 'Founding AI Engineer',
+    institution: 'Arkus AI',
+    location: 'Stockholm, Sweden',
+    startDate: 'May 2025',
+    endDate: 'Present',
+    description: [
+      'Joined as the first AI engineer to build an **agentic AI platform** for clinical, administrative, and wellness workflows from the ground up.',
+      'Architected and own the **multi-agent orchestration** layer enabling no-code workflow creation for healthcare use cases.',
+      'Built a **tool-use framework** for builder agents to discover and orchestrate platform components into end-to-end workflows.',
+      'Shipped a production **clinical guidelines agent** (Claude) for Swedish oncology guideline parsing, used in customer demos.',
+      'Designed **LLMOps** foundations: evaluation metrics, benchmark datasets, and prompt iteration pipelines.',
+      'Implemented **privacy/PII protection** guardrails with human-in-the-loop review workflows for sensitive healthcare data.'
+    ],
+    skills: [
+      'Multi-Agent Systems',
+      'Tool-Use Frameworks',
+      'LLMOps',
+      'Claude',
+      'Prompt Engineering',
+      'Python',
+      'Privacy/PII'
+    ]
+  },
+  {
+    type: 'work',
     title: 'Research Assistant',
     institution: 'Karolinska Institutet',
     location: 'Stockholm, Sweden',
     startDate: 'March 2025',
-    endDate: 'Present',
+    endDate: 'Oct. 2025',
     description: [
-      'Researching & designing an **LLM/RAG** solution for parsing **unstructured prescription data**.',
-      'Architecting an **automated parsing pipeline**, defining data flow and **LLM integration** points.'
+      'Built a production pipeline to extract structured data from **unstructured Swedish prescriptions** using LLM-based parsing and validation.',
+      'Achieved **99.4% success rate** across 1,000+ records, eliminating **90% data loss** from a legacy process.',
+      'Engineered hybrid AI + rule-based validation for **Swedish-to-English** medical terminology normalization.',
+      'Optimized cost and QA with **1.1% manual review** and roughly **$300 per million records** processing cost.',
+      'Added automatic flagging for **high-dose regimens** and complex titration schedules.'
     ],
-    skills: ['LLM', 'RAG', 'System Architecture', 'Healthcare Data']
+    skills: ['LLM', 'RAG', 'Multi-Agent Systems', 'Medical NLP', 'Python', 'Healthcare Data']
   },
   {
     type: 'work',
@@ -34,11 +62,11 @@ export const experienceData: ExperienceItem[] = [
     startDate: 'Sep. 2022',
     endDate: 'Aug 2024',
     description: [
-      'Led healthcare **ML project deliveries** ($5M+ value), managing **20+ engineers/scientists**.',
-      'Built **LSTM nurse staffing model** (550M+ records), reducing **overstaffing costs by 40%** ($1M+/year).',
-      'Deployed **LLM/RAG solution** mapping EHR to FHIR, achieving **95% accuracy** & **50% less manual coding**.',
-      'Drove **presales/GTM** (US, EU, APAC), securing **10+ deals** ($15M+) via tailored AI demos.',
-      'Optimized **cloud data pipelines** (Python, SQL, GCP), cutting **analytics time by 30%**.'
+      'Led end-to-end delivery of healthcare ML engagements totaling **$5M+ contract value**, managing **20+ engineers and data scientists**.',
+      'Built an **LSTM nurse staffing forecast model** (550M+ records), reducing **overstaffing costs by 40%** (~$1M+ annual savings).',
+      'Implemented **LLM + RAG** FHIR mapping to convert unstructured EHR data to standardized resources, achieving **95% accuracy** and cutting manual coding by **50%**.',
+      'Led presales, solutioning, and **GTM** across US, EU, and APAC, contributing to **10+ deals** worth **$15M+**.',
+      'Coordinated cloud data pipelines (Python, SQL, GCP) for large-scale patient data integrations.'
     ],
     skills: ['Machine Learning', 'LSTM', 'LLM', 'RAG', 'Gemini', 'FHIR', 'EHR', 'Presales', 'GTM', 'Python', 'SQL', 'Google Cloud', 'Dataflow', 'Looker', 'Leadership']
   },
