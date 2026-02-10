@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image'; // Import Image for potential persona later
 import { Button } from '@/components/ui/button'; // Import Button for potential links
 import { Linkedin, Github } from 'lucide-react'; // Import icons
 

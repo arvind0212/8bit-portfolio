@@ -1,6 +1,5 @@
 'use client';
-import React, { useState, useEffect, useCallback, useRef } from 'react'; // Import useRef
-import Image from "next/image";
+import React, { useRef } from 'react'; // Import useRef
 import { cn } from "@/lib/utils";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -8,13 +7,10 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { ChevronLeft, ChevronRight, DatabaseZap, Users, ShieldAlert } from "lucide-react"; // Import icons
+import { DatabaseZap, Users, ShieldAlert } from "lucide-react"; // Import icons
 
 const projects = [
   {
@@ -47,7 +43,7 @@ const ProjectSection = () => {
   // Create a stable ref for the Autoplay plugin instance, set stopOnInteraction to true
   const autoplayRef = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({
+  const [emblaRef] = useEmblaCarousel({
     align: 'start',
     containScroll: 'trimSnaps',
     loop: true, // Enable looping for smoother rotation with 3 cards
@@ -56,20 +52,6 @@ const ProjectSection = () => {
       '(min-width: 1024px)': { slidesToScroll: 1 }  // Large screens scroll 1 when 3 are visible
     }
   }, [autoplayRef.current]); // Pass the stable ref's current value
-
-  // No custom useEffect needed to manage play/stop - let the plugin handle it.
-  // State for potential UI toggle can remain if needed.
-  const [autoPlay, setAutoPlay] = useState(true);
-
-  // Callback for potential UI toggle (if re-enabled later)
-  const toggleAutoPlay = useCallback(() => {
-    const autoplay = autoplayRef.current;
-    if (!autoplay) return;
-    const playing = autoplay.isPlaying();
-    if (playing) autoplay.stop();
-    else autoplay.play();
-    setAutoPlay(!playing);
-  }, []);
 
 
   return (

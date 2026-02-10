@@ -6,7 +6,7 @@ import Image from 'next/image'; // Import Image component
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 // Import icons from lucide-react
-import { GraduationCap, MapPin, Menu, X } from 'lucide-react'; // Added Menu and X icons
+import { Menu, X } from 'lucide-react'; // Added Menu and X icons
 
 const NavigationBar = () => {
   const [isSticky, setIsSticky] = useState(false);

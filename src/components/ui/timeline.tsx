@@ -5,9 +5,7 @@ import { cn } from '@/lib/utils';
 import { lifeTimelineData } from '@/lib/lifeTimelineData';
 import type { TimelineEntryData } from '@/lib/lifeTimelineData';
 
-interface TimelineEntryProps extends TimelineEntryData {}
-
-const TimelineEntry: React.FC<TimelineEntryProps> = ({
+const TimelineEntry: React.FC<TimelineEntryData> = ({
   year, title, description, imageSrc, altText
 }) => (
   <Card className="w-full max-w-md h-auto min-h-45 shadow-md hover:shadow-lg transition-shadow duration-300"> {/* Changed w-110 to w-full max-w-md */}

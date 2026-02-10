@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image'; // Import Image for potential persona later
 import { Button } from '@/components/ui/button';
 
 export default function NotFound() {
