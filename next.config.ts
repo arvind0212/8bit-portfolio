@@ -1,10 +1,6 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true
-  }
-  // assetPrefix: '/portfolio-v1/' // Remove this line - not needed for custom domain
-};
+const nextConfig: NextConfig = {};
+
 
 export default nextConfig;
