@@ -9,6 +9,7 @@ export interface ExperienceItem {
   endDate: string;   // Format: "Month. YYYY", "YYYY-MM", or "Present"
   description: string[]; // Array of bullet points
   skills?: string[]; // Optional array of relevant skills/technologies
+  icons?: string[]; // Logo paths relative to /images/logos/
 }
 
 export const experienceData: ExperienceItem[] = [
@@ -36,7 +37,8 @@ export const experienceData: ExperienceItem[] = [
       'Prompt Engineering',
       'Python',
       'Privacy/PII'
-    ]
+    ],
+    icons: ['arkus_ai_logo.jpg']
   },
   {
     type: 'work',
@@ -52,7 +54,8 @@ export const experienceData: ExperienceItem[] = [
       'Optimized cost and QA with **1.1% manual review** and roughly **$300 per million records** processing cost.',
       'Added automatic flagging for **high-dose regimens** and complex titration schedules.'
     ],
-    skills: ['LLM', 'RAG', 'Multi-Agent Systems', 'Medical NLP', 'Python', 'Healthcare Data']
+    skills: ['LLM', 'RAG', 'Multi-Agent Systems', 'Medical NLP', 'Python', 'Healthcare Data'],
+    icons: ['Karolinska Institutet Logo.png']
   },
   {
     type: 'work',
@@ -68,7 +71,8 @@ export const experienceData: ExperienceItem[] = [
       'Led presales, solutioning, and **GTM** across US, EU, and APAC, contributing to **10+ deals** worth **$15M+**.',
       'Coordinated cloud data pipelines (Python, SQL, GCP) for large-scale patient data integrations.'
     ],
-    skills: ['Machine Learning', 'LSTM', 'LLM', 'RAG', 'Gemini', 'FHIR', 'EHR', 'Presales', 'GTM', 'Python', 'SQL', 'Google Cloud', 'Dataflow', 'Looker', 'Leadership']
+    skills: ['Machine Learning', 'LSTM', 'LLM', 'RAG', 'Gemini', 'FHIR', 'EHR', 'Presales', 'GTM', 'Python', 'SQL', 'Google Cloud', 'Dataflow', 'Looker', 'Leadership'],
+    icons: ['quantiphi_logo.jpg']
   },
   {
     type: 'work',
@@ -84,7 +88,8 @@ export const experienceData: ExperienceItem[] = [
       'Enhanced **risk models** with **SDOH/SVI data**, enabling **15% earlier** high-risk patient identification.',
       'Contributed to an **NLP pipeline** for EHR text, reducing **manual chart review time**.'
     ],
-    skills: ['R&D', 'Looker', 'BigQuery', 'Google App Scripts', 'Healthcare Analytics', 'SDOH', 'Risk Modeling', 'NLP', 'EHR', 'Stakeholder Management']
+    skills: ['R&D', 'Looker', 'BigQuery', 'Google App Scripts', 'Healthcare Analytics', 'SDOH', 'Risk Modeling', 'NLP', 'EHR', 'Stakeholder Management'],
+    icons: ['quantiphi_logo.jpg']
   },
   // Academic Experience (Newest First)
   {
@@ -95,7 +100,8 @@ export const experienceData: ExperienceItem[] = [
     startDate: 'Aug. 2024',
     endDate: 'Present',
     description: ['Pursuing **advanced statistical methods** and **data science techniques** for **biological & health data**.'],
-    skills: ['Biostatistics', 'Data Science', 'R', 'Python'] // Added example skills
+    skills: ['Biostatistics', 'Data Science', 'R', 'Python'],
+    icons: ['Karolinska Institutet Logo.png', 'kth.png', 'StockholmUni.jpg']
   },
   {
     type: 'academic',
@@ -105,6 +111,7 @@ export const experienceData: ExperienceItem[] = [
     startDate: 'Sep. 2016',
     endDate: 'Aug. 2020',
     description: ['Completed comprehensive program in **core computer science**, **software development**, and **engineering practices**.'],
-    skills: ['Computer Science', 'Software Engineering', 'Data Structures', 'Algorithms'] // Added example skills
+    skills: ['Computer Science', 'Software Engineering', 'Data Structures', 'Algorithms'],
+    icons: ['bmsce.jpg']
   }
 ];
