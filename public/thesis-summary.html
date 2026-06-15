@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Can AI agents safely standardise clinical data? | Arvind Guruprasad</title>
+<meta name="description" content="A plain-language brief on a Karolinska Institutet master's thesis benchmarking whether AI agents preserve clinical meaning when standardising lab and medication data.">
+<link rel="icon" href="/images/8bit-favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Jersey+20&display=swap" rel="stylesheet">
+<style>
+  /* ---- design tokens: mirrored from the portfolio home page (shadcn slate) ---- */
+  :root{
+    --radius: 0.625rem;
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.129 0.042 264.695);
+    --card: oklch(1 0 0);
+    --primary: oklch(0.208 0.042 265.755);
+    --primary-foreground: oklch(0.984 0.003 247.858);
+    --secondary: oklch(0.968 0.007 247.896);
+    --muted: oklch(0.968 0.007 247.896);
+    --muted-foreground: oklch(0.554 0.046 257.417);
+    --border: oklch(0.929 0.013 255.508);
+    /* accent palette: the same hue family as the home-page hero pills + charts */
+    --violet: oklch(0.52 0.19 282);
+    --teal:   oklch(0.60 0.10 195);
+    --rose:   oklch(0.585 0.21 18);
+    --amber:  oklch(0.74 0.15 78);
+    --emerald:oklch(0.60 0.13 162);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.10), 0 1px 2px -1px rgb(0 0 0 / 0.10);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.10), 0 2px 4px -2px rgb(0 0 0 / 0.10);
+    --maxw: 1080px;
+    --font-heading: "Jersey 20", system-ui, sans-serif;
+    --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;background:var(--background);color:var(--foreground);
+    font-family:var(--font-sans);font-size:18px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  a{color:var(--primary);text-underline-offset:3px;}
+  h1,h2,h3,h4{margin:0;color:var(--foreground);}
+
+  .label{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-foreground);}
+
+  /* ---------- top bar (mirrors the site nav, plus reading-mode toggle) ---------- */
+  .topbar{position:sticky;top:0;z-index:50;background:color-mix(in oklch, var(--background) 88%, transparent);backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--border);}
+  .topbar .row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;max-width:var(--maxw);margin:0 auto;padding:11px 24px;}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--foreground);}
+  .brand img{width:30px;height:30px;object-fit:contain;}
+  .brand span{font-family:var(--font-heading);font-size:22px;line-height:1;}
+  .bar-right{display:flex;align-items:center;gap:18px;}
+  .toggle{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-foreground);}
+  .switch{position:relative;width:44px;height:24px;border:1px solid var(--border);border-radius:30px;background:var(--secondary);cursor:pointer;transition:.25s;flex:none;padding:0;}
+  .switch::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--muted-foreground);transition:.25s;}
+  body.tech-on .switch{background:var(--violet);border-color:var(--violet);}
+  body.tech-on .switch::after{left:23px;background:#fff;}
+  .toggle b{color:var(--foreground);min-width:62px;}
+  .nav-links a{font-family:var(--font-heading);font-size:18px;text-decoration:none;color:var(--foreground);padding:6px 12px;border-radius:var(--radius);transition:background .2s;}
+  .nav-links a:hover{background:var(--secondary);}
+  @media(max-width:720px){.hide-sm{display:none;}}
+
+  /* ---------- buttons ---------- */
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-heading);font-size:18px;padding:9px 18px;border-radius:var(--radius);text-decoration:none;border:1px solid transparent;transition:transform .15s, background .2s, box-shadow .2s;cursor:pointer;}
+  .btn .arrow{font-size:15px;}
+  .btn-outline{background:var(--background);color:var(--foreground);border-color:var(--border);box-shadow:var(--shadow-sm);}
+  .btn-outline:hover{background:var(--secondary);transform:translateY(-1px);}
+  .btn-primary{background:var(--primary);color:var(--primary-foreground);box-shadow:var(--shadow-sm);}
+  .btn-primary:hover{background:color-mix(in oklch,var(--primary) 88%, white);transform:translateY(-1px);}
+  .btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px;}
+
+  /* ---------- sections ---------- */
+  section{padding:68px 0;border-bottom:1px solid var(--border);}
+  section.alt{background:var(--secondary);}
+  .sec-head{display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;}
+  .sec-icon{width:30px;height:30px;flex:none;margin-top:6px;color:var(--accent,var(--primary));}
+  .sec-no{display:inline-block;font-family:var(--font-heading);font-size:15px;line-height:1;color:var(--accent,var(--primary));background:color-mix(in oklch, var(--accent,var(--primary)) 12%, white);border:1px solid color-mix(in oklch, var(--accent,var(--primary)) 26%, white);padding:4px 11px;border-radius:20px;margin-bottom:8px;}
+  .sec-head h2{font-family:var(--font-heading);font-size:clamp(30px,5vw,46px);font-weight:400;line-height:1.04;}
+  .sec-head h2 em{font-style:normal;color:var(--accent,var(--primary));}
+  .sec-intro{font-size:19px;line-height:1.6;max-width:66ch;color:var(--muted-foreground);margin:0 0 8px;}
+  .sec-intro strong{color:var(--foreground);font-weight:600;}
+  .columns{column-count:2;column-gap:44px;margin-top:8px;}
+  .columns p{margin:0 0 16px;color:var(--muted-foreground);}
+  .columns p strong{color:var(--foreground);}
+  .columns p em{color:var(--foreground);font-style:italic;}
+  @media(max-width:760px){.columns{column-count:1;}}
+
+  /* generic card */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:calc(var(--radius) + 4px);box-shadow:var(--shadow-sm);padding:24px;}
+
+  /* jargon-decoded chips */
+  .chips{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0 6px;}
+  @media(max-width:620px){.chips{grid-template-columns:1fr;}}
+  .chip{border:1px solid var(--border);border-left:3px solid var(--accent,var(--teal));border-radius:var(--radius);background:var(--card);padding:14px 16px;}
+  .chip b{font-family:var(--font-heading);font-weight:400;font-size:22px;color:var(--accent,var(--teal));letter-spacing:.02em;}
+  .chip p{margin:4px 0 0;font-size:14.5px;line-height:1.45;color:var(--muted-foreground);}
+
+  /* ---------- hero ---------- */
+  .hero{padding:60px 0 26px;}
+  .eyebrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:22px;color:var(--violet);}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--violet);display:inline-block;}
+  .eyebrow .sub{color:var(--muted-foreground);}
+  .hero-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:44px;align-items:end;}
+  @media(max-width:880px){.hero-grid{grid-template-columns:1fr;gap:30px;}}
+  h1.title{font-family:var(--font-heading);font-weight:400;font-size:clamp(40px,7.5vw,84px);line-height:1.0;letter-spacing:.005em;max-width:15ch;}
+  h1.title em{font-style:normal;color:var(--primary);background:linear-gradient(transparent 62%, color-mix(in oklch,var(--amber) 45%, transparent) 62%);padding:0 2px;}
+  .lede{font-size:21px;line-height:1.5;max-width:46ch;margin-top:24px;color:var(--muted-foreground);}
+  .meta{margin-top:30px;display:flex;flex-wrap:wrap;gap:8px 28px;font-size:14px;color:var(--muted-foreground);}
+  .meta b{color:var(--foreground);font-weight:600;}
+  .verdict{border-top:4px solid var(--amber);}
+  .verdict .v-yes{color:var(--emerald);font-weight:700;}
+  .verdict .v-no{color:var(--rose);font-weight:700;}
+  .verdict p{margin:0;font-size:17px;line-height:1.55;}
+
+  /* ---------- stat band ---------- */
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--border);border-radius:calc(var(--radius) + 4px);overflow:hidden;background:var(--card);box-shadow:var(--shadow-sm);}
+  @media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr);} }
+  .stat{padding:22px 20px;border-right:1px solid var(--border);position:relative;}
+  .stat::before{content:"";position:absolute;left:0;top:0;width:100%;height:3px;background:var(--accent,var(--primary));}
+  .stat:last-child{border-right:none;}
+  @media(max-width:760px){.stat{border-right:1px solid var(--border);border-bottom:1px solid var(--border);}}
+  .stat .n{font-family:var(--font-heading);font-size:clamp(36px,4.4vw,52px);line-height:1;color:var(--accent,var(--primary));}
+  .stat .n small{font-size:.5em;color:var(--muted-foreground);}
+  .stat .l{font-size:12px;color:var(--muted-foreground);margin-top:9px;line-height:1.4;}
+
+  /* ---------- before/after cards ---------- */
+  .ba-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px;}
+  @media(max-width:880px){.ba-grid{grid-template-columns:1fr;}}
+  .ba{border-left:3px solid var(--accent);overflow:hidden;}
+  .ba h4{font-size:13px;font-weight:600;color:var(--muted-foreground);margin:0 0 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .ba code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;background:var(--secondary);border:1px solid var(--border);padding:8px 11px;display:block;border-radius:var(--radius);color:var(--foreground);}
+  .ba .arrow{font-size:12px;color:var(--accent);padding:6px 0;font-weight:600;}
+  .ba .vl{margin-top:14px;font-size:14.5px;line-height:1.5;color:var(--muted-foreground);border-top:1px dashed var(--border);padding-top:12px;}
+  .ba .vl b{color:var(--foreground);}
+  .pill{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:color-mix(in oklch,var(--accent) 15%, white);color:var(--accent);}
+
+  /* ---------- flow ---------- */
+  .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:26px;counter-reset:step;}
+  @media(max-width:880px){.flow{grid-template-columns:1fr 1fr;}}
+  .node{position:relative;border-top:3px solid var(--teal);}
+  .node .k{font-family:var(--font-heading);font-size:30px;color:var(--teal);line-height:1;}
+  .node h4{font-size:17px;font-weight:600;margin:8px 0 6px;}
+  .node p{margin:0;font-size:14px;line-height:1.45;color:var(--muted-foreground);}
+
+  /* ---------- layer ladder ---------- */
+  .ladder{margin-top:24px;border:1px solid var(--border);border-radius:calc(var(--radius) + 4px);overflow:hidden;box-shadow:var(--shadow-sm);}
+  .rung{display:grid;grid-template-columns:74px 1fr 1.2fr 130px;align-items:center;border-bottom:1px solid var(--border);background:var(--card);}
+  .rung:last-child{border-bottom:none;}
+  @media(max-width:760px){.rung{grid-template-columns:62px 1fr;}}
+  .rung .lid{font-family:var(--font-heading);font-size:22px;color:var(--accent);padding:15px 18px;border-left:4px solid var(--accent);}
+  .rung .lname{padding:15px 18px;font-weight:600;font-size:16px;}
+  .rung .ldesc{padding:15px 18px;font-size:14.5px;color:var(--muted-foreground);line-height:1.45;}
+  .rung .lmeter{padding:15px 18px;}
+  @media(max-width:760px){.rung .ldesc,.rung .lmeter{display:none;}}
+  .meter{display:flex;gap:4px;}
+  .meter i{width:13px;height:13px;border-radius:50%;border:1px solid var(--border);display:block;}
+  .meter i.on{background:var(--accent);border-color:var(--accent);}
+
+  /* ---------- agent cards ---------- */
+  .agents{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px;}
+  @media(max-width:880px){.agents{grid-template-columns:1fr;}}
+  .agent{display:flex;flex-direction:column;border-top:3px solid var(--accent);}
+  .agent.feature{box-shadow:var(--shadow-md);border:1px solid color-mix(in oklch,var(--accent) 40%, var(--border));border-top:3px solid var(--accent);}
+  .agent .ah{display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:14px;}
+  .agent .letter{font-family:var(--font-heading);font-size:52px;line-height:.9;color:var(--accent);}
+  .agent .role{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted-foreground);text-align:right;max-width:13ch;}
+  .agent h4{font-size:20px;font-weight:600;margin:0 0 10px;}
+  .agent p{margin:0 0 14px;font-size:15.5px;line-height:1.5;color:var(--muted-foreground);}
+  .agent .can{font-size:13.5px;line-height:1.7;margin-top:auto;border-top:1px dashed var(--border);padding-top:12px;color:var(--foreground);}
+  .agent .can span{color:var(--accent);font-weight:700;}
+  .agent .crown{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:color-mix(in oklch,var(--accent) 14%, white);padding:3px 9px;border-radius:20px;margin-bottom:8px;}
+
+  /* ---------- results ---------- */
+  .res-grid{display:grid;grid-template-columns:1fr 1fr;gap:38px;margin-top:26px;align-items:start;}
+  @media(max-width:880px){.res-grid{grid-template-columns:1fr;gap:30px;}}
+  .barset h4{font-size:13px;font-weight:600;color:var(--muted-foreground);margin:0 0 6px;}
+  .barset .cap{font-size:14px;color:var(--muted-foreground);margin:0 0 18px;line-height:1.45;}
+  .domain-h{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 12px;display:flex;align-items:center;gap:8px;}
+  .domain-h .tag{font-weight:500;letter-spacing:0;text-transform:none;color:var(--muted-foreground);}
+  .bargroup{margin-bottom:8px;}
+  .bar{margin-bottom:13px;}
+  .bar .blab{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;margin-bottom:5px;gap:8px;}
+  .bar .blab .name{display:flex;align-items:center;gap:8px;}
+  .bar .blab .val{color:var(--accent);font-weight:700;}
+  .best{font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--accent);padding:2px 7px;border-radius:20px;}
+  .delta{font-size:11px;font-weight:700;color:var(--emerald);}
+  .track{height:14px;background:var(--secondary);border:1px solid var(--border);border-radius:7px;overflow:hidden;}
+  .fill{height:100%;width:0;border-radius:7px;transition:width 1.1s cubic-bezier(.2,.7,.2,1);}
+  .fill.t1{background:color-mix(in oklch, var(--accent) 45%, white);}
+  .fill.t2{background:color-mix(in oklch, var(--accent) 70%, white);}
+  .fill.t3{background:var(--accent);}
+
+  .tension{background:var(--primary);color:var(--primary-foreground);border-radius:calc(var(--radius) + 4px);padding:24px;box-shadow:var(--shadow-md);}
+  .tension h4{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin:0 0 14px;}
+  .tension .t-row{display:flex;gap:13px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgb(255 255 255 / .14);}
+  .tension .t-row:last-child{border-bottom:none;}
+  .tension .ico{font-size:17px;flex:none;width:22px;line-height:1.5;}
+  .tension .up{color:#6fd19b;}
+  .tension .down{color:#f3a08c;}
+  .tension .dia{color:var(--amber);}
+  .tension p{margin:0;font-size:15.5px;line-height:1.5;color:color-mix(in oklch,var(--primary-foreground) 88%, transparent);}
+  .tension p b{color:#fff;}
+
+  /* technical detail (hidden by default; revealed by the reading-mode toggle) */
+  .tech{display:none;}
+  body.tech-on .tech{display:block;}
+  .tech-hint{margin-top:20px;font-size:13.5px;color:var(--muted-foreground);display:flex;align-items:center;gap:8px;}
+  body.tech-on .tech-hint{display:none;}
+  .tech-hint .k{font-weight:600;color:var(--violet);}
+  .techbox{margin-top:24px;background:color-mix(in oklch,var(--violet) 6%, var(--card));border:1px solid color-mix(in oklch,var(--violet) 22%, var(--border));border-radius:calc(var(--radius) + 4px);padding:20px 22px;}
+  .techbox .tt{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--violet);margin-bottom:12px;}
+  .techbox p{margin:0 0 10px;font-size:15px;line-height:1.6;color:var(--muted-foreground);}
+  .techbox p:last-child{margin-bottom:0;}
+  .techbox code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;background:var(--background);padding:1px 5px;border-radius:4px;border:1px solid var(--border);color:var(--foreground);}
+
+  /* ---------- error axes ---------- */
+  .axes{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px;}
+  @media(max-width:760px){.axes{grid-template-columns:1fr;}}
+  .axbox{border-top:3px solid var(--accent);}
+  .axbox .h{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .axbox .h .ic{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-heading);font-size:20px;color:#fff;background:var(--accent);flex:none;}
+  .axbox h4{font-size:19px;font-weight:600;}
+  .axbox ul{margin:0;padding:0;list-style:none;}
+  .axbox li{padding:10px 0;border-bottom:1px dashed var(--border);font-size:15px;line-height:1.45;color:var(--muted-foreground);display:flex;gap:10px;}
+  .axbox li:last-child{border-bottom:none;}
+  .axbox li b{color:var(--foreground);font-weight:600;}
+  .axbox li .m{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:color-mix(in oklch,var(--accent) 13%, white);border-radius:20px;padding:3px 8px;flex:none;height:fit-content;margin-top:2px;min-width:44px;text-align:center;}
+
+  /* ---------- takeaways ---------- */
+  .callout{border-left:4px solid var(--accent,var(--primary));padding:6px 0 6px 22px;margin:26px 0 0;max-width:62ch;}
+  .callout p{font-family:var(--font-heading);font-size:clamp(22px,3vw,30px);line-height:1.25;margin:0;color:var(--foreground);}
+  .takeaways{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:30px;}
+  @media(max-width:760px){.takeaways{grid-template-columns:1fr;}}
+  .tk{border-top:3px solid var(--accent);}
+  .tk h4{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:0 0 14px;color:var(--accent);}
+  .tk ol{margin:0;padding-left:0;list-style:none;counter-reset:t;}
+  .tk li{counter-increment:t;padding:12px 0;border-bottom:1px dashed var(--border);display:flex;gap:13px;font-size:15.5px;line-height:1.5;color:var(--muted-foreground);}
+  .tk li:last-child{border-bottom:none;}
+  .tk li::before{content:counter(t,decimal-leading-zero);font-family:var(--font-heading);color:var(--accent);font-size:15px;flex:none;}
+  .tk li b{color:var(--foreground);font-weight:600;}
+
+  /* ---------- footer ---------- */
+  footer{padding:58px 0 80px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:start;}
+  @media(max-width:760px){.foot-grid{grid-template-columns:1fr;}}
+  footer h3{font-family:var(--font-heading);font-weight:400;font-size:clamp(26px,3.4vw,38px);max-width:18ch;line-height:1.1;padding-top:16px;}
+  footer h3 em{font-style:normal;color:var(--emerald);}
+  .foot-body{color:var(--muted-foreground);max-width:54ch;margin-top:16px;font-size:16px;}
+  .disclaimer{margin-top:32px;padding-top:20px;border-top:1px solid var(--border);font-size:13.5px;color:var(--muted-foreground);max-width:82ch;line-height:1.6;}
+
+  /* reveal animation */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1);}
+  .reveal.in{opacity:1;transform:none;}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}.fill{transition:none;}}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="row">
+    <a class="brand" href="/">
+      <img src="/images/8bit-favicon.png" alt="">
+      <span>ARVIND GURUPRASAD</span>
+    </a>
+    <div class="bar-right">
+      <div class="toggle">
+        <span class="hide-sm">Reading mode</span>
+        <button class="switch" id="techToggle" role="switch" aria-checked="false" aria-label="Toggle technical detail"></button>
+        <b id="modeLabel">Plain</b>
+      </div>
+      <nav class="nav-links">
+        <a href="https://drive.google.com/file/d/1B08Fza-tUPzirZH96MxiefAJnih5meNo/view?usp=drive_link" target="_blank" rel="noopener">Thesis PDF</a>
+        <a href="/#thesis">&larr; Portfolio</a>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="eyebrow reveal label">
+      <span class="dot"></span> Degree Project · Biostatistics &amp; Data Science
+      <span class="sub">Dept. of Medical Epidemiology &amp; Biostatistics</span>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <h1 class="title reveal">Can AI agents standardise clinical data <em>without losing its meaning?</em></h1>
+        <p class="lede reveal">A controlled study of whether large language model "agents" can turn messy hospital lab and medication records into a research ready format, while keeping every clinical fact intact.</p>
+        <div class="meta reveal">
+          <span><b>Arvind Guruprasad</b> · Author</span>
+          <span>Supervisor · <b>Vladimir Li</b>, Arkus AI</span>
+          <span>Models · <b>GPT-5.4</b> &amp; <b>Kimi-K2.6</b></span>
+        </div>
+      </div>
+      <aside class="verdict card reveal">
+        <div class="label" style="color:var(--amber);border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:14px;">The bottom line</div>
+        <p><span class="v-yes">Yes, mostly.</span> The best agent preserved clinical meaning almost perfectly on lab data and about 91% on medications, under controlled conditions. <span class="v-no">But not yet.</span> This is a lab benchmark on synthetic data, not proof it is safe on real patients. Human oversight stays essential.</p>
+      </aside>
+    </div>
+  </header>
+</div>
+
+<!-- STAT BAND -->
+<div class="wrap" style="padding-bottom:60px;">
+  <div class="stats reveal">
+    <div class="stat" style="--accent:var(--violet)"><div class="n">3</div><div class="l">AI agent designs compared</div></div>
+    <div class="stat" style="--accent:var(--violet)"><div class="n">2</div><div class="l">Leading AI models benchmarked</div></div>
+    <div class="stat" style="--accent:var(--amber)"><div class="n">5</div><div class="l">Cumulative layers of "messiness"</div></div>
+    <div class="stat" style="--accent:var(--teal)"><div class="n">100<small>%</small></div><div class="l">Lab accuracy, best agent</div></div>
+    <div class="stat" style="--accent:var(--rose)"><div class="n">91<small>%</small></div><div class="l">Medication accuracy, best agent</div></div>
+  </div>
+</div>
+
+<!-- WHY IT MATTERS -->
+<section class="alt" style="--accent:var(--rose)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <svg class="sec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      <div><span class="sec-no">§01 · The stakes</span><h2>A converted table can look valid and still be <em>clinically wrong</em></h2></div>
+    </div>
+    <p class="sec-intro reveal">Every hospital records data its own way. To pool it for research, that data must be reshaped into a shared standard, and the danger is subtle: structural checks pass while clinical meaning quietly breaks.</p>
+
+    <div class="chips reveal">
+      <div class="chip" style="--accent:var(--teal)"><b>OMOP</b><p>A widely used "common data model": shared tables and rules so different hospitals' data can be analysed together.</p></div>
+      <div class="chip" style="--accent:var(--violet)"><b>ETL</b><p>Extract, Transform, Load. The pipeline that pulls data from a source system, reshapes it, and loads it into the target.</p></div>
+    </div>
+
+    <div class="columns reveal" style="margin-top:22px;">
+      <p>Reshaping records into a shared model is not just renaming columns; it is a <em>meaning preservation</em> task. A lab result with the wrong unit, a local code mapped to the wrong standard, or a medication <em>order</em> mistaken for an <em>administration</em> each passes a structural check yet corrupts the science.</p>
+      <p>That is why this study targets <strong>lab results and medications</strong>: their meaning is spread across many fields at once (code, unit, value, dose, route, timing), so they are the highest stakes cases to get right. The blunt takeaway: <strong>"the pipeline ran" is not the same as "the data are correct."</strong></p>
+    </div>
+
+    <h3 class="label reveal" style="margin:36px 0 0;">What "losing meaning" looks like</h3>
+    <div class="ba-grid reveal">
+      <div class="ba card" style="--accent:var(--emerald)">
+        <h4>Lab unit conversion <span class="pill">safe</span></h4>
+        <code>Glucose 65.5 mg/dL</code>
+        <div class="arrow">&darr; agent output</div>
+        <code>3.635213 mmol/L</code>
+        <div class="vl">Different text, <b>same clinical value.</b> A valid conversion, fine after review.</div>
+      </div>
+      <div class="ba card" style="--accent:var(--amber)">
+        <h4>Medication instructions <span class="pill">ambiguous</span></h4>
+        <code>"2.5 mg QD"</code>
+        <div class="arrow">&darr; agent output</div>
+        <code>"2,5 mg ORAL daily TABLET"</code>
+        <div class="vl">Dose still readable, but <b>route and form fold into the instructions</b>, harder to compare.</div>
+      </div>
+      <div class="ba card" style="--accent:var(--rose)">
+        <h4>Wrong drug specificity <span class="pill">risky</span></h4>
+        <code>Metformin ER (extended-release)</code>
+        <div class="arrow">&darr; mapped to</div>
+        <code>a less-specific drug code</code>
+        <div class="vl">The exact formulation <b>may no longer be traceable</b>, changing a drug exposure definition.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section style="--accent:var(--teal)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <svg class="sec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.52 16h12.96"/></svg>
+      <div><span class="sec-no">§02 · Method</span><h2>A test built to be <em>fair and repeatable</em></h2></div>
+    </div>
+    <p class="sec-intro reveal">Judging the AI fairly needs a known-correct answer for every record, impossible with real patients. So the benchmark is fully <strong>synthetic and privacy safe</strong>: the right answer is fixed in advance, then the source data is made messier in controlled steps.</p>
+
+    <div class="flow reveal">
+      <div class="node card"><div class="k">01</div><h4>Generate</h4><p>Synthetic patient records. No real people, fully shareable.</p></div>
+      <div class="node card"><div class="k">02</div><h4>Enrich</h4><p>Add the lab and medication detail a real benchmark needs.</p></div>
+      <div class="node card"><div class="k">03</div><h4>Lock the truth</h4><p>Fix the exact correct target answer to grade against.</p></div>
+      <div class="node card"><div class="k">04</div><h4>Add messiness</h4><p>Layer in realistic noise: codes, units, dates, formats.</p></div>
+      <div class="node card"><div class="k">05</div><h4>Score</h4><p>Grade each AI automatically, field by field.</p></div>
+    </div>
+
+    <p class="sec-intro reveal" style="margin-top:26px;">Because the answer key is known and the data synthetic, the whole pipeline is <strong>open, auditable, and reproducible</strong>. A deliberate methodological choice, not just a privacy workaround.</p>
+
+    <div class="tech-hint"><span class="k">⌘ Toggle "Technical"</span> in the top bar for dataset internals, contracts, and statistics.</div>
+    <div class="techbox tech reveal">
+      <div class="tt">Technical detail · benchmark dataset</div>
+      <p>The source backbone is a <code>Synthea</code>-derived cohort (seed 42): <b>52 patients, 390 encounters, 1,222 lab rows, 213 medication orders, 6,450 medication administrations.</b> Raw exports become five canonical tables, then deterministic <code>OMOP CDM v5.4</code> truth for the <code>measurement</code> and <code>drug_exposure</code> targets (<code>person</code> and <code>visit_occurrence</code> act as controls).</p>
+      <p>Ground-truth artifacts (schema map, term map, transform map, attainable mask, provenance manifests) ship with the data so scoring never depends on after-the-fact human judgement. Lab rows retain LOINC truth; medications retain RxNorm truth, via deterministic local-code maps.</p>
+    </div>
+  </div>
+</section>
+
+<!-- LAYERS -->
+<section class="alt" style="--accent:var(--amber)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <svg class="sec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>
+      <div><span class="sec-no">§03 · Difficulty</span><h2>Five layers of <em>real-world messiness</em></h2></div>
+    </div>
+    <p class="sec-intro reveal">Real hospital data is rarely random noise; it is <strong>locally coherent but externally confusing</strong>. Five families of variation stack one on the next, so each agent faces a steadily harder version of the same records. Every layer stays <em>recoverable</em>, so the test rewards skill, not luck.</p>
+
+    <div class="ladder reveal">
+      <div class="rung" style="--accent:var(--teal)">
+        <div class="lid">L1</div><div class="lname">Representation</div>
+        <div class="ldesc">Decimal commas, local null markers, odd date formats, local category codes.</div>
+        <div class="lmeter"><div class="meter"><i class="on"></i><i></i><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="rung" style="--accent:oklch(0.62 0.11 165)">
+        <div class="lid">L2</div><div class="lname">Schema and contract</div>
+        <div class="ldesc">Renamed fields, timestamps split apart, dose and reference text merged.</div>
+        <div class="lmeter"><div class="meter"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="rung" style="--accent:var(--amber)">
+        <div class="lid">L3</div><div class="lname">Terminology</div>
+        <div class="ldesc">Local lab codes, formulary IDs and brand aliases instead of standard codes.</div>
+        <div class="lmeter"><div class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></div>
+      </div>
+      <div class="rung" style="--accent:oklch(0.64 0.18 45)">
+        <div class="lid">L4</div><div class="lname">Units and values</div>
+        <div class="ldesc">Unit swaps and scale changes: right concept, different magnitude on the page.</div>
+        <div class="lmeter"><div class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></div>
+      </div>
+      <div class="rung" style="--accent:var(--rose)">
+        <div class="lid">L5</div><div class="lname">Timing</div>
+        <div class="ldesc">Workflow timestamps shifted or redacted: which date is the true event time?</div>
+        <div class="lmeter"><div class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+      </div>
+    </div>
+    <p class="sec-intro reveal" style="margin-top:22px;font-size:17px;">Out of scope by design: broken record linkage, pipeline glitches, and genuinely ambiguous data. These need human adjudication and are flagged as future work.</p>
+  </div>
+</section>
+
+<!-- AGENTS -->
+<section style="--accent:var(--violet)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <svg class="sec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+      <div><span class="sec-no">§04 · The agents</span><h2>Three designs, each given <em>more capability</em></h2></div>
+    </div>
+    <p class="sec-intro reveal">The leader's question: <strong>does more tooling and autonomy actually make the AI better?</strong> Three designs add exactly one capability at a time.</p>
+
+    <div class="agents">
+      <div class="agent card reveal" style="--accent:var(--muted-foreground)">
+        <div class="ah"><div class="letter">A</div><div class="role">Reasoning only</div></div>
+        <h4>The baseline</h4>
+        <p>Reads the schema and sample rows, then writes a mapping plan from its own knowledge. No lookups, no tools.</p>
+        <div class="can"><span>+</span> Schema reasoning<br><span style="color:var(--muted-foreground);font-weight:400;">no external knowledge</span></div>
+      </div>
+      <div class="agent card reveal" style="--accent:var(--violet)">
+        <div class="ah"><div class="letter">B</div><div class="role">+ Terminology lookup</div></div>
+        <h4>The fact-checker</h4>
+        <p>Everything A does, plus the ability to look up official medical codes for lab tests and drugs as it works.</p>
+        <div class="can"><span>+</span> Schema reasoning<br><span>+</span> Grounded code lookups</div>
+      </div>
+      <div class="agent card feature reveal" style="--accent:var(--emerald)">
+        <div class="ah"><div><div class="crown">★ Best overall</div><div class="letter">C</div></div><div class="role">+ Working environment</div></div>
+        <h4>The analyst</h4>
+        <p>A full workspace agent: it inspects files, writes and runs code, validates its own output, fixes mistakes, finalises.</p>
+        <div class="can"><span>+</span> Schema reasoning<br><span>+</span> Grounded code lookups<br><span>+</span> Run code and self-check</div>
+      </div>
+    </div>
+
+    <div class="tech-hint"><span class="k">⌘ Toggle "Technical"</span> for the exact architecture contracts.</div>
+    <div class="techbox tech reveal">
+      <div class="tt">Technical detail · architecture contracts</div>
+      <p><b>A</b> emits a mapping spec applied by a deterministic executor (tests model-internal knowledge alone). <b>B</b> keeps A's prompt-to-spec and executor contract but adds UMLS/LOINC and RxNorm/RxNav tool paths, isolating <i>terminology grounding</i> as the only added variable. <b>C</b> shifts to a sandboxed single-agent workspace (shell, Python, local terminology tools, validation and finalisation) on a matched local-tool profile with <i>web search disabled</i>, so it gets no browsing advantage over A and B.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="alt" style="--accent:var(--emerald)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <svg class="sec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
+      <div><span class="sec-no">§05 · Results</span><h2>What the numbers <em>actually showed</em></h2></div>
+    </div>
+    <p class="sec-intro reveal">More capability did help: the workspace agent (C) scored highest or tied-highest on both targets. But the gains were uneven, and came with operational costs a single accuracy score would hide.</p>
+
+    <div class="res-grid">
+      <div class="barset card reveal">
+        <h4>Accepted match rate, by agent</h4>
+        <p class="cap">Share of clinical fields preserved correctly, allowing documented clinically-equivalent conversions. Best model shown per agent.</p>
+
+        <div class="bargroup" style="--accent:var(--teal)">
+          <div class="domain-h">Lab measurements <span class="tag">near-solved</span></div>
+          <div class="bar"><div class="blab"><span class="name">Agent A · baseline</span><span class="val">99&ndash;100%</span></div><div class="track"><div class="fill t1" data-w="99.3"></div></div></div>
+          <div class="bar"><div class="blab"><span class="name">Agent B · lookup</span><span class="val">99&ndash;100%</span></div><div class="track"><div class="fill t2" data-w="99.5"></div></div></div>
+          <div class="bar"><div class="blab"><span class="name">Agent C · workspace <span class="best">★ best</span></span><span class="val">100%</span></div><div class="track"><div class="fill t3" data-w="100"></div></div></div>
+        </div>
+
+        <div class="bargroup" style="--accent:var(--rose);margin-top:22px;">
+          <div class="domain-h">Medications <span class="tag">the harder target</span></div>
+          <div class="bar"><div class="blab"><span class="name">Agent A · baseline</span><span class="val">89.9&ndash;90.6%</span></div><div class="track"><div class="fill t1" data-w="90.6"></div></div></div>
+          <div class="bar"><div class="blab"><span class="name">Agent B · lookup</span><span class="val">90.4&ndash;91.3%</span></div><div class="track"><div class="fill t2" data-w="91.3"></div></div></div>
+          <div class="bar"><div class="blab"><span class="name">Agent C · workspace <span class="best">★ best</span></span><span class="val">91.4&ndash;91.5% <span class="delta">▲ +0.9</span></span></div><div class="track"><div class="fill t3" data-w="91.5"></div></div></div>
+        </div>
+        <p class="cap" style="margin-top:18px;">The 100% lab figure reflects documented "clinically equivalent" rules. It is <b style="color:var(--foreground);">not</b> a claim of perfect, unconstrained conversion.</p>
+      </div>
+
+      <div class="tension reveal">
+        <h4>The trade-off leaders should see</h4>
+        <div class="t-row"><div class="ico up">&#9650;</div><p><b>Accuracy went up</b> with capability. The workspace agent led on both data types.</p></div>
+        <div class="t-row"><div class="ico down">&#9660;</div><p><b>Reliability went down.</b> The simplest agent (A) never failed; tool-heavy agents hit rate limits and policy errors that aborted runs.</p></div>
+        <div class="t-row"><div class="ico down">&#9660;</div><p><b>Cost climbed steeply</b> for a roughly 1 to 2 point medication gain: most tools, tokens, and time.</p></div>
+        <div class="t-row"><div class="ico up">&#9650;</div><p><b>Two models, near-tie on quality.</b> GPT-5.4 and Kimi-K2.6 scored almost identically, but GPT-5.4 was more reliable and far more efficient.</p></div>
+        <div class="t-row"><div class="ico dia">&#9670;</div><p>The honest read: <b>"more agentic" is not automatically "better."</b> It depends on data type, reliability needs, and budget.</p></div>
+      </div>
+    </div>
+
+    <div class="tech-hint"><span class="k">⌘ Toggle "Technical"</span> for confidence intervals, robustness, and token cost.</div>
+    <div class="techbox tech reveal">
+      <div class="tt">Technical detail · accuracy, reliability and cost</div>
+      <p><b>Accepted</b> (credits deterministic exceptions plus reviewed unit/value equivalence) vs <b>exact</b> (strict surface): measurement exact about 96 to 97% while accepted hit ceiling; drug exact about 90.7%. Pairwise bootstrap at full L1 to L5: C beat A on accepted <code>drug_exposure</code> by 1.25 pp (GPT, CI 0.64 to 1.86) and 1.96 pp (Kimi, CI 0.24 to 4.81); C vs B was only 0.24 pp for GPT (CI -0.57 to 1.25), a small layer-dependent edge, not a clean ordering.</p>
+      <p><b>Robustness:</b> from L1 to the full stack, accepted-score retention stayed 0.992 to 1.012. Cumulative noise mostly changed <i>which</i> errors appeared rather than collapsing the score.</p>
+      <p><b>Reliability and cost:</b> Agent A had zero failures; failures concentrated in tool-heavy B and C. A zero-imputation check (failures scored 0) flips Kimi's ordering toward A. Agent C tokens per source-row: Kimi 11,639 vs GPT 3,986 (<code>drug</code>), 1,644 vs 377 (<code>measurement</code>); average runtime 506.6s vs 137.1s.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ERROR AXES -->
+<section style="--accent:var(--rose)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <svg class="sec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-1.5-1.5"/></svg>
+      <div><span class="sec-no">§06 · Failure modes</span><h2>Lab and medication data <em>fail differently</em></h2></div>
+    </div>
+    <p class="sec-intro reveal">A single accuracy number hides clinically different mistakes. Breaking errors down by type is the study's most decision-relevant finding.</p>
+
+    <div class="axes reveal">
+      <div class="axbox card" style="--accent:var(--teal)">
+        <div class="h"><div class="ic">L</div><h4>Lab results: mostly cosmetic</h4></div>
+        <ul>
+          <li><span class="m">safe</span><span><b>Unit conversions</b> that change the text but not the clinical value.</span></li>
+          <li><span class="m">audit</span><span><b>Labels swapped for codes:</b> answer right, human-readable trail weaker.</span></li>
+        </ul>
+        <p style="font-size:14.5px;color:var(--muted-foreground);margin:16px 0 0;line-height:1.5;">Lookup tools cut likely-wrong code mappings sharply, from about 32% down to single digits.</p>
+      </div>
+      <div class="axbox card" style="--accent:var(--rose)">
+        <div class="h"><div class="ic">M</div><h4>Medications: consequential</h4></div>
+        <ul>
+          <li><span class="m">dose</span><span><b>Dosage instructions</b> (the "sig") reworded so they no longer compare cleanly.</span></li>
+          <li><span class="m">drug</span><span><b>Product specificity</b> lost, e.g. extended-release mapped to a generic code.</span></li>
+          <li><span class="m">route</span><span><b>Route of administration</b> (e.g. "oral") dropped on some rows.</span></li>
+          <li><span class="m">time</span><span><b>Exposure dates</b> shifted by a day, which can matter for duration-sensitive analyses.</span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="sec-intro reveal" style="margin-top:24px;font-size:17px;">The oversight lesson: <strong>medication data needs closer human review than lab data</strong>, even at high headline accuracy. A plausible-looking medication table is not proof it is correct.</p>
+  </div>
+</section>
+
+<!-- TAKEAWAYS -->
+<section class="alt" style="--accent:var(--violet)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <svg class="sec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+      <div><span class="sec-no">§07 · So what</span><h2>What this means for <em>your organisation</em></h2></div>
+    </div>
+
+    <div class="callout reveal" style="--accent:var(--primary)">
+      <p>"The pipeline ran" is not the same as "the data are correct." Quality must be measured at the level of clinical meaning.</p>
+    </div>
+
+    <div class="takeaways">
+      <div class="tk card reveal" style="--accent:var(--rose)">
+        <h4>For CMIOs and clinical leaders</h4>
+        <ol>
+          <li><span><b>Promising, not deployable.</b> Agents recover a lot of clinical meaning, but validated only on synthetic data with a known answer key.</span></li>
+          <li><span><b>Keep humans in the loop</b> for medications: dose, route, product specificity, and timing are where meaning slips.</span></li>
+          <li><span><b>Insist on semantic checks</b>, not just "did it load." Demand source-to-target traceability you can audit.</span></li>
+        </ol>
+      </div>
+      <div class="tk card reveal" style="--accent:var(--violet)">
+        <h4>For CTOs and technology leaders</h4>
+        <ol>
+          <li><span><b>More autonomy does not equal better ROI.</b> The most capable agent added cost, latency, and failure modes for a small gain.</span></li>
+          <li><span><b>Reliability is a first-class metric.</b> Tool-heavy agents hit rate limits and policy errors; the simplest design never failed.</span></li>
+          <li><span><b>Model choice is multi-dimensional.</b> Two strong models tied on quality but differed up to about 3 times on token cost and runtime.</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="callout reveal" style="--accent:var(--emerald);margin-top:34px;">
+      <p style="color:var(--emerald);">Before any patient-data use: source-quality controls, deterministic validation, governance review, and expert oversight remain non-negotiable.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="wrap">
+  <div class="foot-grid reveal">
+    <div>
+      <h3>A reproducible way to test clinical AI <em>before</em> it touches real patients.</h3>
+      <p class="foot-body">The entire benchmark (generator, target truth, messiness layers, agents, and scoring) is open source and runs on synthetic data, so it can be independently inspected, re-run, and extended with no privacy barrier.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="https://drive.google.com/file/d/1B08Fza-tUPzirZH96MxiefAJnih5meNo/view?usp=drive_link" target="_blank" rel="noopener">Read the full thesis (PDF) <span class="arrow">&#8599;</span></a>
+        <a class="btn btn-outline" href="https://github.com/arvind0212/agentic-clinical-etl-benchmark" target="_blank" rel="noopener">View the benchmark on GitHub <span class="arrow">&#8599;</span></a>
+      </div>
+    </div>
+  </div>
+  <p class="disclaimer reveal">This page is a plain-language summary of an academic thesis. All results were produced on synthetic, privacy-safe data under controlled benchmark conditions and describe relative behaviour of the evaluated AI architectures. They do not establish readiness for unsupervised use on real patient records. Real-world deployment would require validation on governed clinical extracts with appropriate approvals, security review, and expert oversight.</p>
+</footer>
+
+<script>
+(function(){
+  var body = document.body, sw = document.getElementById('techToggle'), lbl = document.getElementById('modeLabel');
+  function setMode(on){
+    body.classList.toggle('tech-on', on);
+    sw.setAttribute('aria-checked', on);
+    lbl.textContent = on ? 'Technical' : 'Plain';
+  }
+  sw.addEventListener('click', function(){ setMode(!body.classList.contains('tech-on')); });
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        e.target.querySelectorAll('.fill[data-w]').forEach(function(f){
+          requestAnimationFrame(function(){ f.style.width = f.getAttribute('data-w') + '%'; });
+        });
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold:.12, rootMargin:'0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  setTimeout(function(){
+    document.querySelectorAll('.fill[data-w]').forEach(function(f){
+      if(!f.style.width){ f.style.width = f.getAttribute('data-w') + '%'; }
+    });
+  }, 1400);
+})();
+</script>
+</body>
+</html>

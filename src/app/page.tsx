@@ -6,6 +6,7 @@ import AboutSection from "@/app/(sections)/AboutSection";
 import ProjectSection from "@/app/(sections)/ProjectSection";
 import SkillsSection from "@/app/(sections)/SkillsSection";
 import ExperienceSection from "@/app/(sections)/ExperienceSection";
+import ThesisSection from "@/app/(sections)/ThesisSection"; // Master's thesis highlight
 import ContactSection from "@/app/(sections)/ContactSection"; // Added import
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
         <AboutSection />
         <SkillsSection /> {/* Added Skills section */}
         <ExperienceSection />
+        <ThesisSection /> {/* Master's thesis highlight + link to detailed brief */}
         <ProjectSection />
         <ContactSection /> {/* Added Contact section */}
       </main>
