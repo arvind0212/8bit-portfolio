@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Jersey_20 } from "next/font/google"; // Import Inter and Jersey_20
 import "./globals.css";
 import { cn } from "@/lib/utils"; // Import cn utility
-import BackToTopButton from "@/components/BackToTopButton"; // Import the new component
 
 // Configure Inter font for body text
 const fontSans = Inter({
@@ -68,7 +67,6 @@ export default function RootLayout({
         )}
       >
         {children}
-        <BackToTopButton /> {/* Add the button here */}
       </body>
     </html>
   );
