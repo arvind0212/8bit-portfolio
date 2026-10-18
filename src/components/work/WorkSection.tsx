@@ -11,6 +11,7 @@ export default function WorkSection() {
         <div>
           <p className="label"><span className="n">01</span>Selected work</p>
           <h2 id="h-work">Proof, with the limits written down.</h2>
+          <p className="intro">The lit bars show which layers I owned, from discovery to rollout.</p>
         </div>
         <div className="rownav" aria-label="Scroll the work">
           <button type="button" id="prev" aria-label="Previous">←</button>

@@ -99,7 +99,7 @@ export const WORK: Work[] = [
     slug: "ki-pipeline",
     kind: "case",
     featured: true,
-    tag: "Research · Karolinska Institutet",
+    tag: "Karolinska Institutet",
     year: "2025",
     hook: "1,000 prescriptions,",
     hookEm: " none lost.",
@@ -163,7 +163,7 @@ export const WORK: Work[] = [
     case: {
       dek: "A small island at the top of the screen. Call it from any app, see exactly what context it took, and approve before anything goes back into your work.",
       role: "Solo, personal project",
-      when: "Oct 2026 · in progress",
+      when: "2026 · in progress",
       team: "Just me and my agent harness",
       stats: [],
       sketchNote:
