@@ -1,6 +1,7 @@
 import { Instrument_Serif, Silkscreen } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import Tune from "./Tune";
 import "./room.css";
 
 const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", variable: "--rf-instrument" });
@@ -18,6 +19,7 @@ export default function SubPage({ label, title, children }: { label: string; tit
           <a href="/#contact">Contact</a>
         </nav>
       </header>
+      <Tune />
       <main className="col">
         <section className="sec">
           <p className="label">{label}</p>

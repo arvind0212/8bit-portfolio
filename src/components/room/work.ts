@@ -25,7 +25,7 @@ export const WORK: Work[] = [
     cta: "Read the summary",
     frame: "",
     preview:
-      '<p class="fk">Synthetic patient record</p><div class="vc"><div><span>Schema check</span><b>Valid ✓</b></div><div><span>Matches the source</span><b class="no">Not correct ✗</b></div></div><p class="big">Valid <em>is not correct.</em></p>',
+      '<p class="fk">Synthetic patient record</p><div class="vc"><div><span>Schema check</span><b>Valid ✓</b></div><div><span>Matches the source</span><b class="no">Not correct ✗</b></div></div><p class="big sm-hide">Valid <em>is not correct.</em></p>',
     year: "2026",
     summary:
       "Three agent designs mapping synthetic patient data to OMOP. The best reached about 100% accepted accuracy on labs and about 91% on medications; the tool-heavy agents failed more often. Synthetic data, not a deployment.",
@@ -41,7 +41,7 @@ export const WORK: Work[] = [
     cta: "Read more",
     frame: "ki",
     preview:
-      '<p class="fk">Prescription pipeline</p><p class="stat">99.4%</p><p class="fs">success on 1,000+ prescription records</p><div class="pipe"><span>Free text</span><i>→</i><span class="acc">LLM parsing</span><i>→</i><span>Rules check</span></div>',
+      '<p class="fk">Prescription pipeline</p><p class="stat">99.4%</p><p class="fs">success on 1,000+ prescription records</p><div class="pipe sm-hide"><span>Free text</span><i>→</i><span class="acc">LLM parsing</span><i>→</i><span>Rules check</span></div>',
     year: "2025",
     summary:
       "A pipeline that turns unstructured Swedish prescriptions into structured records, with LLM parsing and a rule-based check. 99.4% success across 1,000+ records, with a small share flagged for manual review.",

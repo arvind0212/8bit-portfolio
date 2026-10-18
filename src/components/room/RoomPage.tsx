@@ -6,6 +6,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { initRoomPage } from "./init";
 import { WORK } from "./work";
+import Tune from "./Tune";
 import "./room.css";
 
 const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", variable: "--rf-instrument" });
@@ -34,6 +35,7 @@ export default function RoomPage() {
         <div className="room" id="room" role="img" aria-label="Pixel art of Arvind's room in Stockholm, drawn in code: a desk, framed pictures of projects, a whiteboard, a window onto the city, a terminal and a door. A small character walks to the part of the room that matches the section you are reading."></div>
       </div>
 
+      <Tune />
       <main className="col" id="top">
         <section className="hero" id="hero" aria-labelledby="h1">
           <span className="name">Arvind Guruprasad · Stockholm</span>
@@ -67,7 +69,7 @@ export default function RoomPage() {
                   <p className="cmeta"><span className="n">0{i + 1}</span>{w.tag}</p>
                   <h3><a href={w.href}>{w.hook}<em>{w.hookEm}</em></a></h3>
                   <p className="cline">{w.line}</p>
-                  <a className="read" href={w.href}>{w.cta}<span aria-hidden="true"> →</span></a>
+                  <a className="read" href={w.href} aria-label={"Read: " + w.hook + w.hookEm}>Read<span aria-hidden="true"> →</span></a>
                 </div>
               </li>
             ))}
