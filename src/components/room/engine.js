@@ -15,9 +15,12 @@ const D = (a, b, t, x, y) => t > bay(x, y) ? b : a;
 const pack = (r, g, b, a = 255) => (((a & 255) << 24) | ((b & 255) << 16) | ((g & 255) << 8) | (r & 255)) >>> 0;
 
 class Raster {
-  constructor(w, h, ox, oy) { this.W = w; this.H = h; this.ox = ox; this.oy = oy; this.img = new ImageData(w, h); this.b = new Uint32Array(this.img.data.buffer); this.id = new Uint8Array(w * h); this.em = new Uint8Array(w * h); this.cur = 0; this.emit = 0; }
+  constructor(w, h, ox, oy) { this.W = w; this.H = h; this.ox = ox; this.oy = oy; this.img = new ImageData(w, h); this.b = new Uint32Array(this.img.data.buffer); this.id = new Uint8Array(w * h); this.em = new Uint8Array(w * h); this.g = new Uint8Array(w * h); this.u = new Uint32Array(w * h); this.ug = new Uint8Array(w * h); this.cur = 0; this.emit = 0; this.grp = 0; this.gx = -1; }
   P(x, y, z) { return [this.ox + x - y, this.oy + (x + y) / 2 - z]; }
-  set(x, y, c) { if (!c || x < 0 || y < 0 || x >= this.W || y >= this.H) return; const i = y * this.W + x; this.b[i] = c; this.id[i] = this.cur; this.em[i] = this.emit; }
+  set(x, y, c) { if (!c || x < 0 || y < 0 || x >= this.W || y >= this.H) return; const i = y * this.W + x, g = this.gx >= 0 ? this.gx : this.cur ? GID[this.cur] : this.grp;
+    /* keep the floor or wall pixel an object covers, so the floor and walls stay whole while the object is away */
+    if (this.b[i] && !this.u[i] && this.g[i] !== g && this.g[i] <= G.wallL) { this.u[i] = this.b[i]; this.ug[i] = this.g[i]; }
+    this.b[i] = c; this.id[i] = this.cur; this.em[i] = this.emit; this.g[i] = g; }
   poly(pts, sh) {
     const W = this.W, H = this.H; let a = 1e9, z = -1e9; for (const p of pts) { if (p[1] < a) a = p[1]; if (p[1] > z) z = p[1]; }
     const y0 = Math.max(0, Math.ceil(a - .5)), y1 = Math.min(H - 1, F(z - .5)), n = pts.length, xs = [], c0 = this.cur, e0 = this.emit, fn = typeof sh === 'function';
@@ -41,10 +44,10 @@ class Raster {
   line(x0, y0, x1, y1, c) { x0 = Math.round(x0); y0 = Math.round(y0); x1 = Math.round(x1); y1 = Math.round(y1); const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1; let e = dx + dy; for (;;) { this.set(x0, y0, c); if (x0 === x1 && y0 === y1) break; const e2 = 2 * e; if (e2 >= dy) { e += dy; x0 += sx; } if (e2 <= dx) { e += dx; y0 += sy; } } }
   line3(a, b, c) { const p = this.P(...a), q = this.P(...b); this.line(p[0], p[1], q[0], q[1], c); }
   disc(cx, cy, r, sh) { cx = Math.round(cx); cy = Math.round(cy); for (let y = -r; y <= r; y++) for (let x = -r; x <= r; x++) if (x * x + y * y <= r * r + r * .6) { const c = typeof sh === 'function' ? sh(cx + x, cy + y, x, y) : sh; if (c) this.set(cx + x, cy + y, c); } }
-  outline(c) { /* 1px dark edge around every opaque region */
-    const b = this.b, W = this.W, H = this.H, out = [];
-    for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) { const i = y * W + x; if (b[i] >>> 24 === 255) continue; if ((b[i - 1] >>> 24) === 255 || (b[i + 1] >>> 24) === 255 || (b[i - W] >>> 24) === 255 || (b[i + W] >>> 24) === 255) out.push(i); }
-    for (const i of out) b[i] = c;
+  outline(c) { /* 1px dark edge around every opaque region; the edge joins the piece it outlines */
+    const b = this.b, g = this.g, W = this.W, H = this.H, out = [];
+    for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) { const i = y * W + x; if (b[i] >>> 24 === 255) continue; for (const j of [i - 1, i + 1, i - W, i + W]) if ((b[j] >>> 24) === 255) { out.push(i, j); break; } }
+    for (let k = 0; k < out.length; k += 2) { b[out[k]] = c; g[out[k]] = g[out[k + 1]]; }
   }
 }
 
@@ -80,6 +83,10 @@ Object.entries({
 /* ---------- the room ---------- */
 const W = 320, H = 260, OX = 160, OY = 108;
 const ID = { desk: 1, fThesis: 2, fAmbient: 3, fHq: 4, fHouse: 5, board: 6, bench: 7, term: 8, door: 9, window: 10, handheld: 11, mug: 12, ball: 13, plant: 14, postcard: 15 };
+/* pieces the intro animates one by one; every pixel belongs to exactly one */
+const GROUPS = ['floor', 'wallR', 'wallL', 'rug', 'mat', 'board', 'fThesis', 'fAmbient', 'fHq', 'fHouse', 'window', 'postcard', 'door', 'bench', 'plant', 'term', 'desk', 'monitor', 'keys', 'handheld', 'mug', 'bun', 'lamp', 'chair', 'ball'];
+const G = Object.fromEntries(GROUPS.map((n, i) => [n, i]));
+const GID = { [ID.desk]: G.desk, [ID.fThesis]: G.fThesis, [ID.fAmbient]: G.fAmbient, [ID.fHq]: G.fHq, [ID.fHouse]: G.fHouse, [ID.board]: G.board, [ID.bench]: G.bench, [ID.term]: G.term, [ID.door]: G.door, [ID.window]: G.window, [ID.handheld]: G.handheld, [ID.mug]: G.mug, [ID.ball]: G.ball, [ID.plant]: G.plant, [ID.postcard]: G.postcard };
 const FRAMES = [
   { id: ID.fThesis, u: 82, v: 70, kind: 'thesis' }, { id: ID.fAmbient, u: 110, v: 70, kind: 'ambient' },
   { id: ID.fHq, u: 82, v: 44, kind: 'hq' }, { id: ID.fHouse, u: 110, v: 44, kind: 'house' }
@@ -162,12 +169,14 @@ function bake(theme) {
   /* floor slab */
   L0.box(-6, -6, -8, 152, 152, 8, (sx, sy) => { const [u, v] = L0.tUV(sx, sy, 0); const a = F(u), b = F(v), row = F((b + 6) / 10), off = (row * 23) % 44; if (((b + 6) % 10) === 0 || ((a + off + 6) % 44) === 0) return K.seam; const t = hash(row, F((a + off + 6) / 44)); return t < .33 ? K.plank1 : t < .66 ? K.plank2 : D(K.plank2, K.plank3, .5, sx, sy); }, K.slab, K.slab2);
   /* right wall (plane y=0): whiteboard, frames */
+  L0.grp = G.wallR;
   L0.box(-6, -6, 0, 152, 6, 100, K.wallTop, (sx, sy) => { const [u0, v0] = L0.lUV(sx, sy, 0); const u = F(u0), v = F(v0);
     if (v < 6) return v === 5 ? K.baseS : K.base;
     if (u >= 10 && u < 66 && v >= 40 && v < 90) { L0.cur = ID.board; return whiteboard(u - 10, v - 40, sx, sy); }
     for (const f of FRAMES) if (u >= f.u && u < f.u + 24 && v >= f.v && v < f.v + 20) { L0.cur = f.id; const a = u - f.u, b = v - f.v; if (a === 0 || a === 23 || b === 0 || b === 19) return K.wood; if (a === 1 || a === 22 || b === 1 || b === 18) return K.wood2; if (a === 2 || a === 21 || b === 2 || b === 17) return K.mat; return framePic(f.kind, a - 3, 16 - b, sx, sy); }
     return D(K.wallA2, K.wallA, .25 + (v - 6) / 100 * .8, sx, sy); }, K.wallCut2);
   /* left wall (plane x=0): window, postcard, door */
+  L0.grp = G.wallL;
   L0.box(-6, 0, 0, 6, 146, 100, K.wallTop, K.wallCut, (sx, sy) => { const [u0, v0] = L0.rUV(sx, sy, 0); const u = F(u0), v = F(v0);
     if (v < 6 && !(u >= 100 && u < 130)) return v === 5 ? K.baseS : K.base;
     if (u >= 14 && u < 64 && v >= 36 && v < 86) { L0.cur = ID.window; if (u < 17 || u >= 61 || v < 39 || v >= 83 || u === 39 || v === 61) return (u === 16 || v === 38) ? K.frameS : K.frame; L0.emit = N ? 1 : 0; return outside(u - 17, v - 39, sx, sy, theme); }
@@ -175,12 +184,15 @@ function bake(theme) {
     if (u >= 100 && u < 130 && v < 76) { L0.cur = ID.door; const a = u - 100, b = v; if (a < 2 || a >= 28 || b >= 74) return K.wood; if (a < 3 || a >= 27 || b >= 73) return K.door2; if (b >= 8 && b < 34 && a >= 6 && a < 24) return (a === 6 || a === 23 || b === 8 || b === 33) ? K.door2 : (a === 7 || b === 32) ? K.door3 : K.door; if (b >= 40 && b < 66 && a >= 6 && a < 24) return (a === 6 || a === 23 || b === 40 || b === 65) ? K.door2 : (a === 7 || b === 64) ? K.door3 : K.door; if (a >= 23 && a < 26 && b >= 36 && b < 38) return K.handle; return K.door; }
     return D(K.wallB2, K.wallB, .25 + (v - 6) / 100 * .8, sx, sy); });
   /* window sill */
-  L0.box(0, 14, 34, 3, 50, 2, K.frame, K.frameS, K.frameS);
+  L0.gx = G.window; L0.box(0, 14, 34, 3, 50, 2, K.frame, K.frameS, K.frameS); L0.gx = -1;
   /* sunbeam across the floor */
+  L0.grp = G.floor;
   if (theme === 'day') L0.poly([L0.P(0, 16, 0), L0.P(0, 62, 0), L0.P(44, 76, 0), L0.P(44, 30, 0)], (sx, sy) => { if (bay(sx, sy) > .45) return 0; const c = L0.b[sy * W + sx]; const r = c & 255, g = (c >>> 8) & 255, b = (c >>> 16) & 255; return pack(r + (255 - r) * .22 | 0, g + (244 - g) * .22 | 0, b + (214 - b) * .22 | 0); });
   /* rug */
+  L0.grp = G.rug;
   L0.box(60, 62, 0, 74, 62, 1, (sx, sy) => { const [u, v] = L0.tUV(sx, sy, 1); const a = F(u) - 60, b = F(v) - 62; if (a < 2 || a >= 72 || b < 2 || b >= 60) return K.rugR; if (((a - 2) % 12) >= 5 && ((a - 2) % 12) < 7) return K.rugG; return D(K.rugC, K.rugC2, .35, sx, sy); }, K.rugR, K.rugR);
   /* door mat */
+  L0.grp = G.mat;
   L0.box(2, 104, 0, 16, 26, 1, (sx, sy) => { const [u, v] = L0.tUV(sx, sy, 1); const a = F(u) - 2, b = F(v) - 104; if (a < 1 || a >= 15 || b < 1 || b >= 25) return K.matB; return ((a + b) & 1) ? K.matB : K.matB2; }, K.matB, K.matB);
   /* workbench with the tools */
   L0.cur = ID.bench;
@@ -214,6 +226,7 @@ function bake(theme) {
   L1.cur = ID.desk;
   L1.box(72, 38, 0, 50, 20, 32, (sx, sy) => { const [u, v] = L1.tUV(sx, sy, 32); if (F(v) === 57) return K.oakRim; const g = Math.sin(v * 1.9 + Math.sin(u * .12) * 1.6); return g > .75 ? D(K.oakT, K.oakT2, .7, sx, sy) : K.oakT; }, (sx, sy) => { const [u0, v0] = L1.lUV(sx, sy, 58); const u = F(u0), v = F(v0); if (v === 10 || v === 21 || u === 72 || u === 121) return K.oakR; if (u >= 100 && u < 104 && (v === 5 || v === 16 || v === 27)) return K.mon2; return K.oakL; }, K.oakR);
   /* monitor on the desk, screen faces the chair */
+  L1.gx = G.monitor;
   L1.box(90, 40, 32, 14, 8, 2, K.mon1, K.mon2, K.mon3);
   L1.box(95, 42, 34, 4, 3, 6, K.mon1, K.mon2, K.mon3);
   L1.box(84, 43, 40, 26, 3, 20, K.mon1, (sx, sy) => { const [u0, v0] = L1.lUV(sx, sy, 46); const u = F(u0), v = F(v0); if (u < 86 || u >= 108 || v < 42 || v >= 58) return K.mon2; L1.emit = 1;
@@ -222,25 +235,31 @@ function bake(theme) {
     const r = 55 - v; if (r % 2 === 1) { const li = (r - 1) / 2, p = u - 92; const lens = [11, 7, 13, 5, 10, 8, 12]; if (li < lens.length && p < lens[li]) return (p % 4 === 0) ? [K.tO, K.tD, K.tG, K.tB, K.tD, K.tG, K.tD][li] : K.tx; }
     return K.scr; }, K.mon3);
   /* keyboard, mouse */
+  L1.gx = G.keys;
   L1.box(88, 50, 32, 18, 6, 1, (sx, sy) => { const [u, v] = L1.tUV(sx, sy, 33); return (F(u) % 3 === 0 || F(v) % 3 === 2) ? K.keyD : K.keyT; }, K.keyL, K.keyR);
   L1.box(109, 51, 32, 3, 4, 1, K.keyT, K.keyL, K.keyR);
+  L1.gx = -1;
   L1.cur = ID.handheld;
   L1.box(74, 46, 32, 10, 14, 3, (sx, sy) => { const [u0, v0] = L1.tUV(sx, sy, 35); const u = F(u0) - 74, v = F(v0) - 46; if (u >= 2 && u < 8 && v >= 2 && v < 8) { if (u === 2 || u === 7 || v === 2 || v === 7) return K.hhS2; return (u === 4 && v === 4) ? K.hhK : K.hhS; } if ((u === 3 && v >= 9 && v < 12) || (v === 10 && u >= 2 && u < 5)) return K.hhK; if ((u === 6 || u === 8) && (v === 10 || v === 11) && ((u === 6) === (v === 11))) return K.hhK; return K.hhY; }, K.hhL, K.hhR);
   L1.cur = ID.mug;
   L1.box(112, 41, 32, 5, 5, 6, (sx, sy) => { const [u, v] = L1.tUV(sx, sy, 38); return (u > 112.5 && u < 116 && v > 41.5 && v < 45) ? K.coffee : K.mugT; }, (sx, sy) => { const [, v] = L1.lUV(sx, sy, 46); return (v > 34 && v < 36.5) ? K.cover : K.mugL; }, K.mugR);
   L1.box(117, 43, 34, 2, 2, 3, K.mugT, K.mugL, K.mugR);
   /* cinnamon bun on a plate */
+  L1.gx = G.bun;
   { const q = L1.P(114, 51, 32); L1.disc(q[0], q[1], 4, (x, y, ex, ey) => (ey > 0 || Math.abs(ex) > 3) ? K.plate : 0); L1.disc(q[0], q[1] - 1, 3, (x, y, ex, ey) => { const r = ex * ex + ey * ey; if (r < 1) return K.bun2; if ((ex === 2 && ey === -1) || (ex === -1 && ey === -2) || (ex === 0 && ey === 2)) return K.sugar; return (r > 5 || (ex === 1 && ey === 1)) ? K.bun2 : K.bun; }); }
-  L1.cur = 0;
+  L1.cur = 0; L1.gx = -1;
   /* desk lamp */
+  L1.grp = G.lamp;
   L1.box(118, 39, 32, 4, 4, 1, K.lampP, K.lampP, K.lampP);
   { const a = L1.P(120, 41, 33), b = L1.P(120, 41, 50); L1.line(a[0], a[1], b[0], b[1], K.lampP); L1.line(b[0], b[1], b[0] - 7, b[1] + 3, K.lampP); L1.emit = N ? 1 : 0; L1.box(112, 40, 46, 8, 5, 4, K.lampS, K.lampS2, K.lampS2); if (N) { L1.poly([L1.P(112, 45, 46), L1.P(120, 45, 46), L1.P(120, 45, 44), L1.P(112, 45, 44)], K.lampG); } L1.emit = 0; }
   /* chair base and seat */
+  L1.grp = G.chair;
   { const c = [96, 66, 3]; [[0, -10], [9, -3], [6, 8], [-6, 8], [-9, -3]].forEach(([a, b]) => { L1.line3(c, [96 + a, 66 + b, 2], K.chair2); const q = L1.P(96 + a, 66 + b, 1); L1.set(F(q[0]), F(q[1]), K.chromeD); L1.set(F(q[0]) + 1, F(q[1]), K.chromeD); }); }
   L1.box(95, 65, 4, 2, 2, 12, K.chrome, K.chrome, K.chromeD);
   L1.box(88, 58, 16, 16, 16, 4, K.chairT, K.chair, K.chair2);
 
   /* ---- near layer: chair back, football ---- */
+  L2.grp = G.chair;
   L2.box(88, 74, 20, 16, 3, 22, (sx, sy) => ((sx + sy) & 1) ? K.chairT : 0, (sx, sy) => ((sx + sy) & 1) ? K.chair : 0, K.chair2);
   L2.box(88, 74, 42, 16, 3, 3, K.chairT, K.chair, K.chair2);
   L2.box(86, 70, 20, 2, 2, 8, K.chair, K.chair, K.chair2); L2.box(104, 70, 20, 2, 2, 8, K.chair, K.chair, K.chair2);
@@ -251,7 +270,7 @@ function bake(theme) {
   /* night and dusk grading, then outlines */
   if (theme !== 'day') {
     const lamp = L1.P(118, 43, 46);
-    for (const R of L) { const b = R.b, em = R.em; for (let i = 0; i < W * H; i++) { const c = b[i]; if (!c || em[i] || (c >>> 24) < 255) continue; const x = i % W, y = (i / W) | 0; let r = c & 255, g = (c >>> 8) & 255, bb = (c >>> 16) & 255;
+    for (const R of L) for (const [b, em] of [[R.b, R.em], [R.u, null]]) { for (let i = 0; i < W * H; i++) { const c = b[i]; if (!c || (em && em[i]) || (c >>> 24) < 255) continue; const x = i % W, y = (i / W) | 0; let r = c & 255, g = (c >>> 8) & 255, bb = (c >>> 16) & 255;
       if (N) { const d = Math.hypot(x - lamp[0], (y - lamp[1]) * 1.4); const k = d < 70 ? (1 - d / 70) * .55 : 0; const nr = r * .40 + 10, ng = g * .44 + 14, nb = bb * .60 + 38; b[i] = pack(Math.min(255, nr + (r - nr) * k) | 0, Math.min(255, ng + (g - ng) * k) | 0, Math.min(255, nb + (bb - nb) * k * .7) | 0); }
       else { b[i] = pack(Math.min(255, r * .92 + 12) | 0, (g * .84 + 6) | 0, (bb * .86 + 2) | 0); } } }
   }
@@ -261,7 +280,7 @@ function bake(theme) {
   const BB = {};
   for (const R of L) for (let i = 0; i < W * H; i++) { const id = R.id[i]; if (!id) continue; const x = i % W, y = (i / W) | 0; const b = BB[id] || (BB[id] = { x0: x, y0: y, x1: x, y1: y }); if (x < b.x0) b.x0 = x; if (x > b.x1) b.x1 = x; if (y < b.y0) b.y0 = y; if (y > b.y1) b.y1 = y; }
   Object.values(BB).forEach(b => { b.x = b.x0; b.y = b.y0; b.w = b.x1 - b.x0 + 1; b.h = b.y1 - b.y0 + 1; });
-  return { layers: L.map(R => R.img), BB };
+  return { layers: L.map(R => R.img), groups: L.map(R => R.g), under: L.map(R => [R.u, R.ug]), BB };
 }
 
 /* ---------- the character ---------- */
@@ -367,11 +386,35 @@ function mount(opts) {
   const charEl = document.createElement('div'); charEl.className = 'ch'; charEl.id = 'walker'; charEl.setAttribute('aria-hidden', 'true');
   const ca = document.createElement('canvas'), cb = document.createElement('canvas'); for (const c of [ca, cb]) { c.width = CW; c.height = CH; c.className = 'cf'; charEl.appendChild(c); }
   const hots = document.createElement('div'); hots.className = 'hots';
-  root.append(layers[0], layers[1], charEl, layers[2], hots);
-  root.insertBefore(charEl, layers[1]);
+  if (opts.pieces) root.append(charEl, hots);
+  else { root.append(layers[0], layers[1], charEl, layers[2], hots); root.insertBefore(charEl, layers[1]); }
 
   let theme = opts.theme || themeFor(new Date()), baked = null, s = 1;
-  function rebake() { baked = bake(theme); layers.forEach((c, i) => c.getContext('2d').putImageData(baked.layers[i], 0, 0)); root.dataset.theme = theme; layoutHots(); }
+  let pieces = [];
+  function rebake() {
+    baked = bake(theme); root.dataset.theme = theme;
+    if (opts.pieces) splitPieces(); else layers.forEach((c, i) => c.getContext('2d').putImageData(baked.layers[i], 0, 0));
+    layoutHots(); opts.onBake && opts.onBake(pieces);
+  }
+  /* one canvas per piece and layer, cropped to its pixels, so the intro can move each on its own */
+  function splitPieces() {
+    for (const p of pieces) p.el.remove();
+    pieces = [];
+    baked.layers.forEach((img, li) => {
+      const src = new Uint32Array(img.data.buffer), g = baked.groups[li], [u, ug] = baked.under[li], bb = {};
+      const grow = (k, i) => { const x = i % W, y = (i / W) | 0, b = bb[k] || (bb[k] = { x0: x, y0: y, x1: x, y1: y }); if (x < b.x0) b.x0 = x; if (x > b.x1) b.x1 = x; if (y < b.y0) b.y0 = y; if (y > b.y1) b.y1 = y; };
+      for (let i = 0; i < W * H; i++) { if (src[i]) grow(g[i], i); if (u[i]) grow(ug[i], i); }
+      for (const k of Object.keys(bb)) {
+        const b = bb[k], w = b.x1 - b.x0 + 1, h = b.y1 - b.y0 + 1, out = new ImageData(w, h), o = new Uint32Array(out.data.buffer);
+        for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = (y + b.y0) * W + x + b.x0; if (g[i] === +k) o[y * w + x] = src[i]; else if (u[i] && ug[i] === +k) o[y * w + x] = u[i]; }
+        const c = document.createElement('canvas'); c.width = w; c.height = h; c.className = 'rl rl' + li; c.dataset.piece = GROUPS[k]; c.setAttribute('aria-hidden', 'true');
+        c.getContext('2d').putImageData(out, 0, 0); root.insertBefore(c, hots);
+        pieces.push({ name: GROUPS[k], layer: li, el: c, x: b.x0, y: b.y0, w, h });
+      }
+    });
+    sizePieces();
+  }
+  function sizePieces() { for (const p of pieces) { const st = p.el.style; st.left = p.x * s + 'px'; st.top = p.y * s + 'px'; st.width = p.w * s + 'px'; st.height = p.h * s + 'px'; } }
 
   /* hotspots */
   const hotDefs = opts.hotspots || [];
@@ -389,7 +432,7 @@ function mount(opts) {
     layers.forEach(c => { c.style.width = (W * s) + 'px'; c.style.height = (H * s) + 'px'; });
     charEl.style.width = (CW * s) + 'px'; charEl.style.height = (CH * s) + 'px';
     for (const c of [ca, cb]) { c.style.width = (CW * s) + 'px'; c.style.height = (CH * s) + 'px'; }
-    layoutHots(); lastTx = null; render(true); camMeasure();
+    sizePieces(); layoutHots(); lastTx = null; render(true); camMeasure();
   }
 
   /* walker state */
@@ -464,18 +507,19 @@ function mount(opts) {
   function camMeasure() { cam.init = true; }
   function camStep(dt) {
     const t = opts.cam && opts.cam(st); if (!t) return;
+    if (t.m) { const v = 'matrix(' + t.m.map(n => n.toFixed(5)).join(',') + ')'; if (v !== cam.last) { root.style.transform = v; cam.last = v; } return; }
     if (cam.init || RM.matches || dt === 0) { cam.x = t.x; cam.y = t.y; cam.z = t.z; cam.init = false; }
     else { const a = 1 - Math.exp(-dt * 16); cam.x += (t.x - cam.x) * a; cam.y += (t.y - cam.y) * a; cam.z += (t.z - cam.z) * a; }
     const v = 'translate3d(' + cam.x.toFixed(2) + 'px,' + cam.y.toFixed(2) + 'px,0) scale(' + cam.z.toFixed(4) + ')';
     if (v !== cam.last) { root.style.transform = v; cam.last = v; }
   }
   /* loop: runs only while visible */
-  let raf = 0, visible = true, hidden = document.hidden;
+  let raf = 0, visible = true, hidden = document.hidden, speed = 1;
   function loop(now) {
     raf = 0; if (!visible || hidden) return;
-    const dt = Math.min(.05, (now - (st.lastT || now)) / 1000); st.lastT = now;
+    const dt = Math.min(.05, (now - (st.lastT || now)) / 1000) * speed; st.lastT = now;
     if (pending && now - poseT >= DWELL) setPose(pending[0], pending[1], pending[2]);
-    if (!RM.matches) { st.clock += dt; while (st.clock >= 1 / FPS) { st.clock -= 1 / FPS; st.fi++; } step(Math.min(dt, .02)); stepZ(now); } /* a slow frame slows the walk a little instead of doubling one step */
+    if (!RM.matches) { st.clock += dt; while (st.clock >= 1 / FPS) { st.clock -= 1 / FPS; st.fi++; } step(Math.min(dt, .02 * speed)); stepZ(now); } /* a slow frame slows the walk a little instead of doubling one step */
     drawFrame(); render(false); camStep(dt);
     opts.onFrame && opts.onFrame(now, st);
     raf = requestAnimationFrame(loop);
@@ -496,7 +540,7 @@ function mount(opts) {
   return {
     go: setTarget, place, state: st, nodes: NODES,
     cycleTheme() { theme = theme === 'day' ? 'dusk' : theme === 'dusk' ? 'night' : 'day'; opts.themeLocked = true; rebake(); return theme; },
-    get theme() { return theme; }, get scale() { return s; }, frameFor, W, H, CW, CH, OX, OY, kick, camStep, destroy, pos: () => ({ x: st.x, y: st.y, moving: st.moving, pose: st.pose })
+    get theme() { return theme; }, get scale() { return s; }, get pieces() { return pieces; }, char: charEl, setSpeed(k) { speed = k; }, setVisible(v) { visible = v; if (v) kick(); }, frameFor, W, H, CW, CH, OX, OY, kick, camStep, destroy, pos: () => ({ x: st.x, y: st.y, moving: st.moving, pose: st.pose })
   };
 }
 
