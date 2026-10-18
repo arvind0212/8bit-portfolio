@@ -75,7 +75,7 @@
 .rp .label .n{color:var(--accent)}
 .rp h1,.rp h2,.rp h3{color:var(--head-c)}
 .rp h2{font:var(--head-fw) var(--t-h2)/var(--head-lh) var(--head-ff);letter-spacing:var(--head-ls);max-width:22ch}
-.rp .intro,.rp .mrows p,.rp .fit,.rp .jcap{color:var(--body-c);max-width:var(--measure);letter-spacing:var(--body-ls)}
+.rp .intro,.rp .mrows p,.rp .fit{color:var(--body-c);max-width:var(--measure);letter-spacing:var(--body-ls)}
 .rp .intro{margin-top:var(--s-3)}
 .rp .read{display:inline-flex;align-items:center;gap:6px;min-height:44px;font:var(--ui-fw) var(--t-ui)/var(--ui-lh) var(--ui-ff);letter-spacing:var(--ui-ls);text-decoration:none;color:var(--accent)}
 .rp .read span{transition:transform var(--d-fast) var(--ease)}
@@ -153,30 +153,30 @@
 .rp .card.all b{font:var(--head-fw) calc(var(--head-fs)*0.66*var(--head-k))/1.2 var(--head-ff);letter-spacing:var(--head-ls)}
 
 /* journey: one avatar on a dotted path */
-.rp .journey{margin-top:8px}
-.rp .jy{position:relative;padding-top:170px}
+.rp .journey{margin-top:var(--s-6)}
+.rp .jy{position:relative;padding-top:calc(var(--s-10) + var(--s-6))}
 .rp .jpath{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
-.rp .jpath path{fill:none;stroke:var(--ink);stroke-opacity:.45;stroke-width:2;stroke-dasharray:.1 9;stroke-linecap:round}
+.rp .jpath path{fill:none;stroke:var(--ink-3);stroke-opacity:.6;stroke-width:2;stroke-dasharray:.1 9;stroke-linecap:round}
 .rp .jav{position:absolute;left:0;top:0;z-index:2;image-rendering:pixelated;pointer-events:none;will-change:transform}
-.rp .jstops{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;position:relative;z-index:1}
+.rp .jstops{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--s-2);position:relative;z-index:1}
 .rp .jstops li:nth-child(1){transform:translateY(26px)}.rp .jstops li:nth-child(2){transform:translateY(16px)}.rp .jstops li:nth-child(3){transform:translateY(8px)}.rp .jstops li:nth-child(4){transform:translateY(2px)}.rp .jstops li:nth-child(6){transform:translateY(-4px)}
-.rp .jstops button{width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 4px 8px;border:0;background:none;color:inherit;cursor:pointer;text-align:center;transition:opacity .25s}
-.rp .jdot{width:14px;height:14px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);transition:background .25s,border-color .25s,transform .25s var(--ease)}
-.rp .jlogo{display:flex;gap:4px;align-items:center;height:28px;margin:8px 0 6px}
-.rp .jlogo img{height:28px;width:auto;max-width:80px;object-fit:contain;filter:grayscale(1);opacity:.85;transition:filter .25s,opacity .25s}
-.rp .jlogo .jic{width:26px;height:26px;fill:none;stroke:var(--grey);stroke-width:1.6;stroke-linecap:round}
+.rp .jstops button{width:100%;display:flex;flex-direction:column;align-items:center;gap:var(--s-1);padding:0 var(--s-1) var(--s-2);border:0;background:none;color:inherit;cursor:pointer;text-align:center;transition:opacity var(--d-med) var(--ease)}
+.rp .jdot{width:14px;height:14px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);transition:background var(--d-med),border-color var(--d-med),transform var(--d-med) var(--ease)}
+.rp .jlogo{display:flex;gap:var(--s-1);align-items:center;height:28px;margin:var(--s-2) 0 var(--s-2)}
+.rp .jlogo img{height:28px;width:auto;max-width:80px;object-fit:contain;filter:grayscale(1);opacity:.85;transition:filter var(--d-med),opacity var(--d-med)}
+.rp .jlogo .jic{width:26px;height:26px;fill:none;stroke:var(--ink-3);stroke-width:1.6;stroke-linecap:round}
 .rp .jstops button.on .jic,.rp .jstops button:hover .jic{stroke:var(--accent)}
-.rp .jstops b{font:600 calc(var(--body-fs)*.94*var(--body-k))/1.25 var(--body-ff);color:var(--ink)}
-.rp .jstops small{font:var(--label-fw) calc(var(--label-fs)*0.92*var(--label-k))/1 var(--label-ff);letter-spacing:var(--label-ls);color:var(--grey)}
-.rp .jrole{font:400 calc(var(--body-fs)*.8*var(--body-k))/1.4 var(--body-ff);color:var(--body-c);text-wrap:balance;max-width:17ch}
+.rp .jstops small{font:var(--label-fw) var(--t-label)/var(--label-lh) var(--f-mono);letter-spacing:var(--label-ls);color:var(--ink-3)}
+.rp .jstops b{font:600 var(--t-body)/1.25 var(--f-text);color:var(--ink)}
+.rp .jrole{font:400 var(--t-small)/1.4 var(--f-text);color:var(--ink-2);text-wrap:balance;max-width:17ch}
 .rp .jline{display:none}
 .rp .jstops:has(.on) button:not(.on){opacity:.62}
 .rp .jstops button.on .jdot,.rp .jstops button:hover .jdot{background:var(--accent);border-color:var(--accent);transform:scale(1.25)}
 .rp .jstops button.on img,.rp .jstops button:hover img{filter:none;opacity:1}
-.rp .jcap{margin-top:28px;min-height:1.6em;margin-inline:auto;text-align:center;opacity:0;transform:translateY(6px)}
-.rp .jcap.in{opacity:1;transform:none;transition:opacity .35s var(--ease),transform .35s var(--ease)}
+.rp .jcap{margin-top:var(--s-6);min-height:1.6em;font-size:var(--t-body);color:var(--ink-2);opacity:0;transform:translateY(6px)}
+.rp .jcap.in{opacity:1;transform:none;transition:opacity var(--d-med) var(--ease),transform var(--d-med) var(--ease)}
 .rp .jcap b{color:var(--ink);font-weight:600}
-.rp .cvline{text-align:center;margin-top:6px}
+.rp .cvline{margin-top:var(--s-4)}
 .rp .intro .ph-only{display:none}
 
 /* how I work */
@@ -235,19 +235,19 @@
   .rp .card.all{display:block}
   .rp .card.all a{min-height:0;padding:16px 18px;flex-direction:row;align-items:center}
   .rp .card.all .k,.rp .card.all b{display:none}
-  .rp .jy{padding:12px 0 6px 100px}
+  .rp .journey{margin-top:var(--s-5)}
+  .rp .jy{padding:0 0 0 100px}
   .rp .jstops{grid-template-columns:1fr;gap:0}
   .rp .jstops li{transform:none!important}
-  .rp .jstops button{display:grid;grid-template-columns:1fr auto;grid-template-areas:"name yrs" "role role" "line line";align-items:baseline;justify-items:start;gap:0 12px;min-height:44px;padding:11px 0;text-align:left;position:relative}
-  .rp .jdot{position:absolute;left:-24px;top:17px}
+  .rp .jstops button{display:grid;grid-template-columns:1fr auto;grid-template-areas:"name yrs" "role role" "line line";align-items:baseline;justify-items:start;gap:0 var(--s-3);min-height:44px;padding:var(--s-3) 0;text-align:left;position:relative}
+  .rp .jdot{position:absolute;left:-24px;top:18px}
   .rp .jlogo{display:none}
   .rp .jstops b{grid-area:name}
   .rp .jstops small{grid-area:yrs;justify-self:end}
-  .rp .jrole{grid-area:role;max-width:none;text-wrap:pretty}
-  .rp .jline{grid-area:line;display:block;margin-top:2px;font:400 calc(var(--body-fs)*.88*var(--body-k))/1.45 var(--body-ff);color:var(--body-c)}
+  .rp .jrole{grid-area:role;max-width:none;color:var(--ink-3);text-wrap:pretty}
+  .rp .jline{grid-area:line;display:block;margin-top:var(--s-1);font:400 var(--t-small)/1.5 var(--f-text);color:var(--ink-2)}
   .rp .jstops:has(.on) button:not(.on){opacity:.72}
   .rp .jcap{display:none}
-  .rp .cvline{text-align:left}
   .rp .intro .ph-only{display:inline}.rp .intro .dt-only{display:none}
   .rp .mrows{grid-template-columns:1fr}
   .rp .posts li{flex-direction:column;gap:6px}
