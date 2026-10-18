@@ -19,7 +19,7 @@ export default function TopBar({ home = true, room = false }: { home?: boolean; 
         const s = document.getElementById(a.dataset.sec!);
         if (s && s.getBoundingClientRect().top <= y) on = a.dataset.sec!;
       }
-      if (scrollY + innerHeight >= document.documentElement.scrollHeight - 4) on = "contact";
+      if (scrollY > 0 && scrollY + innerHeight >= document.documentElement.scrollHeight - 4) on = "contact";
       for (const a of links) {
         a.classList.toggle("on", a.dataset.sec === on);
         if (a.dataset.sec === on) a.setAttribute("aria-current", "true");

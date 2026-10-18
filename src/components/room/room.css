@@ -253,6 +253,11 @@
   .rp .links{grid-template-columns:1fr 1fr}
 }
 
+@media (max-width:380px){
+  .rp .top{gap:var(--s-2);padding:0 8px 0 14px}
+  .rp .top nav a{padding:0 7px}
+}
+
 @media (prefers-reduced-motion:reduce){
   .rp *,.rp *::before,.rp *::after{transition-duration:0s!important;animation-duration:0s!important;transition-delay:0s!important}
 }
