@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import SubPage from "@/components/room/SubPage";
+import Shell from "@/components/work/Shell";
+import WorkCard from "@/components/work/WorkCard";
 import { WORK } from "@/components/room/work";
 
 export const metadata: Metadata = {
@@ -8,21 +9,34 @@ export const metadata: Metadata = {
 };
 
 export default function WorkIndex() {
+  const cases = WORK.filter((w) => w.kind !== "team");
+  const team = WORK.filter((w) => w.kind === "team");
   return (
-    <SubPage label="All work" title="Everything, with the limits written down.">
-      <ol className="worklist">
-        {WORK.map((w, i) => (
-          <li key={w.slug} id={w.slug}>
-            <span className="n">{String(i + 1).padStart(2, "0")}</span>
-            <div>
-              <p className="cmeta">{w.tag} · {w.year}</p>
-              <h3>{w.hook}<em>{w.hookEm}</em></h3>
-              <p className="wsum">{w.summary}</p>
-              {w.slug === "thesis" && <a className="read" href={w.href}>{w.cta}<span aria-hidden="true"> →</span></a>}
-            </div>
-          </li>
-        ))}
-      </ol>
-    </SubPage>
+    <Shell>
+      <section className="cs" aria-labelledby="h-all">
+        <p className="crumb"><a href="/">← Home</a></p>
+        <p className="label">All work · {WORK.length}</p>
+        <h1 id="h-all">Everything, with the limits <em>written down.</em></h1>
+        <p className="dek">Case studies I can show in full. The lit bars mark the layers I owned.</p>
+        <ol className="wgrid">
+          {cases.map((w, i) => <WorkCard key={w.slug} w={w} n={i + 1} />)}
+        </ol>
+        {team.length > 0 && (
+          <div className="wsub">
+            <h2 className="label">Team work</h2>
+            <p className="dek">Results that belong to a team. My part is named in each line.</p>
+            <ol className="trows">
+              {team.map((w) => (
+                <li key={w.slug} id={w.slug}>
+                  <h4>{w.hook}<em>{w.hookEm}</em></h4>
+                  <p className="cmeta">{w.tag} · {w.year}</p>
+                  <p>{w.line}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+      </section>
+    </Shell>
   );
 }
