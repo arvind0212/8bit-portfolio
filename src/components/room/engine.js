@@ -319,7 +319,7 @@ function drawFigure(g, pose, dir, k) {
     r(12, 10 + hy, 3, 1, C.hair2); r(17, 10 + hy, 3, 1, C.hair2);
     r(13, 11 + hy, 1, 1, C.white); r(14, 11 + hy, 1, 1, C.eye); r(18, 11 + hy, 1, 1, C.white); r(19, 11 + hy, 1, 1, C.eye);
     r(16, 13 + hy, 1, 1, C.skinD);
-    r(12, 14 + hy, 8, 2, C.skinD); r(13, 15 + hy, 6, 1, C.hair3); r(14, 14 + hy, 4, 1, C.mouth);
+    r(14, 14 + hy, 4, 1, C.mouth); r(13, 16 + hy, 6, 1, C.skinD);
   }
 }
 function frameFor(pose, dir, mirror, k) {
