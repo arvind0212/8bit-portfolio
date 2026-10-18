@@ -132,18 +132,20 @@
 .rp .jav{position:absolute;left:0;top:0;z-index:2;image-rendering:pixelated;pointer-events:none;will-change:transform}
 .rp .jstops{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;position:relative;z-index:1}
 .rp .jstops li:nth-child(1){transform:translateY(26px)}.rp .jstops li:nth-child(2){transform:translateY(16px)}.rp .jstops li:nth-child(3){transform:translateY(8px)}.rp .jstops li:nth-child(4){transform:translateY(2px)}.rp .jstops li:nth-child(6){transform:translateY(-4px)}
-.rp .jstops button{width:100%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 0 8px;border:0;background:none;cursor:pointer;text-align:center;transition:opacity .25s}
+.rp .jstops button{width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 4px 8px;border:0;background:none;color:inherit;cursor:pointer;text-align:center;transition:opacity .25s}
 .rp .jdot{width:14px;height:14px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);transition:background .25s,border-color .25s,transform .25s var(--ease)}
-.rp .jlogo{display:flex;gap:4px;align-items:center;height:30px;margin-top:6px}
-.rp .jlogo img{height:30px;width:auto;max-width:80px;object-fit:contain;filter:grayscale(1);opacity:.85;transition:filter .25s,opacity .25s}
+.rp .jlogo{display:flex;gap:4px;align-items:center;height:28px;margin:8px 0 6px}
+.rp .jlogo img{height:28px;width:auto;max-width:80px;object-fit:contain;filter:grayscale(1);opacity:.85;transition:filter .25s,opacity .25s}
 .rp .jlogo .jic{width:26px;height:26px;fill:none;stroke:var(--grey);stroke-width:1.6;stroke-linecap:round}
 .rp .jstops button.on .jic,.rp .jstops button:hover .jic{stroke:var(--accent)}
-.rp .jstops b{font:600 calc(var(--body-fs)*.86*var(--body-k))/1.2 var(--body-ff)}
+.rp .jstops b{font:600 calc(var(--body-fs)*.94*var(--body-k))/1.25 var(--body-ff);color:var(--ink)}
 .rp .jstops small{font:var(--label-fw) calc(var(--label-fs)*0.92*var(--label-k))/1 var(--label-ff);letter-spacing:var(--label-ls);color:var(--grey)}
+.rp .jrole{font:400 calc(var(--body-fs)*.8*var(--body-k))/1.4 var(--body-ff);color:var(--body-c);text-wrap:balance;max-width:17ch}
+.rp .jline{display:none}
 .rp .jstops:has(.on) button:not(.on){opacity:.62}
 .rp .jstops button.on .jdot,.rp .jstops button:hover .jdot{background:var(--accent);border-color:var(--accent);transform:scale(1.25)}
 .rp .jstops button.on img,.rp .jstops button:hover img{filter:none;opacity:1}
-.rp .jcap{margin-top:30px;min-height:1.6em;margin-inline:auto;text-align:center;opacity:0;transform:translateY(6px)}
+.rp .jcap{margin-top:28px;min-height:1.6em;margin-inline:auto;text-align:center;opacity:0;transform:translateY(6px)}
 .rp .jcap.in{opacity:1;transform:none;transition:opacity .35s var(--ease),transform .35s var(--ease)}
 .rp .jcap b{color:var(--ink);font-weight:600}
 .rp .cvline{text-align:center;margin-top:6px}
@@ -198,16 +200,18 @@
   .rp .card.all{display:block}
   .rp .card.all a{min-height:0;padding:16px 18px;flex-direction:row;align-items:center}
   .rp .card.all .k,.rp .card.all b{display:none}
-  .rp .jy{padding:46px 0 10px 158px}
+  .rp .jy{padding:12px 0 6px 100px}
   .rp .jstops{grid-template-columns:1fr;gap:0}
   .rp .jstops li{transform:none!important}
-  .rp .jstops button{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"logo name" "logo yrs";align-items:center;justify-items:start;gap:0 10px;min-height:66px;padding:0;text-align:left;position:relative}
-  .rp .jdot{position:absolute;left:-26px;top:50%;margin-top:-7px}
-  .rp .jlogo{grid-area:logo;margin:0;height:auto}
-  .rp .jlogo img{height:22px;max-width:56px}
-  .rp .jstops b{grid-area:name;align-self:end}
-  .rp .jstops small{grid-area:yrs;align-self:start;margin-top:3px}
-  .rp .jcap{text-align:left;margin-top:16px}
+  .rp .jstops button{display:grid;grid-template-columns:1fr auto;grid-template-areas:"name yrs" "role role" "line line";align-items:baseline;justify-items:start;gap:0 12px;min-height:44px;padding:11px 0;text-align:left;position:relative}
+  .rp .jdot{position:absolute;left:-24px;top:17px}
+  .rp .jlogo{display:none}
+  .rp .jstops b{grid-area:name}
+  .rp .jstops small{grid-area:yrs;justify-self:end}
+  .rp .jrole{grid-area:role;max-width:none;text-wrap:pretty}
+  .rp .jline{grid-area:line;display:block;margin-top:2px;font:400 calc(var(--body-fs)*.88*var(--body-k))/1.45 var(--body-ff);color:var(--body-c)}
+  .rp .jstops:has(.on) button:not(.on){opacity:.72}
+  .rp .jcap{display:none}
   .rp .cvline{text-align:left}
   .rp .intro .ph-only{display:inline}.rp .intro .dt-only{display:none}
   .rp .mrows{grid-template-columns:1fr}

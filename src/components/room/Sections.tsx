@@ -53,7 +53,7 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
       <section className="sec" id="journey" aria-labelledby="h-journey">
         <p className="label"><span className="n">02</span>Journey</p>
         <h2 id="h-journey">The road here.</h2>
-        <p className="intro"><span className="dt-only">Hover a stop to walk there.</span><span className="ph-only">Tap a stop to walk there.</span></p>
+        <p className="intro">From Muscat to Stockholm, and from consulting to building. <span className="dt-only">Hover a stop to walk there.</span><span className="ph-only">Tap a stop to walk there.</span></p>
         <div className="journey" id="jroot"></div>
         <p className="cvline"><a className="read" href={CV} target="_blank" rel="noopener noreferrer">Full CV<span aria-hidden="true"> ↗</span></a></p>
       </section>

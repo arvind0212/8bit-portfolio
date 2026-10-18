@@ -318,12 +318,12 @@ function walker(i, k, dir) {
 }
 
 const STOPS = [
-  { name: 'Muscat', yrs: 'Childhood', line: 'Born in Muscat, Oman. Football first.', act: 'kicking a football' },
-  { name: 'BMSCE', yrs: '2016–20', line: 'Engineering in Bangalore.', act: 'reading', logos: [['bmsce.png', 'BMS College of Engineering']] },
-  { name: 'Quantiphi', yrs: '2020–24', line: 'Business analyst to TPM, scoping healthcare data work.', act: 'presenting at a whiteboard', logos: [['quantiphi.png', 'Quantiphi']] },
-  { name: 'MSc', yrs: '2024–26', line: 'Joint master’s at KI, KTH and Stockholm University.', act: 'at a laptop with a thesis chart', logos: [['karolinska.png', 'Karolinska Institutet'], ['kth.png', 'KTH'], ['stockholm-university.png', 'Stockholm University']] },
-  { name: 'KI · Arkus AI', yrs: '2025–26', line: 'A prescription pipeline at KI, agent tooling at Arkus AI.', act: 'plugging in an agent', logos: [['karolinska.png', 'Karolinska Institutet'], ['arkus-ai.png', 'Arkus AI']] },
-  { name: 'Now', yrs: 'Stockholm', line: 'Building in public with my own agent harness.', act: 'with a coffee in the snow' }
+  { name: 'Muscat', yrs: 'Until 2016', role: 'Born and raised', line: 'Grew up in Oman. Football first.', act: 'kicking a football' },
+  { name: 'BMSCE', yrs: '2016–20', role: 'B.E. Computer Science', line: 'Engineering in Bangalore.', act: 'reading', logos: [['bmsce.png', 'BMS College of Engineering']] },
+  { name: 'Quantiphi', yrs: '2020–24', role: 'Business Analyst → Senior BA', line: 'Healthcare data on Google Cloud, from delivery to deals.', act: 'presenting at a whiteboard', logos: [['quantiphi.png', 'Quantiphi']] },
+  { name: 'Stockholm', yrs: '2024–26', role: 'MSc Biostatistics & Data Science', line: 'Left consulting to build as AI took off.', act: 'at a laptop with a thesis chart', logos: [['karolinska.png', 'Karolinska Institutet'], ['kth.png', 'KTH'], ['stockholm-university.png', 'Stockholm University']] },
+  { name: 'KI · Arkus AI', yrs: '2025–26', role: 'Research assistant, AI engineer', line: 'A prescription pipeline at KI. Agent tools at Arkus AI.', act: 'plugging in an agent', logos: [['karolinska.png', 'Karolinska Institutet'], ['arkus-ai.png', 'Arkus AI']] },
+  { name: 'Now', yrs: '2026', role: 'Building in public', line: 'Writing up what I build, in Stockholm.', act: 'with a coffee in the snow' }
 ];
 
 const cache = new Map();
@@ -343,9 +343,9 @@ export function initJourney(root, base = '/images/journey/') {
   const cap = document.createElement('p'); cap.className = 'jcap'; cap.setAttribute('aria-live', 'polite');
   const btns = STOPS.map((st, i) => {
     const li = document.createElement('li'); const b = document.createElement('button'); b.type = 'button';
-    b.setAttribute('aria-label', st.name + ', ' + st.yrs + ': ' + st.line);
+    b.setAttribute('aria-label', st.name + ', ' + st.yrs + ', ' + st.role + '. ' + st.line);
     const mk = st.logos ? '<span class="jlogo">' + st.logos.map(([f, alt]) => '<img src="' + base + f + '" alt="' + alt + '" loading="lazy">').join('') + '</span>' : '<span class="jlogo"><svg class="jic" viewBox="0 0 24 24" aria-hidden="true"><path d="' + (i ? 'M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.5 4.5 12 7l2.5-2.5M9.5 19.5 12 17l2.5 2.5' : 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4') + '"/></svg></span>';
-    b.innerHTML = '<i class="jdot"></i>' + mk + '<b>' + st.name + '</b><small>' + st.yrs + '</small>';
+    b.innerHTML = '<i class="jdot"></i>' + mk + '<small>' + st.yrs + '</small><b>' + st.name + '</b><span class="jrole">' + st.role + '</span><span class="jline">' + st.line + '</span>';
     li.appendChild(b); ol.appendChild(li); return b;
   });
   wrap.append(svg, av, ol); root.append(wrap, cap);
@@ -354,7 +354,7 @@ export function initJourney(root, base = '/images/journey/') {
   function layout() {
     vertical = innerWidth <= 760;
     const W = wrap.clientWidth;
-    scale = vertical ? 1.5 : W < 900 ? 1.75 : 2;
+    scale = vertical ? 1.125 : W < 900 ? 1.75 : 2;
     const S = SW * scale;
     av.style.width = av.style.height = S + 'px';
     const rects = btns.map(b => b.querySelector('.jdot').getBoundingClientRect()), wr = wrap.getBoundingClientRect();
@@ -375,7 +375,7 @@ export function initJourney(root, base = '/images/journey/') {
     const [x, y] = lerpPt(pos), S = SW * scale, i = Math.round(pos);
     let ox = 0;
     if (mode !== 'walk' && !vertical) ox = (29 - FIG[i][0]) * scale;
-    const left = vertical ? x - S - 24 : x - 36 * scale + ox, top = vertical ? y - S * .62 : y - 69 * scale - 10;
+    const left = vertical ? Math.max(0, x - S - 8) : x - 36 * scale + ox, top = vertical ? y - S * .62 : y - 69 * scale - 10;
     av.style.transform = 'translate3d(' + left.toFixed(1) + 'px,' + top.toFixed(1) + 'px,0)';
   }
   function draw(key, make) { g.clearRect(0, 0, SW, SH); g.drawImage(frame(key, make), 0, 0); }
@@ -384,7 +384,7 @@ export function initJourney(root, base = '/images/journey/') {
   function mark(i) {
     btns.forEach((b, j) => { b.classList.toggle('on', j === i); b.setAttribute('aria-pressed', String(j === i)); });
     const st = STOPS[i]; cap.classList.remove('in'); void cap.offsetWidth;
-    cap.innerHTML = '<b>' + st.name + ' · ' + st.yrs + '</b> ' + st.line; cap.classList.add('in');
+    cap.innerHTML = '<b>' + st.name + '</b> ' + st.line; cap.classList.add('in');
   }
   function go(i) {
     if (i === target && mode !== 'idle') return;
