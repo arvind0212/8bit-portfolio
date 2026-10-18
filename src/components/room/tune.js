@@ -1,5 +1,5 @@
 /* type tuner: per-role font dials plus a bounding-box editor; returns a cleanup that removes everything it added */
-const KEY='rp-tune-v1';
+const KEY='rp-tune-v2';
 const GF='https://fonts.googleapis.com/css2?family=';
 const FONTS=[
   ['Serif',[
@@ -29,14 +29,15 @@ const FONTS=[
 const FONT=Object.fromEntries(FONTS.flatMap(([,l])=>l.map(([n,v,g])=>[n,{v,g}])));
 
 const ROLES=[
-  {k:'label',n:'Labels',sel:'.label,.cmeta,.metarow,.hero .name,.jstops small,.draft,.card.all .k,footer',d:{ff:'Geist Mono',fs:13,fw:500,lh:1.3,ls:.04,dk:76,mw:0},fs:[10,18,.5]},
-  {k:'ui',n:'Nav & buttons',sel:'.top nav a,.top .who b,.btn,.read,.links a',d:{ff:'Geist',fs:16,fw:700,lh:1.2,ls:0,dk:100,mw:0},fs:[12,22,.5]},
-  {k:'card',n:'Case-study text',sel:'.cline,.wsum',d:{ff:'Geist',fs:17,fw:400,lh:1.55,ls:0,dk:84,mw:60},fs:[13,22,.5]},
-  {k:'hero',n:'Hero line',sel:'.value',d:{ff:'Geist',fs:20,fw:400,lh:1.5,ls:0,dk:100,mw:34},fs:[14,30,.5]},
-  {k:'body',n:'Body',sel:'.intro,.mrows p,.fit,.jcap,.jstops b',d:{ff:'Geist',fs:17,fw:400,lh:1.6,ls:0,dk:86,mw:68},fs:[14,22,.5]},
-  {k:'head',n:'Headings',sel:'h1,h2,h3,.card.all b,.posts .pt',d:{ff:'Instrument Serif',fs:38,fw:400,lh:1.1,ls:-.01,dk:100,mw:0},fs:[22,60,1]},
+  {k:'label',n:'Labels',sel:'.label,.cmeta,.eyebrow,.facts .k,.jstops small,.draft,.card.all .k,footer',d:{ff:'Geist Mono',fs:13,fw:500,lh:1.3,ls:.06,dk:74,mw:0},fs:[10,18,.5]},
+  {k:'ui',n:'Nav & buttons',sel:'.top nav a,.top .who b,.btn,.read,.links a',d:{ff:'Geist',fs:15,fw:600,lh:1.2,ls:0,dk:100,mw:0},fs:[12,22,.5]},
+  {k:'card',n:'Case-study text',sel:'.cline,.wsum',d:{ff:'Geist',fs:18,fw:400,lh:1.55,ls:0,dk:88,mw:56},fs:[13,22,.5]},
+  {k:'hero',n:'Hero line',sel:'.value',d:{ff:'Geist',fs:22,fw:400,lh:1.45,ls:-.005,dk:90,mw:36},fs:[14,30,.5]},
+  {k:'body',n:'Body',sel:'.intro,.mrows p,.fit,.jcap,.jstops b,.facts b,.facts span',d:{ff:'Geist',fs:18,fw:400,lh:1.6,ls:0,dk:88,mw:62},fs:[14,22,.5]},
+  {k:'head',n:'Headings',sel:'h2,h3,.card.all b,.posts .pt',d:{ff:'Instrument Serif',fs:44,fw:400,lh:1.08,ls:-.01,dk:100,mw:0},fs:[22,64,1]},
+  {k:'disp',n:'Hero headline',sel:'h1',d:{ff:'Instrument Serif',fs:88,fw:400,lh:1,ls:-.015,dk:100,mw:0},fs:[40,128,1]},
 ];
-const ORDER=['head','hero','body','card','label','ui'];
+const ORDER=['disp','head','hero','body','card','label','ui'];
 const ROLE=Object.fromEntries(ROLES.map(r=>[r.k,r]));
 const DIALS=[
   ['fs','Size','px'],['fw','Weight','',[300,800,100]],['lh','Line height','',[1,2.2,.02]],
@@ -44,16 +45,16 @@ const DIALS=[
 ];
 const PRESETS={
   Current:{},
-  Readable:{head:{fs:40},hero:{ff:'Inter',fs:21,lh:1.55},body:{ff:'Inter',fs:18,lh:1.65,dk:90,mw:66},card:{ff:'Inter',fs:17.5,lh:1.6,dk:88},label:{ff:'JetBrains Mono',fs:13,dk:80,ls:.02},ui:{ff:'Inter'}},
-  Editorial:{head:{fs:42,lh:1.05},hero:{ff:'Newsreader',fs:23,lh:1.4},body:{ff:'Source Serif 4',fs:18.5,lh:1.65,dk:90,mw:64},card:{ff:'Source Serif 4',fs:18,lh:1.6,dk:88},label:{ff:'IBM Plex Mono',fs:12.5,ls:.06},ui:{ff:'DM Sans'}},
-  Before:{body:{dk:70,mw:0},card:{fs:15.5,lh:1.6,dk:70,mw:0},label:{fs:12,dk:70,ls:.06}},
+  Inter:{hero:{ff:'Inter'},body:{ff:'Inter'},card:{ff:'Inter'},ui:{ff:'Inter'},label:{ff:'JetBrains Mono',ls:.04}},
+  Editorial:{hero:{ff:'Newsreader',fs:24,lh:1.38},body:{ff:'Source Serif 4',fs:19,lh:1.62},card:{ff:'Source Serif 4',fs:18.5,lh:1.58},label:{ff:'IBM Plex Mono'},ui:{ff:'DM Sans'}},
+  Before:{disp:{fs:68,lh:1.02,ls:-.01},head:{fs:38,lh:1.1},hero:{fs:20,lh:1.5,dk:100,mw:34},body:{fs:17,dk:86,mw:68},card:{fs:17,dk:84,mw:60},label:{fs:13,ls:.04,dk:76},ui:{fs:16,fw:700}},
 };
 const fresh=()=>Object.fromEntries(ROLES.map(r=>[r.k,{...r.d}]));
 const preset=name=>{const s=fresh();for(const [k,v] of Object.entries(PRESETS[name]||{}))Object.assign(s[k],v);return s};
 const round=(v,st)=>+(Math.round(v/st)*st).toFixed(3);
 const fmt=(p,v)=>p==='fs'?v+'px':p==='ls'?v+'em':p==='dk'?v+'%':p==='mw'?(v?v+'ch':'none'):p==='ff'?FONT[v].v:String(v);
 const show=(p,v)=>p==='mw'&&!v?'none':p==='ls'?v.toFixed(3)+'em':p==='lh'?v.toFixed(2):v+({fs:'px',dk:'%',mw:'ch'}[p]||'');
-const COLORS={head:'#B4462F',hero:'#7A4FB8',body:'#1F6F4A',card:'#0F6D8C',label:'#A8742A',ui:'#C2337A',text:'#6B6B6B'};
+const COLORS={disp:'#8A2F1F',head:'#B4462F',hero:'#7A4FB8',body:'#1F6F4A',card:'#0F6D8C',label:'#A8742A',ui:'#C2337A',text:'#6B6B6B'};
 const TEXT='h1,h2,h3,p,a,button,small,b,span,li,em,label,footer';
 const EL=[['mw','Width','px',[80,1200,1]],['fs','Size','px',[10,90,.5]],['fw','Weight','',[300,800,100]],['lh','Line height','',[.9,2.2,.02]]];
 const NUDGE=[['mt','Margin top'],['mb','Margin bottom'],['ml','Margin left'],['pd','Padding']];
@@ -113,7 +114,7 @@ export function initTune(page,{open}={}){
   const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch{return null}};
   const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({r:st.r,e:st.e,open:st.open,role:st.role,side:st.side}))}catch{}};
   const saved=load();
-  const st={r:fresh(),e:{},open:!!open||!!saved?.open,role:saved?.role||'body',side:saved?.side||'l',boxes:false,sel:null};
+  const st={r:fresh(),e:{},open:!!open||!!saved?.open,role:saved?.role||'body',side:saved?.side||'r',boxes:false,sel:null};
   if(saved?.r)for(const k of Object.keys(st.r))Object.assign(st.r[k],saved.r[k]||{});
   if(saved?.e)st.e=saved.e;
 

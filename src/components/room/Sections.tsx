@@ -1,6 +1,12 @@
 import type { ReactNode } from "react";
 import { WORK } from "./work";
 
+const FACTS = [
+  ["Before", "Quantiphi, 2020–24", "Healthcare AI, from the deal to delivery"],
+  ["Studied", "Karolinska Institutet", "MSc, Biostatistics and Data Science"],
+  ["Now", "Building agents", "In Stockholm, in public"],
+];
+
 export const CV = "https://drive.google.com/file/d/1NuS61X_awnnDSR8uW-5jEng5P1QcZ2f3/view?usp=drive_link";
 
 /* the site itself: V7 draws the room into the hero and contact slots, the desk version shows it on the monitor */
@@ -9,12 +15,17 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
   return (
     <main className="col" id="top">
       <section className="hero" id="hero" aria-labelledby="h1">
-        <span className="name">Arvind Guruprasad · Stockholm</span>
-        <h1 id="h1">Strategy <em>that ships.</em></h1>
+        <p className="eyebrow"><b>Arvind Guruprasad</b><span>Stockholm, Sweden</span><span className="avail"><i aria-hidden="true"></i>Open to new roles</span></p>
+        <h1 id="h1">Strategy that <em>ships.</em></h1>
         {room && <div className="slot" id="slot" aria-hidden="true"></div>}
         <p className="value">I&apos;m a <b>tech generalist</b>. I turn strategy into working systems, from scoping the deal to writing the agent.</p>
-        <p className="metarow"><span>Applied AI</span><span>Healthcare</span><span>Stockholm</span></p>
-        <a className="btn" href="#work">See the work<span aria-hidden="true">↓</span></a>
+        <div className="acts">
+          <a className="btn" href="#work">See the work<span aria-hidden="true">↓</span></a>
+          <a className="read" href="#contact">Get in touch<span aria-hidden="true">→</span></a>
+        </div>
+        <ul className="facts" aria-label="At a glance">
+          {FACTS.map(([k, b, line]) => <li key={k}><span className="k">{k}</span><b>{b}</b><span>{line}</span></li>)}
+        </ul>
       </section>
 
       <section className="sec" id="work" aria-labelledby="h-work">
