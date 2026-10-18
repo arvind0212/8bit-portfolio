@@ -22,14 +22,15 @@ export default function DeskPage() {
   }, []);
   return (
     <div ref={ref} data-mode="scene" className={["rp", "dk", instrument.variable, GeistSans.variable, GeistMono.variable, pix.variable].join(" ")}>
-      <div className="scene" id="scene">
-        <div className="room" id="room" role="img" aria-label="Pixel art of Arvind's room in Stockholm. It builds itself, Arvind walks in and sits at his desk, and the view moves into his monitor, where the site is."></div>
+      <div className="scene" id="scene" role="img" aria-labelledby="roomdesc">
+        <p className="sr" id="roomdesc">A voxel model of Arvind&apos;s room in Stockholm builds itself, and the view moves into the monitor on his desk, where the site is.</p>
         <button type="button" className="skip" id="skip">Skip<span aria-hidden="true"> »</span></button>
         <div className="roomhint" id="roomhint" hidden>
           <span>Click the monitor to sit back down.</span>
           <button type="button" id="sitback">Back to the desk</button>
         </div>
       </div>
+      <canvas className="dissolve" id="dissolve" hidden aria-hidden="true"></canvas>
       <div className="screen" id="screen">
         <div className="site" id="site">
           <header className="top">

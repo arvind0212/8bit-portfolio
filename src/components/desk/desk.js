@@ -1,51 +1,37 @@
-import { createRoom } from '../room/engine';
+import * as THREE from 'three';
+import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
+import { buildWorld, ORDER, SCREEN, ROOM } from './world';
 import { initJourney } from '../room/journey';
 import { initDeskTune } from './dtune';
+import { bezier } from './bezier';
 
-/* The desk home: the room builds itself, the character sits down, the camera eases into the
-   monitor and the monitor becomes the site. "Room" eases back out. Returns a cleanup. */
+/* The desk home: a voxel room drops into place while the camera is already moving, and the
+   flight ends square-on to the monitor, whose screen becomes the site. "Room" flies back out.
+   Returns a cleanup. */
 
 export const DEF = {
-  delay: 300, overlap: .45, steps: 12, snap: 1,
-  floorDur: 520, popFrom: .55,
-  wallDur: 620, wallStagger: 140,
-  hangDur: 420, hangStagger: 60,
-  dropDur: 640, dropStagger: 80, dropH: 64, fallPart: .62, squash: .22,
-  charMode: 'walk', walk: 2.2, charDelay: 120, hold: 350,
-  camDur: 2200, fit: .9, phoneFit: 1.15, yOff: 0, panLead: .12, unshearStart: .3, unshearEnd: 1,
-  screenOn0: .3, screenOn1: .62, near0: .08, near1: .38, over: 1.06, backMul: .85,
+  delay: 250, overlap: .5, steps: 0, snap: 1, pixel: 2,
+  floorDur: 480, popFrom: .3,
+  wallDur: 560, wallStagger: 120,
+  hangDur: 380, hangStagger: 55,
+  dropDur: 620, dropStagger: 70, dropH: 26, fallPart: .62, squash: .18,
+  camAt: 1300, camDur: 2600, fit: 1.05, phoneFit: .95,
+  az0: 42, el0: 30, fov0: 14, fov1: 38, el1: 0,
+  panLead: .1, perspLead: .25, turnStart: 0, turnEnd: .85,
+  over: 1.04, backMul: .85,
+  screenMode: 'live', screenOn0: .45, screenOn1: .8,
+  glow0: .55, glow1: .95, fadeMs: 420, dissolveMs: 650, tile: 18,
   skipRate: 4, skipRamp: 260,
   popEase: [.34, 1.56, .64, 1], riseEase: [.22, 1, .36, 1], dropEase: [.55, 0, 1, .45], landEase: [.3, 1.8, .5, 1], camEase: [.65, 0, .25, 1]
 };
 
-const PHASES = [
-  { k: 'floor', fx: 'pop', names: ['floor'] },
-  { k: 'wall', fx: 'rise', names: ['wallR', 'wallL'] },
-  { k: 'hang', fx: 'pop', names: ['window', 'board', 'fThesis', 'fAmbient', 'fHq', 'fHouse', 'postcard', 'door', 'rug', 'mat'] },
-  { k: 'drop', fx: 'drop', names: ['desk', 'chair', 'bench', 'term', 'plant'] },
-  { k: 'drop', fx: 'drop', names: ['monitor', 'keys', 'lamp', 'mug', 'bun', 'handheld', 'ball'] }
-];
-
-/* the monitor screen in room pixels: top-left corner, 22 along +x (which runs down-right), 16 down */
-const SO = [200, 116], SW = 22, SH = 16, SC = [SO[0] + SW / 2, SO[1] + SW / 4 + SH / 2];
-
-export function bezier([x1, y1, x2, y2]) {
-  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
-  const X = t => ((ax * t + bx) * t + cx) * t, Y = t => ((ay * t + by) * t + cy) * t, dX = t => (3 * ax * t + 2 * bx) * t + cx;
-  return x => {
-    if (x <= 0) return 0; if (x >= 1) return 1;
-    let t = x;
-    for (let i = 0; i < 8; i++) { const e = X(t) - x; if (Math.abs(e) < 1e-6) return Y(t); const d = dX(t); if (Math.abs(d) < 1e-6) break; t -= e / d; }
-    let a = 0, b = 1; t = x;
-    for (let i = 0; i < 40; i++) { const v = X(t); if (Math.abs(v - x) < 1e-6) break; if (v < x) a = t; else b = t; t = (a + b) / 2; }
-    return Y(t);
-  };
-}
-
-const KEY = 'dk-tune-v1', SEEN = 'dk-seen';
+const KEY = 'dk-tune-v2', SEEN = 'dk-seen';
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const lerp = (a, b, t) => a + (b - a) * t;
 const win = (t, a, b) => b > a ? clamp((t - a) / (b - a)) : t >= a ? 1 : 0;
+const D2R = Math.PI / 180;
+
+function webgl() { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } }
 
 export function initDesk(page, { tune = false } = {}) {
   const RM = matchMedia('(prefers-reduced-motion: reduce)');
@@ -57,169 +43,192 @@ export function initDesk(page, { tune = false } = {}) {
   const curves = () => { E = Object.fromEntries(['popEase', 'riseEase', 'dropEase', 'landEase', 'camEase'].map(k => [k, bezier(S[k])])); };
   curves();
 
-  const scene = $('#scene'), screen = $('#screen'), site = $('#site'), hint = $('#roomhint');
-  const Room = createRoom(), ID = Room.ID;
-  const tip = (id, label, t) => ({ id, label, tip: t, onClick: () => {} });
-  const hotspots = [
-    { id: ID.desk, label: 'Sit at the desk and open the site', tip: 'sit back down', onClick: () => enter() },
-    tip(ID.board, 'Whiteboard', 'the whiteboard'), tip(ID.bench, 'Workbench', 'the workbench'), tip(ID.term, 'Terminal', 'the terminal'),
-    tip(ID.window, 'Window onto Stockholm', 'stockholm, outside'), tip(ID.door, 'Door', 'the door'), tip(ID.fThesis, 'Framed picture', 'the thesis'),
-    tip(ID.fAmbient, 'Framed picture', 'ambient island'), tip(ID.mug, 'Fika mug', 'fika. non-negotiable.'), tip(ID.ball, 'Football', 'corner kicks, mostly missed'),
-    tip(ID.plant, 'Plant', 'watered on sundays'), tip(ID.postcard, 'Postcard from Muscat', 'postcard from muscat')
-  ];
+  const scene3 = $('#scene'), screen = $('#screen'), site = $('#site'), hint = $('#roomhint'), dis = $('#dissolve');
+  const GL = webgl();
 
-  /* state: intro (building, character) → in (camera) → site; out (camera back) → room */
-  let mode = 'intro', vt = 0, lastNow = 0, rate = 1, rateT = 1, plan = null, pieces = [], bounds = null;
-  let camStart = Infinity, outStart = 0, camT = 0, charAt = Infinity, charShown = false, saved = 0;
+  /* three.js: the world, a WebGL renderer for it and a CSS3D renderer that carries the site on the screen */
+  const W = GL ? buildWorld() : null;
+  const camera = new THREE.PerspectiveCamera(S.fov0, innerWidth / innerHeight, .5, 3000);
+  const renderer = GL ? new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' }) : null;
+  const css = new CSS3DRenderer(), cssScene = new THREE.Scene();
+  if (GL) {
+    renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.domElement.className = 'gl'; scene3.prepend(renderer.domElement);
+  }
+  css.domElement.className = 'css3d'; scene3.insertBefore(css.domElement, scene3.querySelector('.skip'));
+  const cssObj = new CSS3DObject(screen);
+  cssObj.position.copy(SCREEN.c);
+  const home = screen.parentNode, homeNext = screen.nextSibling;
 
+  let vw = innerWidth, vh = innerHeight;
+  function size() {
+    vw = innerWidth; vh = innerHeight;
+    if (GL) { renderer.setPixelRatio(Math.min(devicePixelRatio, 2) / S.pixel); renderer.setSize(vw, vh, false); renderer.domElement.style.width = vw + 'px'; renderer.domElement.style.height = vh + 'px'; }
+    css.setSize(vw, vh); camera.aspect = vw / vh;
+    cssObj.scale.setScalar(k());
+    if (place === 'css3d') { screen.style.width = vw + 'px'; screen.style.height = vh + 'px'; }
+    if (dis.width && place === 'overlay') sizeDissolve();
+  }
+  /* world units per CSS pixel for the site on the screen: at the end of the flight the site is exactly the viewport */
+  const k = () => Math.min(SCREEN.w / vw, SCREEN.h / vh) / S.over;
+
+  /* camera: target, framing height, field of view and angle each eased from the room view to square-on at the screen */
+  const T0 = new THREE.Vector3(), T1 = SCREEN.c.clone(), T = new THREE.Vector3(), dir = new THREE.Vector3();
+  function cam(t) {
+    const a = vw / vh;
+    T0.copy(ROOM.center);
+    const h0 = 2 * ROOM.radius * Math.max(1, .8 / a) / (a < 1 ? S.phoneFit : S.fit), h1 = vh * k();
+    const pz = E.camEase(t), pt = E.camEase(clamp(t * (1 + S.panLead))), pp = E.camEase(clamp(t * (1 + S.perspLead))), pa = E.camEase(win(t, S.turnStart, S.turnEnd));
+    const fov = lerp(S.fov0, S.fov1, pp), h = Math.exp(lerp(Math.log(h0), Math.log(h1), pz));
+    const az = lerp(S.az0, 0, pa) * D2R, el = lerp(S.el0, S.el1, pa) * D2R;
+    T.lerpVectors(T0, T1, pt);
+    const d = h / (2 * Math.tan(fov * D2R / 2));
+    dir.set(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el));
+    camera.fov = fov; camera.position.copy(T).addScaledVector(dir, d); camera.lookAt(T); camera.updateProjectionMatrix();
+    W && (W.glow.opacity = S.screenMode === 'glow' ? win(t, S.glow0, S.glow1) : 0);
+    if (place === 'css3d') screen.style.opacity = S.screenMode === 'live' ? win(t, S.screenOn0, S.screenOn1).toFixed(3) : '0';
+  }
+
+  /* build plan: phases overlap; each object has a start time and a duration */
+  let plan = null;
   function makePlan() {
     const at = {}; let t = S.delay, end = 0;
-    for (const ph of PHASES) {
+    for (const ph of ORDER) {
       const dur = S[ph.k + 'Dur'], stg = ph.k === 'floor' ? 0 : S[ph.k + 'Stagger'];
-      ph.names.forEach((n, i) => { at[n] = { t0: t + i * stg, dur, fx: ph.fx }; });
+      ph.names.forEach((n, i) => { at[n] = { t0: t + i * stg, dur }; });
       const e = t + (ph.names.length - 1) * stg + dur; end = Math.max(end, e);
       t = e - S.overlap * (e - t);
     }
     return { at, end };
   }
-  function measure(list) {
-    let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
-    for (const p of list) { x0 = Math.min(x0, p.x); y0 = Math.min(y0, p.y); x1 = Math.max(x1, p.x + p.w); y1 = Math.max(y1, p.y + p.h); }
-    return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
-  }
   const q = (u, dur) => { if (!S.steps) return u; const n = dur / 1000 * S.steps; return Math.floor(u * n) / n; };
-
-  /* one piece at virtual time vt */
-  function pose(p) {
-    const a = plan.at[p.name], st = p.el.style;
+  function pose(it) {
+    const a = plan.at[it.name], g = it.group;
     if (!a) return;
-    const u = clamp(q((vt - a.t0) / a.dur, a.dur), 0, 1), s = room ? room.scale : 2;
-    if (vt < a.t0) { st.visibility = 'hidden'; return; }
-    st.visibility = '';
-    if (u >= 1) { st.transform = ''; st.clipPath = ''; return; }
-    if (a.fx === 'pop') {
-      const k = lerp(S.popFrom, 1, E.popEase(u));
-      st.transformOrigin = '50% 70%'; st.transform = 'scale(' + k.toFixed(4) + ')';
-    } else if (a.fx === 'rise') {
-      let r = (1 - E.riseEase(u)) * p.h; if (S.snap) r = Math.round(r);
-      st.clipPath = 'inset(' + (r * s).toFixed(1) + 'px 0 0 0)';
-    } else {
+    if (vt < a.t0) { g.visible = false; return; }
+    g.visible = true;
+    const u = clamp(q((vt - a.t0) / a.dur, a.dur));
+    g.position.copy(it.base); g.scale.set(1, 1, 1);
+    if (u >= 1) return;
+    if (it.fx === 'pop') g.scale.setScalar(Math.max(.001, lerp(S.popFrom, 1, E.popEase(u))));
+    else if (it.fx === 'rise') { let e = E.riseEase(u); if (S.snap) e = Math.round(e * it.h) / it.h; g.scale.y = Math.max(.001, e); }
+    else {
       const f = S.fallPart;
-      if (u < f) {
-        let y = -S.dropH * (1 - E.dropEase(u / f)); if (S.snap) y = Math.round(y);
-        st.transformOrigin = '50% 100%'; st.transform = 'translateY(' + (y * s) + 'px)';
-      } else {
-        const sy = 1 - S.squash * (1 - E.landEase((u - f) / (1 - f))), sx = 1 + (1 - sy) * .6;
-        st.transformOrigin = '50% 100%'; st.transform = 'scale(' + sx.toFixed(4) + ',' + sy.toFixed(4) + ')';
-      }
+      if (u < f) { let y = S.dropH * (1 - E.dropEase(u / f)); if (S.snap) y = Math.round(y); g.position.y += y; }
+      else { const sy = 1 - S.squash * (1 - E.landEase((u - f) / (1 - f))), sx = 1 + (1 - sy) * .6; g.scale.set(sx, sy, sx); }
     }
   }
-  function poseAll() { for (const p of pieces) pose(p); }
-  function settle() { for (const p of pieces) { p.el.style.visibility = ''; p.el.style.transform = ''; p.el.style.clipPath = ''; } }
+  const poseAll = () => { if (W) for (const it of Object.values(W.items)) pose(it); };
+  const settle = () => { if (W) for (const it of Object.values(W.items)) { it.group.visible = true; it.group.position.copy(it.base); it.group.scale.set(1, 1, 1); } };
 
-  /* camera: one focal point (the screen centre) carried from where it sits in the room view to the
-     middle of the viewport, log-scale zoom, and a shear that turns the iso screen face square-on */
-  function geom() {
-    const s = room.scale, vw = innerWidth, vh = innerHeight, B = bounds;
-    const sc0 = Math.min(vw / (B.w * s), vh / (B.h * s)) * (vw <= 760 ? S.phoneFit : S.fit);
-    const F = [SC[0] * s, SC[1] * s];
-    const ox = vw / 2 - (B.x + B.w / 2) * s * sc0, oy = vh / 2 - (B.y + B.h / 2) * s * sc0 + S.yOff * vh;
-    const sc1 = Math.max(vw / (SW * s), vh / (SH * s)) * S.over;
-    return { vw, vh, F, sc0, sc1, C0: [ox + sc0 * F[0], oy + sc0 * F[1]], C1: [vw / 2, vh / 2] };
-  }
-  function cam() {
-    if (!room || !bounds) return null;
-    const g = geom(), t = camT;
-    const pz = E.camEase(t), pc = E.camEase(clamp(t * (1 + S.panLead))), pu = E.camEase(win(t, S.unshearStart, S.unshearEnd));
-    const sc = Math.exp(lerp(Math.log(g.sc0), Math.log(g.sc1), pz)), h = -.5 * pu;
-    const C = [lerp(g.C0[0], g.C1[0], pc), lerp(g.C0[1], g.C1[1], pc)];
-    const k = sc / g.sc1, sh = k * (h + .5);
-    screen.style.transform = 'matrix(' + [k, sh, 0, k, C[0] - k * g.C1[0], C[1] - sh * g.C1[0] - k * g.C1[1]].map(n => n.toFixed(5)).join(',') + ')';
-    const on = win(t, S.screenOn0, S.screenOn1); screen.style.opacity = on.toFixed(3); screen.style.visibility = on > 0 ? 'visible' : 'hidden';
-    const near = 1 - win(t, S.near0, S.near1);
-    if (charShown) room.char.style.opacity = near.toFixed(3);
-    for (const p of pieces) if (p.layer === 2) p.el.style.opacity = near.toFixed(3);
-    return { m: [sc, sc * h, 0, sc, C[0] - sc * g.F[0], C[1] - sc * (h * g.F[0] + g.F[1])] };
+  /* where the site element lives: in page flow, on the 3D screen, or fixed over the viewport */
+  let place = 'flow';
+  function setPlace(p) {
+    if (p === place) return;
+    if (place === 'css3d') cssScene.remove(cssObj);
+    place = p;
+    if (p === 'flow') { screen.style.cssText = ''; home.insertBefore(screen, homeNext); }
+    else if (p === 'css3d') { screen.style.cssText = 'position:absolute;overflow:hidden;pointer-events:none;width:' + vw + 'px;height:' + vh + 'px;opacity:0'; cssScene.add(cssObj); }
+    else { home.insertBefore(screen, homeNext); screen.style.cssText = 'position:fixed;left:0;top:0;z-index:3;overflow:hidden;pointer-events:none;width:' + vw + 'px;height:' + vh + 'px;opacity:0'; }
   }
 
-  function onFrame(now) {
+  /* the dissolve: a snapshot of the screen at the end of the flight, cleared tile by tile */
+  const snap = document.createElement('canvas'); let order = [], cols = 0, rows = 0;
+  function sizeDissolve() {
+    dis.width = vw; dis.height = vh; dis.style.width = vw + 'px'; dis.style.height = vh + 'px';
+    cols = Math.ceil(vw / S.tile); rows = Math.ceil(vh / S.tile);
+    order = Array.from({ length: cols * rows }, (_, i) => i);
+    for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+  }
+  function takeSnapshot() {
+    sizeDissolve(); cam(1); renderer.render(W.scene, camera);
+    snap.width = vw; snap.height = vh; const g = snap.getContext('2d'); g.imageSmoothingEnabled = false; g.drawImage(renderer.domElement, 0, 0, vw, vh);
+  }
+  function drawDissolve(r) {
+    const g = dis.getContext('2d'); g.clearRect(0, 0, vw, vh); g.drawImage(snap, 0, 0);
+    const n = Math.floor(r * order.length);
+    for (let i = 0; i < n; i++) { const c = order[i] % cols, w = (order[i] / cols) | 0; g.clearRect(c * S.tile, w * S.tile, S.tile, S.tile); }
+  }
+
+  /* state: intro → reveal → site; back: hide → out → room; enter: in → reveal → site */
+  let mode = 'intro', vt = 0, lastNow = 0, rate = 1, rateT = 1, camStart = Infinity, camT = 0, revStart = 0, saved = 0, raf = 0;
+  const revDur = () => S.screenMode === 'glow' ? S.fadeMs : S.screenMode === 'dissolve' ? S.dissolveMs : 0;
+  function reveal(r) {
+    if (S.screenMode === 'glow') screen.style.opacity = r.toFixed(3);
+    else if (S.screenMode === 'dissolve') { screen.style.opacity = '1'; dis.hidden = false; drawDissolve(r); }
+  }
+  function startReveal() {
+    camT = 1; cam(1);
+    if (S.screenMode === 'live' || !revDur()) return toSite();
+    if (S.screenMode === 'dissolve') takeSnapshot();
+    setPlace('overlay'); mode = 'reveal'; revStart = vt; reveal(0);
+  }
+  function frame(now) {
+    raf = 0;
     const dt = lastNow ? Math.min(100, now - lastNow) : 0; lastNow = now;
     rate += (rateT - rate) * (S.skipRamp ? 1 - Math.exp(-dt / S.skipRamp * 3) : 1);
-    room.setSpeed(S.walk * rate);
     vt += dt * rate;
-    if (mode === 'intro') {
-      poseAll();
-      if (!charShown && vt >= charAt) showChar();
-      if (vt >= camStart) mode = 'in';
-    }
-    if (mode === 'in') { camT = clamp((vt - camStart) / S.camDur); if (camT >= 1) toSite(); }
-    else if (mode === 'out') { camT = 1 - clamp((vt - outStart) / (S.camDur * S.backMul)); if (camT <= 0) toRoom(); }
+    if (mode === 'intro') { poseAll(); if (vt >= camStart) { camT = clamp((vt - camStart) / S.camDur); if (camT >= 1) startReveal(); } }
+    else if (mode === 'in') { camT = clamp((vt - camStart) / S.camDur); if (camT >= 1) startReveal(); }
+    else if (mode === 'reveal') { const r = clamp((vt - revStart) / revDur()); reveal(r); if (r >= 1) return toSite(); }
+    else if (mode === 'hide') { const r = 1 - clamp((vt - revStart) / (revDur() || 1)); reveal(r); if (r <= 0) { dis.hidden = true; setPlace('css3d'); mode = 'out'; revStart = vt; } }
+    else if (mode === 'out') { camT = 1 - clamp((vt - revStart) / (S.camDur * S.backMul)); if (camT <= 0) toRoom(); }
+    draw();
+    if (mode !== 'site') raf = requestAnimationFrame(frame);
   }
+  function draw() { cam(camT); if (GL) renderer.render(W.scene, camera); if (place === 'css3d') css.render(cssScene, camera); }
+  const kick = () => { if (!raf) { lastNow = 0; raf = requestAnimationFrame(frame); } };
 
-  function showChar() {
-    charShown = true;
-    if (S.charMode === 'none') { room.char.style.opacity = '0'; camStart = vt + S.hold; return; }
-    room.char.style.opacity = '1';
-    if (S.charMode === 'sit') { room.place('desk'); camStart = vt + S.hold; return; }
-    room.place('door'); room.go('desk');
-  }
-  function onArrive(n) { if (n === 'desk' && mode === 'intro' && camStart === Infinity) camStart = vt + S.hold; }
-
-  /* the site lives inside the screen layer while the camera moves, and in normal flow otherwise */
   function toSite() {
-    mode = 'site'; camT = 1; rateT = rate = 1; room.setSpeed(S.walk);
-    page.dataset.mode = 'site';
-    screen.style.transform = ''; screen.style.opacity = ''; screen.style.visibility = '';
-    site.style.transform = '';
-    scene.hidden = true; room.setVisible(false);
+    mode = 'site'; camT = 1; rate = rateT = 1;
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    setPlace('flow'); dis.hidden = true;
+    page.dataset.mode = 'site'; site.style.transform = ''; scene3.hidden = true;
     journey();
     scrollTo({ top: saved, behavior: 'instant' });
     try { sessionStorage.setItem(SEEN, '1'); } catch (e) { /* no storage */ }
   }
-  function leaveSite() {
-    saved = scrollY;
-    page.dataset.mode = 'scene';
-    site.style.transform = 'translateY(' + (-saved) + 'px)';
-    scene.hidden = false; room.setVisible(true);
-    lastNow = 0;
-  }
   function back() {
     if (mode !== 'site') return;
-    leaveSite(); mode = 'out'; outStart = vt; rateT = rate = 1; cam(); room.camStep(0);
-    if (RM.matches) toRoom();
+    saved = scrollY;
+    page.dataset.mode = 'scene'; scene3.hidden = false;
+    site.style.transform = 'translateY(' + (-saved) + 'px)';
+    rate = rateT = 1; revStart = vt;
+    if (!GL || RM.matches) { setPlace('css3d'); return toRoom(); }
+    if (S.screenMode === 'live') { setPlace('css3d'); mode = 'out'; }
+    else { if (S.screenMode === 'dissolve') takeSnapshot(); setPlace('overlay'); reveal(1); mode = 'hide'; }
+    kick();
   }
-  function toRoom() { mode = 'room'; camT = 0; page.dataset.mode = 'room'; hint.hidden = false; screen.style.visibility = 'hidden'; room.camStep(0); }
+  function toRoom() { mode = 'room'; camT = 0; page.dataset.mode = 'room'; hint.hidden = false; draw(); }
   function enter() {
     if (mode !== 'room') return;
     hint.hidden = true; page.dataset.mode = 'scene';
-    if (RM.matches) return toSite();
-    mode = 'in'; camStart = vt; rateT = rate = 1;
+    if (!GL || RM.matches) return toSite();
+    mode = 'in'; camStart = vt; rate = rateT = 1; kick();
   }
-
   function start({ build = true } = {}) {
-    plan = makePlan(); vt = 0; lastNow = 0; rate = rateT = 1; camT = 0; saved = 0;
-    camStart = Infinity; charShown = false; charAt = plan.end + S.charDelay;
-    hint.hidden = true; page.dataset.mode = 'scene';
-    scene.hidden = false; room.setVisible(true);
-    site.style.transform = '';
-    room.char.style.opacity = '0';
-    if (!build || RM.matches) { settle(); vt = plan.end; charAt = vt; showChar(); if (S.charMode === 'walk') room.place('desk'); return toSite(); }
-    mode = 'intro'; room.place('desk'); poseAll(); room.camStep(0);
+    plan = makePlan(); vt = 0; rate = rateT = 1; camT = 0; saved = 0;
+    camStart = S.delay + S.camAt;
+    hint.hidden = true; dis.hidden = true; page.dataset.mode = 'scene'; scene3.hidden = false;
+    site.style.transform = ''; setPlace('css3d');
+    if (!build || !GL || RM.matches) { settle(); return toSite(); }
+    mode = 'intro'; poseAll(); kick();
   }
   function replayCamera() {
-    if (mode === 'site') { back(); return; }
-    settle(); mode = 'in'; camStart = vt; rateT = rate = 1;
+    if (mode === 'site') return back();
+    settle(); setPlace('css3d'); dis.hidden = true; hint.hidden = true; page.dataset.mode = 'scene';
+    mode = 'in'; camStart = vt; rate = rateT = 1; kick();
   }
 
-  let room = null;
-  room = Room.mount({
-    root: $('#room'), hotspots, start: 'desk', pieces: true, cam, onFrame, onArrive,
-    onBake: list => { pieces = list; bounds = bounds || measure(list); if (plan) poseAll(); }
-  });
+  /* in the room, the monitor or the desk takes you back in */
+  const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
+  const hit = e => { if (!GL) return false; ptr.set(e.clientX / vw * 2 - 1, -(e.clientY / vh) * 2 + 1); ray.setFromCamera(ptr, camera); return ray.intersectObjects(W.pick, false).length > 0; };
+  scene3.addEventListener('click', e => { if (mode === 'room' && hit(e)) enter(); }, sig);
+  scene3.addEventListener('pointermove', e => { if (mode === 'room') scene3.style.cursor = hit(e) ? 'pointer' : ''; }, sig);
 
   /* any scroll, key or tap during the intro speeds it up instead of cutting to the end */
   const skip = e => {
-    if (mode !== 'intro' && mode !== 'in') return;
+    if (mode !== 'intro' && mode !== 'in' && mode !== 'reveal') return;
     if (e.target instanceof Element && e.target.closest('.dtune,.skip')) return;
     rateT = S.skipRate;
   };
@@ -227,6 +236,7 @@ export function initDesk(page, { tune = false } = {}) {
   $('#skip').addEventListener('click', () => { rateT = S.skipRate; }, sig);
   page.querySelectorAll('[data-act=room]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); back(); }, sig));
   $('#sitback').addEventListener('click', () => enter(), sig);
+  addEventListener('resize', () => { size(); if (mode !== 'site') draw(); }, sig);
 
   /* the work row and the journey, as in V7 */
   const cards = $('#cards'), prev = $('#prev'), next = $('#next'), obs = [];
@@ -237,21 +247,32 @@ export function initDesk(page, { tune = false } = {}) {
   cards.addEventListener('scroll', ends, { passive: true, signal: ac.signal });
   { const ro = new ResizeObserver(ends); ro.observe(cards); obs.push(ro); }
   ends();
-  /* the journey measures itself, so it lays out only while the site is untransformed */
+  /* the journey measures itself, so it lays out only while the site is in page flow */
   let endJourney = () => {};
-  const journey = () => { endJourney(); $('#jroot').replaceChildren(); endJourney = initJourney($('#jroot')); };
+  const journey = () => { endJourney(); endJourney = initJourney($('#jroot')); };
 
+  size();
   let seen = false; try { seen = !!sessionStorage.getItem(SEEN); } catch (e) { /* no storage */ }
   start({ build: tune || !seen });
 
   const endTune = tune ? initDeskTune(page, S, DEF, {
-    change(k) { if (k.endsWith('Ease')) curves(); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* no storage */ } if (mode === 'room' || mode === 'in' || mode === 'out') room.camStep(0); },
-    reset() { Object.assign(S, DEF); curves(); try { localStorage.removeItem(KEY); } catch (e) { /* no storage */ } },
+    change(key) {
+      if (key.endsWith('Ease')) curves();
+      if (key === 'pixel' || key === 'over' || key === 'tile') size();
+      if (key === 'screenMode' && mode === 'site') { /* applies on the next flight */ }
+      try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* no storage */ }
+      if (mode === 'room') draw();
+    },
+    reset() { Object.assign(S, DEF); curves(); size(); try { localStorage.removeItem(KEY); } catch (e) { /* no storage */ } },
     replay: () => { scrollTo({ top: 0, behavior: 'instant' }); start(); },
-    camera: replayCamera,
-    back,
-    state: () => mode
+    camera: replayCamera
   }) : () => {};
 
-  return () => { ac.abort(); obs.forEach(o => o.disconnect()); endJourney(); endTune(); room.destroy(); };
+  return () => {
+    ac.abort(); obs.forEach(o => o.disconnect()); endJourney(); endTune();
+    if (raf) cancelAnimationFrame(raf);
+    setPlace('flow');
+    if (GL) { renderer.dispose(); renderer.domElement.remove(); W.scene.traverse(o => { if (o.geometry) o.geometry.dispose(); }); }
+    css.domElement.remove();
+  };
 }

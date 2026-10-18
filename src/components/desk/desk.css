@@ -1,10 +1,11 @@
 /* the desk home: room scene, the screen layer that carries the site, and the tuning panel */
 .dk .scene{position:fixed;inset:0;z-index:1;overflow:hidden;background:var(--paper)}
 .dk .scene[hidden]{display:none}
-.dk .room .rl{will-change:transform}
-.dk:not([data-mode=room]) .room .hot{pointer-events:none}
-.dk .screen{position:fixed;left:0;top:0;width:100vw;height:100vh;height:100lvh;z-index:2;overflow:hidden;transform-origin:0 0;background:var(--paper);pointer-events:none;visibility:hidden;will-change:transform,opacity}
-.dk[data-mode=site] .screen{position:relative;width:auto;height:auto;overflow:visible;transform:none;pointer-events:auto;visibility:visible;will-change:auto}
+.dk .scene .gl{position:absolute;left:0;top:0;image-rendering:pixelated}
+.dk .scene .css3d{position:absolute;inset:0;pointer-events:none;z-index:2}
+.dk .scene .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.dk .screen{background:var(--paper)}
+.dk .dissolve{position:fixed;left:0;top:0;z-index:4;pointer-events:none;image-rendering:pixelated}
 .dk .site{transform-origin:0 0}
 .dk .hero{min-height:100svh;justify-content:center;padding-bottom:calc(var(--top) + 8px)}
 .dk .hero .btn{margin-top:30px}

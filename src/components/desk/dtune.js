@@ -1,12 +1,41 @@
-import { bezier } from './desk';
+import { bezier } from './bezier';
 
 /* tuning panel for the intro: sliders, curve editors, replay buttons; returns a cleanup */
 const GROUPS = [
+  ['Monitor to site', [
+    ['screenMode', 'Transition', ['live', 'glow', 'dissolve']],
+    ['screenOn0', 'Live: site appears from', 0, 1, .01],
+    ['screenOn1', 'Live: site appears until', 0, 1, .01],
+    ['glow0', 'Glow: screen lights from', 0, 1, .01],
+    ['glow1', 'Glow: screen lights until', 0, 1, .01],
+    ['fadeMs', 'Glow: site fade', 0, 1500, 10, 'ms'],
+    ['dissolveMs', 'Dissolve: duration', 100, 2000, 10, 'ms'],
+    ['tile', 'Dissolve: block size', 4, 64, 1, 'px']
+  ]],
+  ['Camera', [
+    ['camAt', 'Starts after build begins', 0, 3000, 10, 'ms'],
+    ['camDur', 'Duration', 600, 6000, 20, 'ms'],
+    ['camEase', 'Camera curve'],
+    ['fov0', 'Start lens (narrow = flatter)', 4, 40, .5, '°'],
+    ['fov1', 'End lens', 15, 75, .5, '°'],
+    ['perspLead', 'Lens change leads', 0, 1, .01],
+    ['panLead', 'Pan leads zoom', 0, .6, .01],
+    ['az0', 'Start angle', 0, 80, 1, '°'],
+    ['el0', 'Start height', 5, 70, 1, '°'],
+    ['el1', 'End height', -10, 20, .5, '°'],
+    ['turnStart', 'Turn to screen from', 0, 1, .01],
+    ['turnEnd', 'Turn to screen until', 0, 1, .01],
+    ['fit', 'Room size (desktop)', .5, 1.8, .01, '×'],
+    ['phoneFit', 'Room size (phone)', .5, 2.2, .01, '×'],
+    ['over', 'Overscan at end', 1, 1.25, .005, '×'],
+    ['backMul', 'Way back duration', .3, 2, .05, '×']
+  ]],
   ['Room build', [
     ['delay', 'Start delay', 0, 1500, 10, 'ms'],
     ['overlap', 'Phase overlap', 0, .95, .01],
-    ['steps', 'Pixel steps (fps, 0 = smooth)', 0, 30, 1],
-    ['snap', 'Snap to room pixels', 0, 1, 1],
+    ['pixel', 'Pixel size', 1, 5, 1, '×'],
+    ['steps', 'Frame steps (fps, 0 = smooth)', 0, 30, 1],
+    ['snap', 'Snap to whole voxels', 0, 1, 1],
     ['floorDur', 'Floor pop', 100, 1500, 10, 'ms'],
     ['popFrom', 'Pop start scale', 0, 1, .01],
     ['wallDur', 'Wall rise', 100, 1500, 10, 'ms'],
@@ -15,32 +44,10 @@ const GROUPS = [
     ['hangStagger', 'Wall items stagger', 0, 300, 5, 'ms'],
     ['dropDur', 'Object drop', 200, 1600, 10, 'ms'],
     ['dropStagger', 'Object stagger', 0, 400, 5, 'ms'],
-    ['dropH', 'Drop height', 8, 200, 1, 'px'],
+    ['dropH', 'Drop height', 2, 80, 1, ' vox'],
     ['fallPart', 'Fall vs landing', .3, .95, .01],
     ['squash', 'Landing squash', 0, .5, .01],
     ['popEase', 'Pop curve'], ['riseEase', 'Wall curve'], ['dropEase', 'Fall curve'], ['landEase', 'Landing curve']
-  ]],
-  ['Character', [
-    ['charMode', 'Entrance', ['walk', 'sit', 'none']],
-    ['walk', 'Walk speed', .5, 4, .05, '×'],
-    ['charDelay', 'Wait after build', 0, 1500, 10, 'ms'],
-    ['hold', 'Hold before camera', 0, 2500, 10, 'ms']
-  ]],
-  ['Camera', [
-    ['camDur', 'Duration', 400, 5000, 20, 'ms'],
-    ['camEase', 'Camera curve'],
-    ['fit', 'Room size (desktop)', .5, 1.5, .01, '×'],
-    ['phoneFit', 'Room size (phone)', .5, 2, .01, '×'],
-    ['yOff', 'Room vertical offset', -.3, .3, .01],
-    ['panLead', 'Pan leads zoom', 0, .6, .01],
-    ['unshearStart', 'Face screen from', 0, 1, .01],
-    ['unshearEnd', 'Face screen until', 0, 1, .01],
-    ['screenOn0', 'Site fades in from', 0, 1, .01],
-    ['screenOn1', 'Site fades in until', 0, 1, .01],
-    ['near0', 'Character fades from', 0, 1, .01],
-    ['near1', 'Character fades until', 0, 1, .01],
-    ['over', 'Overscan at end', 1, 1.25, .005, '×'],
-    ['backMul', 'Way back duration', .3, 2, .05, '×']
   ]],
   ['Skipping', [
     ['skipRate', 'Speed-up when skipping', 1, 10, .1, '×'],
@@ -73,7 +80,7 @@ export function initDeskTune(page, S, DEF, act) {
   const sync = () => { for (const f of fields) f.sync(); };
   const fields = [];
   for (const [title, items] of GROUPS) {
-    const g = el('details', 'dt-g'); g.open = title === 'Room build' || title === 'Camera';
+    const g = el('details', 'dt-g'); g.open = title === 'Monitor to site' || title === 'Camera';
     g.append(el('summary', '', title));
     for (const [k, label, a, b, st, unit] of items) {
       if (Array.isArray(a)) {
