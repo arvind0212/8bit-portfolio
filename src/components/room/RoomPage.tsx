@@ -7,6 +7,7 @@ import { GeistMono } from "geist/font/mono";
 import { initRoomPage } from "./init";
 import Sections from "./Sections";
 import Tune from "./Tune";
+import TopBar from "./TopBar";
 import "./room.css";
 
 const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", variable: "--rf-instrument" });
@@ -17,15 +18,7 @@ export default function RoomPage() {
   useEffect(() => (ref.current ? initRoomPage(ref.current) : undefined), []);
   return (
     <div ref={ref} className={["rp", instrument.variable, GeistSans.variable, GeistMono.variable, pix.variable].join(" ")}>
-      <header className="top">
-        <a className="who" href="#top" aria-label="Arvind Guruprasad, back to top"><i aria-hidden="true">AG</i><b>Arvind Guruprasad</b></a>
-        <nav aria-label="Main">
-          <a href="#work" data-sec="work">Work</a>
-          <a href="#journey" data-sec="journey">Journey</a>
-          <a href="#writing" data-sec="writing">Writing</a>
-          <a href="#contact" data-sec="contact">Contact</a>
-        </nav>
-      </header>
+      <TopBar />
 
       <div className="dock" id="dock" aria-hidden="true"><span className="dl" id="dockl">the desk</span></div>
       <div className="stage" id="stage">

@@ -5,6 +5,8 @@ import { Instrument_Serif, Silkscreen } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import Sections from "../room/Sections";
+import TopBar from "../room/TopBar";
+import Tune from "../room/Tune";
 import { initDesk } from "./desk";
 import "../room/room.css";
 import "./desk.css";
@@ -33,16 +35,8 @@ export default function DeskPage() {
       <canvas className="dissolve" id="dissolve" hidden aria-hidden="true"></canvas>
       <div className="screen" id="screen">
         <div className="site" id="site">
-          <header className="top">
-            <a className="who" href="#top" aria-label="Arvind Guruprasad, back to top"><i aria-hidden="true">AG</i><b>Arvind Guruprasad</b></a>
-            <nav aria-label="Main">
-              <a href="#work" data-sec="work">Work</a>
-              <a href="#journey" data-sec="journey">Journey</a>
-              <a href="#writing" data-sec="writing">Writing</a>
-              <a href="#contact" data-sec="contact">Contact</a>
-              <a href="#room" data-act="room" className="toroom" aria-label="Step back into the room"><span aria-hidden="true">⌂</span> Room</a>
-            </nav>
-          </header>
+          <TopBar room />
+          <Tune />
           <Sections room={false} back={<p className="backroom"><a href="#room" data-act="room" className="read">Step back into the room<span aria-hidden="true"> ↖</span></a></p>} />
         </div>
       </div>

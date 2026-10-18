@@ -7,10 +7,12 @@
 .dk .screen{background:var(--paper)}
 .dk .dissolve{position:fixed;left:0;top:0;z-index:4;pointer-events:none;image-rendering:pixelated}
 .dk .site{transform-origin:0 0}
-.dk .hero{min-height:100svh;justify-content:center;padding-bottom:calc(var(--top) + 8px)}
-.dk .hero .btn{margin-top:30px}
+.dk .hero{min-height:100svh;padding-bottom:var(--s-6)}
+.dk .hero .eyebrow{margin-top:auto}
+.dk .hero .acts{margin-bottom:var(--s-8)}
+.dk .hero .facts{margin-top:auto}
 
-.dk .top nav .toroom{gap:6px;color:var(--accent)}
+.dk .top nav .toroom{color:var(--accent);font-weight:600}
 .dk .top nav .toroom span{font-size:1.1em;line-height:1}
 .dk .backroom{margin-top:26px}
 
