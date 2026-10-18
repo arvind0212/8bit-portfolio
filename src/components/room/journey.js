@@ -322,7 +322,7 @@ const STOPS = [
   { name: 'BMSCE', yrs: '2016–20', role: 'B.E. Computer Science', line: 'Engineering in Bangalore.', act: 'reading', logos: [['bmsce.png', 'BMS College of Engineering']] },
   { name: 'Quantiphi', yrs: '2020–24', role: 'Business Analyst → Senior BA', line: 'Healthcare data on Google Cloud, from delivery to deals.', act: 'presenting at a whiteboard', logos: [['quantiphi.png', 'Quantiphi']] },
   { name: 'Stockholm', yrs: '2024–26', role: 'MSc Biostatistics & Data Science', line: 'Left consulting to build as AI took off.', act: 'at a laptop with a thesis chart', logos: [['karolinska.png', 'Karolinska Institutet'], ['kth.png', 'KTH'], ['stockholm-university.png', 'Stockholm University']] },
-  { name: 'KI · Arkus AI', yrs: '2025–26', role: 'Research assistant, AI engineer', line: 'A prescription pipeline at KI. Agent tools at Arkus AI.', act: 'plugging in an agent', logos: [['karolinska.png', 'Karolinska Institutet'], ['arkus-ai.png', 'Arkus AI']] },
+  { name: 'KI · Arkus AI', yrs: '2025–26', role: 'Research assistant, founding AI engineer', line: 'A prescription pipeline at KI. Agent tools at Arkus AI.', act: 'plugging in an agent', logos: [['karolinska.png', 'Karolinska Institutet'], ['arkus-ai.png', 'Arkus AI']] },
   { name: 'Now', yrs: '2026', role: 'Building in public', line: 'Writing up what I build, in Stockholm.', act: 'with a coffee in the snow' }
 ];
 
