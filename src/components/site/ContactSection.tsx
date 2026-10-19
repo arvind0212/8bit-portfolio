@@ -8,10 +8,10 @@ export const CV = "https://drive.google.com/file/d/1NuS61X_awnnDSR8uW-5jEng5P1Qc
 
 export const LINKEDIN = "https://www.linkedin.com/in/arvind-guruprasad-73479a142/";
 
-const LINKS: [string, string, string, () => React.JSX.Element][] = [
-  ["LinkedIn", "Arvind Guruprasad", LINKEDIN, LinkedInIcon],
-  ["GitHub", "arvind0212", "https://github.com/arvind0212", GitHubIcon],
-  ["CV", "PDF", CV, DocIcon],
+const LINKS: [string, string, () => React.JSX.Element][] = [
+  ["LinkedIn", LINKEDIN, LinkedInIcon],
+  ["GitHub", "https://github.com/arvind0212", GitHubIcon],
+  ["CV", CV, DocIcon],
 ];
 
 export default function ContactSection({ room, back }: { room: boolean; back?: ReactNode }) {
@@ -28,22 +28,18 @@ export default function ContactSection({ room, back }: { room: boolean; back?: R
       </dl>
       <div className="cx-act">
         <div className="cx-mail">
-          <a href={"mailto:" + EMAIL}><span className="cx-ic"><MailIcon /></span><span className="cx-mt"><span className="cx-k">Email me</span><span className="cx-v">{EMAIL.split("@")[0]}@<wbr />{EMAIL.split("@")[1]}</span></span></a>
+          <a href={"mailto:" + EMAIL}><span className="cx-ic"><MailIcon /></span><span className="cx-v">{EMAIL.split("@")[0]}@<wbr />{EMAIL.split("@")[1]}</span></a>
           <CopyEmail email={EMAIL} />
         </div>
         <ul className="cx-links">
-          {LINKS.map(([name, sub, href, Icon]) => (
+          {LINKS.map(([name, href, Icon]) => (
             <li key={name}>
-              <a href={href} target="_blank" rel="noopener noreferrer">
-                <span className="cx-ic"><Icon /></span>
-                <span className="cx-ln"><b>{name}</b><span>{sub}</span></span>
-                <span className="cx-go" aria-hidden="true">↗</span>
-              </a>
+              <a href={href} target="_blank" rel="noopener noreferrer"><Icon />{name}</a>
             </li>
           ))}
         </ul>
+        {back && <div className="cx-back">{back}</div>}
       </div>
-      {back && <div className="cx-back">{back}</div>}
     </section>
   );
 }
