@@ -7,17 +7,9 @@ export default function WorkSection() {
   const featured = cases.filter((w) => w.featured).slice(0, 3);
   return (
     <section className="sec" id="work" aria-labelledby="h-work">
-      <div className="shead">
-        <div>
-          <p className="label"><span className="n">01</span>Selected work</p>
-          <h2 id="h-work">Proof, with the limits written down.</h2>
-          <p className="intro">The lit bars show which layers I owned, from discovery to rollout.</p>
-        </div>
-        <div className="rownav" aria-label="Scroll the work">
-          <button type="button" id="prev" aria-label="Previous">←</button>
-          <button type="button" id="next" aria-label="Next">→</button>
-        </div>
-      </div>
+      <p className="label"><span className="n">01</span>Selected work</p>
+      <h2 id="h-work">Proof, with the limits written down.</h2>
+      <p className="intro">The lit bars show which layers I owned, from discovery to rollout.</p>
       <ol className="cards" id="cards">
         {featured.map((w, i) => <WorkCard key={w.slug} w={w} n={i + 1} />)}
         <li className="card all">

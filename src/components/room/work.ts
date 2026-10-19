@@ -182,7 +182,7 @@ export const WORK: Work[] = [
       decision:
         "Bring the agent to the app instead. Context is taken only when asked for and shown so you can check it, and paste-back waits for approval.",
       outcome:
-        "Offline technical checks pass. First real use showed setup was too fiddly and the open view too cramped, so I'm reworking the setup and the open view now.",
+        "Offline technical checks pass. First real use showed setup was too fiddly, so I rebuilt it; setting up is now much simpler.",
       notDone:
         "No always-on screen reading. The island sees your screen, clipboard or audio only when you ask it to.",
       limits: [

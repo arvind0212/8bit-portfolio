@@ -1,23 +1,17 @@
 /* selected work, all work and case studies; every size, colour and gap comes from the site system tokens in room.css */
 
-/* home row: large cards that scroll sideways */
-.rp .shead{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s-5);margin-bottom:var(--s-6)}
-.rp .shead .intro{margin-top:var(--s-3)}
-.rp .rownav{display:flex;gap:var(--s-2)}
-.rp .rownav button{width:46px;height:46px;border-radius:50%;border:1px solid var(--ink);background:var(--card);font-size:18px;cursor:pointer;transition:background var(--d-fast),color var(--d-fast),opacity var(--d-fast)}
-.rp .rownav button:hover:not(:disabled){background:var(--ink);color:var(--paper)}
-.rp .rownav button:disabled{opacity:.3;cursor:default}
-/* the padding gives hovered frames and their shadows room inside the scroller; the negative margin keeps the column edge */
-.rp .cards{--pad:var(--s-3);display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 2 * var(--s-6)) / 3);gap:var(--s-6);overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:var(--pad);margin:calc(-1 * var(--pad)) calc(-1 * var(--pad)) 0;padding:var(--pad) var(--pad) var(--s-5);scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+/* home: two large cards per row, the all-work tile takes the fourth cell */
+.rp .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-8) var(--s-7);margin-top:var(--s-6)}
 
 /* card */
-.rp .card{scroll-snap-align:start;display:flex;flex-direction:column}
+.rp .card{position:relative;display:flex;flex-direction:column}
+.rp .card h3 a::after{content:"";position:absolute;inset:0;z-index:1;border-radius:var(--r-m)}
 .rp .card .cv{display:block}
 .rp .frame{position:relative;aspect-ratio:16/10;background:var(--paper2);border-radius:var(--r-m);overflow:hidden;container-type:inline-size;box-shadow:0 0 0 1px var(--line);transition:transform var(--d-med) var(--ease),box-shadow var(--d-med) var(--ease)}
 .rp .card:hover .frame{transform:translateY(-4px);box-shadow:0 0 0 1px var(--line),0 10px 18px -10px rgba(31,26,21,.28)}
 .rp .frame.ki{background:var(--accent-soft)}
 .rp .card.sketch .frame{background:repeating-linear-gradient(-45deg,transparent 0 9px,rgba(31,26,21,.035) 9px 10px),var(--paper2)}
-.rp .fr{position:absolute;inset:0;padding:6cqw 7cqw;display:flex;flex-direction:column;justify-content:center;gap:2.4cqw;font-size:clamp(10px,4cqw,16px);color:var(--ink)}
+.rp .fr{position:absolute;inset:0;padding:6cqw 7cqw;display:flex;flex-direction:column;justify-content:center;gap:2.4cqw;font-size:clamp(10px,3.7cqw,19px);color:var(--ink)}
 .rp .frame.ui .fr{align-items:center}
 .rp .fk{font:500 .78em/1.3 var(--f-mono);color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
 .rp .big{font:2.1em/1.05 var(--f-display)}
@@ -51,10 +45,12 @@
 .rp .cline{margin-top:var(--s-2);font:var(--card-fw) var(--t-card)/var(--card-lh) var(--card-ff);color:var(--ink-2);max-width:var(--card-mw)}
 .rp .card .cfoot{margin-top:auto;padding-top:var(--s-5)}
 .rp .card .cfoot .read{margin-top:var(--s-2)}
-.rp .card.all a{display:flex;flex-direction:column;justify-content:space-between;gap:var(--s-4);height:100%;min-height:220px;padding:var(--s-5);border-radius:var(--r-m);border:1px dashed var(--ink-3);text-decoration:none;transition:background var(--d-fast),border-color var(--d-fast)}
+.rp .card.all a{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:var(--s-3);height:100%;min-height:220px;padding:var(--s-7);border-radius:var(--r-m);border:1px dashed var(--ink-3);text-decoration:none;transition:background var(--d-fast),border-color var(--d-fast)}
 .rp .card.all a:hover{background:var(--card);border-color:var(--accent)}
 .rp .card.all .k{font:var(--label-fw) var(--t-label)/1 var(--label-ff);letter-spacing:var(--label-ls);color:var(--ink-3);text-transform:uppercase}
-.rp .card.all b{font:var(--head-fw) var(--t-h3)/1.2 var(--head-ff);letter-spacing:var(--head-ls)}
+.rp .card.all b{font:var(--head-fw) var(--t-h2)/1.1 var(--head-ff);letter-spacing:var(--head-ls);max-width:14ch}
+.rp .card.all .read{margin-top:var(--s-3)}
+.rp .cards .card.all{align-self:start;aspect-ratio:16/10}
 
 /* layer strip: five segments, the owned ones lit */
 .rp .layers ol{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--s-1)}
@@ -69,9 +65,7 @@
 .rp .layers.lg li.on span{color:var(--ink);opacity:1}
 
 /* all work: the same cards in a grid, then team work as rows */
-.rp .wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:var(--s-8) var(--s-5);margin-top:var(--s-7)}
-.rp .wgrid .card{position:relative}
-.rp .wgrid .card h3 a::after{content:"";position:absolute;inset:0;z-index:1}
+.rp .wgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-8) var(--s-5);margin-top:var(--s-7)}
 .rp .wsub{margin-top:var(--s-9)}
 .rp .trows{margin-top:var(--s-5)}
 .rp .trows li{display:grid;grid-template-columns:1fr auto;gap:var(--s-2) var(--s-5);padding:var(--s-5) 0;border-top:1px solid var(--line);scroll-margin-top:90px}
@@ -144,20 +138,18 @@
 .rp .nextcs:hover b{color:var(--accent)}
 
 @media (max-width:760px){
-  .rp .shead{margin-bottom:var(--s-5)}
-  .rp .rownav{display:none}
-  .rp .cards{grid-auto-flow:row;grid-auto-columns:auto;overflow:visible;scroll-snap-type:none;gap:var(--s-7);margin:0;padding:0}
-  .rp .card{position:relative}
+  .rp .cards{grid-template-columns:1fr;gap:var(--s-7);margin-top:var(--s-5)}
   .rp .fr{padding:7cqw 8cqw;font-size:clamp(14px,4.6cqw,19px);gap:3.6cqw}
   .rp .frame .sm-hide{display:none}
   .rp .frame .fk{font-size:max(12.5px,.8em)}
   .rp .ct{padding-top:var(--s-3)}
-  .rp .card h3 a::after{content:"";position:absolute;inset:0;z-index:1;border-radius:var(--r-m)}
   .rp .card:active .frame{transform:scale(.985)}
   .rp .card .cfoot{padding-top:var(--s-4)}
   .rp .card .cfoot .read{min-height:40px;margin-top:var(--s-1)}
   .rp .card.all a{min-height:0;padding:var(--s-4) var(--s-5);flex-direction:row;align-items:center}
   .rp .card.all .k,.rp .card.all b{display:none}
+  .rp .card.all .read{margin:0}
+  .rp .cards .card.all{aspect-ratio:auto}
 
   .rp .wgrid{grid-template-columns:1fr;gap:var(--s-7);margin-top:var(--s-6)}
   .rp .trows li{grid-template-columns:1fr}

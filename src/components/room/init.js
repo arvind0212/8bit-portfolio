@@ -88,6 +88,7 @@ addEventListener('resize',()=>{chrome='';room.camStep(0);tick()},sig);
 
 /* the work row: arrows scroll by one card and switch off at the ends */
 const cards=$('#cards'),prev=$('#prev'),next=$('#next');
+if(cards&&prev&&next){
 const step=()=>{const c=cards.querySelector('.card');return c?c.getBoundingClientRect().width+20:300};
 const ends=()=>{prev.disabled=cards.scrollLeft<4;next.disabled=cards.scrollLeft+cards.clientWidth>=cards.scrollWidth-4};
 prev.addEventListener('click',()=>cards.scrollBy({left:-step(),behavior:RM.matches?'auto':'smooth'}),sig);
@@ -95,6 +96,7 @@ next.addEventListener('click',()=>cards.scrollBy({left:step(),behavior:RM.matche
 cards.addEventListener('scroll',ends,{passive:true,signal:ac.signal});
 {const ro=new ResizeObserver(ends);ro.observe(cards);obs.push(ro)}
 ends();
+}
 
 const endJourney=initJourney($('#jroot'));
 return ()=>{ac.abort();obs.forEach(o=>o.disconnect());endJourney();room.destroy();

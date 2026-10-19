@@ -240,13 +240,15 @@ export function initDesk(page, { tune = false } = {}) {
 
   /* the work row and the journey, as in V7 */
   const cards = $('#cards'), prev = $('#prev'), next = $('#next'), obs = [];
-  const step = () => { const c = cards.querySelector('.card'); return c ? c.getBoundingClientRect().width + 20 : 300; };
-  const ends = () => { prev.disabled = cards.scrollLeft < 4; next.disabled = cards.scrollLeft + cards.clientWidth >= cards.scrollWidth - 4; };
-  prev.addEventListener('click', () => cards.scrollBy({ left: -step(), behavior: RM.matches ? 'auto' : 'smooth' }), sig);
-  next.addEventListener('click', () => cards.scrollBy({ left: step(), behavior: RM.matches ? 'auto' : 'smooth' }), sig);
-  cards.addEventListener('scroll', ends, { passive: true, signal: ac.signal });
-  { const ro = new ResizeObserver(ends); ro.observe(cards); obs.push(ro); }
-  ends();
+  if (cards && prev && next) {
+    const step = () => { const c = cards.querySelector('.card'); return c ? c.getBoundingClientRect().width + 20 : 300; };
+    const ends = () => { prev.disabled = cards.scrollLeft < 4; next.disabled = cards.scrollLeft + cards.clientWidth >= cards.scrollWidth - 4; };
+    prev.addEventListener('click', () => cards.scrollBy({ left: -step(), behavior: RM.matches ? 'auto' : 'smooth' }), sig);
+    next.addEventListener('click', () => cards.scrollBy({ left: step(), behavior: RM.matches ? 'auto' : 'smooth' }), sig);
+    cards.addEventListener('scroll', ends, { passive: true, signal: ac.signal });
+    { const ro = new ResizeObserver(ends); ro.observe(cards); obs.push(ro); }
+    ends();
+  }
   /* the journey measures itself, so it lays out only while the site is in page flow */
   let endJourney = () => {};
   const journey = () => { endJourney(); endJourney = initJourney($('#jroot')); };
