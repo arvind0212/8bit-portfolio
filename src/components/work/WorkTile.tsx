@@ -28,22 +28,11 @@ function MiniChart({ w }: { w: Work }) {
   );
 }
 
-/* lay tiles on a 12-column grid and tell each whether it starts at the left edge */
-export function place(spans: number[]) {
-  let col = 0;
-  return spans.map((span) => {
-    if (col + span > 12) col = 0;
-    const left = col === 0 && span < 12;
-    col = (col + span) % 12;
-    return left ? "left" : "right";
-  });
-}
-
-export default function WorkTile({ w, span, edge }: { w: Work; span: number; edge: "left" | "right" }) {
+export default function WorkTile({ w, span }: { w: Work; span: number }) {
   const s = w.screen;
   const href = "/work/" + w.slug;
   return (
-    <li className={`tile w${span} t-${s.tone}` + (w.peek ? " peek from-" + (w.peek === true ? edge : w.peek) : "")}>
+    <li className={`tile w${span} t-${s.tone}` + (w.enter ? " enter-" + w.enter : "")}>
       <div className="thead">
         <h3><a href={href}>{w.hook}{w.hookEm}. <span className="tctx">{w.ctx}</span></a></h3>
         <p className="out"><b>{w.outcome.v}</b><span>{w.outcome.l}</span></p>
