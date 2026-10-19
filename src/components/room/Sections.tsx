@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
 import WorkSection from "../work/WorkSection";
+import WritingSection from "../site/WritingSection";
+import ContactSection from "../site/ContactSection";
+import SiteFooter from "../site/SiteFooter";
 
 export const CV = "https://drive.google.com/file/d/1NuS61X_awnnDSR8uW-5jEng5P1QcZ2f3/view?usp=drive_link";
 
@@ -86,31 +89,10 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
         </ol>
       </section>
 
-      <section className="sec" id="writing" aria-labelledby="h-writing">
-        <p className="label"><span className="n">04</span>Writing</p>
-        <h2 id="h-writing">Notes from building.</h2>
-        <ol className="posts">
-          <li><span className="pt">Valid is not correct: what my thesis taught me about agents</span><span className="draft">Draft</span></li>
-          <li><span className="pt">The harness: how I brief, check and review agent work</span><span className="draft">Draft</span></li>
-          <li><span className="pt">From scoping deals to writing the agent</span><span className="draft">Draft</span></li>
-        </ol>
-        <a className="read" href="/writing">All writing<span aria-hidden="true"> →</span></a>
-      </section>
+      <WritingSection />
 
-      <section className="sec contact" id="contact" aria-labelledby="h-contact">
-        <p className="label"><span className="n">05</span>Contact</p>
-        <h2 id="h-contact">Bring me a problem.</h2>
-        {room && <div className="slot cslot" id="cslot" aria-hidden="true"></div>}
-        <div className="links">
-          <a href="mailto:arvindguruprasad33@gmail.com">Email<span aria-hidden="true"> ↗</span></a>
-          <a href="https://linkedin.com/in/arvind-guruprasad-73479a142/" target="_blank" rel="noopener noreferrer">LinkedIn<span aria-hidden="true"> ↗</span></a>
-          <a href="https://github.com/arvind0212" target="_blank" rel="noopener noreferrer">GitHub<span aria-hidden="true"> ↗</span></a>
-          <a href={CV} target="_blank" rel="noopener noreferrer">CV<span aria-hidden="true"> ↗</span></a>
-        </div>
-        <p className="fit">Open to applied AI, forward deployed and AI solutions roles in Sweden and Europe.</p>
-        {back}
-        <footer>The room and the people in it are drawn in code.</footer>
-      </section>
+      <ContactSection room={room} back={back} />
+      <SiteFooter />
     </main>
   );
 }
