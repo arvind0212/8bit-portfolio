@@ -1,6 +1,6 @@
 /* Styles for the room home page, scoped to .rp so the classic page keeps its own look */
 .rp{
-  /* colour: Mist paper, one accent; contrast on --paper: ink 16.0, ink-2 10.4, ink-3 5.6, accent 5.1 */
+  /* colour: Mist paper, one accent; contrast on --paper: ink 15.1, ink-2 9.7, ink-3 5.3, accent 5.2 */
   --paper:#E9EDF0;--paper2:#DDE3E8;--card:#F5F7F9;--ink:#141820;--ink-2:#333A44;--ink-3:#58616C;--grey:var(--ink-3);--line:#CCD4DB;
   --accent:#1F6F4A;--accent-soft:#D8E8E0;--warn:#A8442F;
   --ff-display:var(--rf-display),'Bricolage Grotesque',system-ui,sans-serif;--ff-text:var(--rf-text),'Atkinson Hyperlegible Next',system-ui,sans-serif;--ff-mono:var(--rf-mono),'Martian Mono',ui-monospace,monospace;
