@@ -21,6 +21,10 @@
 .rp .wc-fr .pt div{display:flex;justify-content:space-between;align-items:center;gap:1em;padding:.55em .9em;border:1px solid var(--line);border-radius:var(--r-s);background:var(--card)}
 .rp .wc-fr .pt b{font:500 .9em var(--label-ff)}
 .rp .wc-fr .pt .no{color:var(--warn)}
+.rp .wc-fr .pm{display:grid;grid-template-columns:1fr auto;align-items:baseline;row-gap:var(--s-2);font-size:.95em;color:var(--ink-2)}
+.rp .wc-fr .pm b{font:var(--head-fw) 1.9em/1 var(--head-ff);font-variation-settings:var(--dvar);color:var(--accent)}
+.rp .wc-fr .pm i{grid-column:1/-1;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--accent) var(--w),var(--paper2) 0)}
+.rp .fk-l{color:var(--accent);text-transform:uppercase}
 .rp .wc-meta{display:flex;align-items:baseline;gap:var(--s-3);margin-top:var(--s-4);font:var(--label-fw) var(--t-label)/1 var(--label-ff);letter-spacing:var(--label-ls);color:var(--ink-3)}
 .rp .wc-soon{padding:2px 6px;border:1px dashed var(--ink-3);border-radius:4px;font-size:.88em;text-transform:uppercase}
 .rp .wc-t{margin-top:var(--s-2);font:var(--head-fw) var(--t-h3)/1.15 var(--head-ff);letter-spacing:var(--head-ls);color:var(--ink)}

@@ -18,7 +18,7 @@ export default function WritingIndex() {
         <p className="crumb"><a href="/">← Home</a></p>
         <p className="label">Writing</p>
         <h1 id="wi-h">Notes from building.</h1>
-        <p className="intro">Short pieces on what I learn while building with agents, and one long read.</p>
+        <p className="intro">A long read on my thesis, and short notes on what I learn while building with agents.</p>
 
         <a className="feat" href={"/writing/" + long.slug}>
           <div className="feat-c">

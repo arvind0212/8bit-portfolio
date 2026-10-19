@@ -25,26 +25,8 @@ export const POSTS: Post[] = [
     preview:
       '<p class="pk">Kept their meaning, best agent</p><div class="pm"><span>Lab results</span><b>~100%</b><i style="--w:100%"></i></div><div class="pm"><span>Medications</span><b>~91%</b><i style="--w:91%"></i></div>',
   },
-  {
-    slug: "where-meaning-breaks",
-    date: "Jun 2026",
-    topics: ["Agents", "Clinical data", "Evaluation"],
-    title: "Meaning can survive. The benchmark shows where it breaks.",
-    dek: "What the thesis showed once it was defended, and why the harness around the agent matters.",
-    live: true,
-    preview:
-      '<p class="pk">Agent output</p><div class="pf"><span>Agent</span><i>→</i><span class="acc">Validation loop</span><i>→</i><span>Human review</span></div><p class="pq">Meaning <em>survives</em> when every step is checked.</p>',
-  },
-  {
-    slug: "valid-not-correct",
-    date: "May 2026",
-    topics: ["Clinical data", "Evaluation"],
-    title: "A valid OMOP table can still be clinically wrong.",
-    dek: "The question behind my thesis: do agents keep the meaning, or only the format?",
-    live: true,
-    preview:
-      '<p class="pk">One lab result, mapped</p><div class="pt"><div><span>Format</span><b>Valid</b></div><div><span>Unit</span><b class="no">Lost</b></div><div><span>Meaning</span><b class="no">Wrong</b></div></div>',
-  },
+
+
   {
     slug: "the-harness",
     date: "Next",
