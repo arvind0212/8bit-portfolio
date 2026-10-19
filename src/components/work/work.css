@@ -37,7 +37,8 @@
 .rp .tile.enter-top .sb.ui{background:none;min-height:0;padding:0}
 .rp .tile.enter-top .pill{box-shadow:0 10px 24px rgba(20,24,32,.18)}
 .rp .tile.enter-top .ask{box-shadow:0 12px 28px rgba(20,24,32,.10)}
-.rp .tile.enter-top .thead{margin-top:auto;padding-bottom:var(--s-5)}
+.rp .tile.enter-top .thead{margin-top:auto;padding-top:var(--s-7);padding-bottom:var(--s-5)}
+.rp .tile.enter-top .out{margin-top:var(--s-3)}
 .rp .tile.all{padding:var(--s-5);gap:var(--s-3);min-height:0}
 .rp .tile.all ul{list-style:none;margin:0;padding:0}
 .rp .tile.all li{font:var(--head-fw) calc(var(--t-body)*.95)/1.3 var(--head-ff);letter-spacing:-.01em;padding:var(--s-3) 0;border-top:1px solid var(--line)}
