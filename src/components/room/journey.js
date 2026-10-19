@@ -317,114 +317,130 @@ function walker(i, k, dir) {
   return s;
 }
 
-const STOPS = [
-  { name: 'Muscat', yrs: 'Until 2016', role: 'Born and raised', line: 'Grew up in Oman. Football first.', act: 'kicking a football' },
-  { name: 'BMSCE', yrs: '2016–20', role: 'B.E. Computer Science', line: 'Engineering in Bangalore.', act: 'reading', logos: [['bmsce.png', 'BMS College of Engineering']] },
-  { name: 'Quantiphi', yrs: '2020–24', role: 'Business Analyst → Senior BA', line: 'Healthcare data on Google Cloud, from delivery to deals.', act: 'presenting at a whiteboard', logos: [['quantiphi.png', 'Quantiphi']] },
-  { name: 'Stockholm', yrs: '2024–26', role: 'MSc Biostatistics & Data Science', line: 'Left consulting to build as AI took off.', act: 'at a laptop with a thesis chart', logos: [['karolinska.png', 'Karolinska Institutet'], ['kth.png', 'KTH'], ['stockholm-university.png', 'Stockholm University']] },
-  { name: 'KI · Arkus AI', yrs: '2025–26', role: 'Research assistant, founding AI engineer', line: 'A prescription pipeline at KI. Agent tools at Arkus AI.', act: 'plugging in an agent', logos: [['karolinska.png', 'Karolinska Institutet'], ['arkus-ai.png', 'Arkus AI']] },
-  { name: 'Now', yrs: '2026', role: 'Building in public', line: 'Writing up what I build, in Stockholm.', act: 'with a coffee in the snow' }
-];
-
 const cache = new Map();
 function frame(key, make) { let c = cache.get(key); if (!c) { c = render(make()); cache.set(key, c); } return c; }
+const paint = (cv, s, k = 0) => { const g = cv.getContext('2d'); g.clearRect(0, 0, SW, SH); g.drawImage(frame('s' + s + k, () => SCENES[s](k, {})), 0, 0); };
 
-/* builds the journey into root; returns a cleanup */
-export function initJourney(root, base = '/images/journey/') {
-  const RM = matchMedia('(prefers-reduced-motion: reduce)'), ac = new AbortController(), sig = { signal: ac.signal };
-  let alive = true, raf = 0, timer = 0;
-  root.innerHTML = '';
-  const wrap = document.createElement('div'); wrap.className = 'jy';
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('class', 'jpath'); svg.setAttribute('aria-hidden', 'true');
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'); svg.appendChild(path);
-  const av = document.createElement('canvas'); av.className = 'jav'; av.width = SW; av.height = SH; av.setAttribute('role', 'img');
-  const g = av.getContext('2d');
-  const ol = document.createElement('ol'); ol.className = 'jstops';
-  const cap = document.createElement('p'); cap.className = 'jcap'; cap.setAttribute('aria-live', 'polite');
-  const btns = STOPS.map((st, i) => {
-    const li = document.createElement('li'); const b = document.createElement('button'); b.type = 'button';
-    b.setAttribute('aria-label', st.name + ', ' + st.yrs + ', ' + st.role + '. ' + st.line);
-    const mk = st.logos ? '<span class="jlogo">' + st.logos.map(([f, alt]) => '<img src="' + base + f + '" alt="' + alt + '" loading="lazy">').join('') + '</span>' : '<span class="jlogo"><svg class="jic" viewBox="0 0 24 24" aria-hidden="true"><path d="' + (i ? 'M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.5 4.5 12 7l2.5-2.5M9.5 19.5 12 17l2.5 2.5' : 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4') + '"/></svg></span>';
-    b.innerHTML = '<i class="jdot"></i>' + mk + '<small>' + st.yrs + '</small><b>' + st.name + '</b><span class="jrole">' + st.role + '</span><span class="jline">' + st.line + '</span>';
-    li.appendChild(b); ol.appendChild(li); return b;
-  });
-  wrap.append(svg, av, ol); root.append(wrap, cap);
+const cl = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const eOut = t => 1 - Math.pow(1 - t, 3), eIn = t => t * t * t, eIO = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const seg = (t, a, d) => cl((t - a) / d);
+const HYS = 28, DWELL = 140, LOCK = 160;
 
-  let pts = [], vertical = false, scale = 2, pos = 5, at = 5, target = 5, dir = 1, mode = 'idle', t0 = 0, last = 0, walkK = 0;
-  function layout() {
-    vertical = innerWidth <= 760;
-    const W = wrap.clientWidth;
-    scale = vertical ? 1.125 : W < 900 ? 1.75 : 2;
-    const S = SW * scale;
-    av.style.width = av.style.height = S + 'px';
-    const rects = btns.map(b => b.querySelector('.jdot').getBoundingClientRect()), wr = wrap.getBoundingClientRect();
-    pts = rects.map(r => [r.left + r.width / 2 - wr.left, r.top + r.height / 2 - wr.top]);
-    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + wrap.clientHeight); svg.setAttribute('width', W); svg.setAttribute('height', wrap.clientHeight);
-    let d = 'M' + pts[0][0] + ' ' + pts[0][1];
-    for (let i = 1; i < pts.length; i++) {
-      const [ax, ay] = pts[i - 1], [bx, by] = pts[i];
-      d += vertical ? ' C' + (ax + 18) + ' ' + (ay + (by - ay) * .5) + ' ' + (bx - 18) + ' ' + (by - (by - ay) * .5) + ' ' + bx + ' ' + by
-        : ' C' + (ax + (bx - ax) * .5) + ' ' + (ay - 14) + ' ' + (bx - (bx - ax) * .5) + ' ' + (by + 14) + ' ' + bx + ' ' + by;
-    }
-    path.setAttribute('d', d);
-    place();
+/* the journey rail: newest first; the avatar sinks into a portal at one stop, the year slides down the rail, and he climbs out at the next.
+   The active card is the last one whose top has crossed a reading line 40% down the viewport (sliding to 90% over the last half-screen),
+   with hysteresis and a short dwell so small scrolls never retrigger. Returns a cleanup. */
+export function initJourney(root) {
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches, ac = new AbortController(), sig = { signal: ac.signal };
+  const rail = root.querySelector('.jrail'), cards = [...root.querySelectorAll('.jcard')], N = cards.length;
+  root.querySelectorAll('canvas[data-spr]').forEach(c => paint(c, +c.dataset.spr));
+  const made = [];
+  const el = (tag, cls, html = '') => { const e = document.createElement(tag); e.className = cls; e.innerHTML = html; rail.appendChild(e); made.push(e); return e; };
+  const line = el('i', 'jline');
+  const when = el('div', 'jwhen', '<span class="jyl on"><span></span></span><div class="jfall"><i></i><i></i><i></i></div>'), whenY = when.querySelector('span span');
+  const pod = el('div', 'jpod'), av = document.createElement('canvas'); av.width = SW; av.height = SH; av.className = 'jav'; av.setAttribute('role', 'img'); pod.appendChild(av);
+  const stops = cards.map(() => el('i', 'jstop')), portals = cards.map(() => el('i', 'jportal'));
+  const labels = cards.map(c => { const d = c.dataset, l = el('span', 'jyl' + ('stack' in d ? ' stack' : '')); [d.y, d.to].filter(Boolean).forEach(x => { const s = document.createElement('span'); s.textContent = x; l.appendChild(s); }); return l; });
+
+  let Y = [], at = 0, want = 0, busy = false, alive = true, actT = 0, raf = 0, dwellT = 0, pending = -1, lockY = null;
+  const H = () => pod.offsetHeight;
+  const sc = i => +cards[i].dataset.s;
+  function measure() {
+    const rt = rail.getBoundingClientRect().top;
+    Y = cards.map(c => c.getBoundingClientRect().top - rt + 40);
+    [stops, portals, labels].forEach(g => g.forEach((e, i) => e.style.top = Y[i] + 'px'));
+    line.style.top = Y[0] + 'px'; line.style.height = (Y[N - 1] - Y[0]) + 'px';
+    if (!busy) rest(at);
   }
-  function lerpPt(p) { const i = Math.max(0, Math.min(pts.length - 2, Math.floor(p))), f = p - i, a = pts[i], b = pts[i + 1]; return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f]; }
-  function place() {
-    if (!pts.length) return;
-    const [x, y] = lerpPt(pos), S = SW * scale, i = Math.round(pos);
-    let ox = 0;
-    if (mode !== 'walk' && !vertical) ox = (29 - FIG[i][0]) * scale;
-    const left = vertical ? Math.max(0, x - S - 8) : x - 36 * scale + ox, top = vertical ? y - S * .62 : y - 69 * scale - 10;
-    av.style.transform = 'translate3d(' + left.toFixed(1) + 'px,' + top.toFixed(1) + 'px,0)';
-  }
-  function draw(key, make) { g.clearRect(0, 0, SW, SH); g.drawImage(frame(key, make), 0, 0); }
-  function scene(i, k, blink) { draw('s' + i + k + (blink ? 'b' : ''), () => SCENES[i](k, { blink })); av.setAttribute('aria-label', 'Arvind ' + STOPS[i].act); }
-  function walkFrame(i, k) { draw('w' + i + k + dir, () => walker(i, k, dir)); }
+  function rest(i) { pod.style.transform = 'translateY(' + (Y[i] - H() + 4) + 'px)'; av.style.transform = 'translateY(0)'; }
   function mark(i) {
-    btns.forEach((b, j) => { b.classList.toggle('on', j === i); b.setAttribute('aria-pressed', String(j === i)); });
-    const st = STOPS[i]; cap.classList.remove('in'); void cap.offsetWidth;
-    cap.innerHTML = '<b>' + st.name + '</b> ' + st.line; cap.classList.add('in');
+    [cards, stops, labels].forEach(g => g.forEach((e, j) => e.classList.toggle('on', j === i)));
+    av.setAttribute('aria-label', 'Arvind ' + cards[i].dataset.act);
   }
-  function go(i) {
-    if (i === target && mode !== 'idle') return;
-    target = i; mark(i);
-    if (RM.matches) { pos = at = i; mode = 'idle'; scene(i, 0); place(); return; }
-    if (Math.abs(pos - i) < .01) { act(); return; }
-    dir = i > pos ? 1 : -1; if (mode !== 'walk') { mode = 'walk'; t0 = last = performance.now(); }
-    loop();
+  function act(i) {
+    clearInterval(actT);
+    if (RM || !alive) return;
+    const seq = [0, 1, 2, 3, 2, 1, 2, 3]; let k = 0;
+    actT = setInterval(() => { paint(av, sc(i), seq[k]); if (++k >= 8) { clearInterval(actT); paint(av, sc(i)); } }, 230);
   }
-  function act() { mode = 'act'; t0 = performance.now(); at = target; pos = target; place(); loop(); }
-  function loop() { if (!raf && alive) raf = requestAnimationFrame(step); }
-  function step(now) {
-    raf = 0; if (!alive) return;
-    const dt = Math.min(64, now - last); last = now;
-    if (mode === 'walk') {
-      const speed = .0032 * (vertical ? 1.2 : 1);
-      const d = target - pos; dir = d > 0 ? 1 : -1;
-      pos += dir * Math.min(Math.abs(d), speed * dt);
-      walkK = Math.max(0, Math.floor((now - t0) / 130)) % 4;
-      walkFrame(Math.round(pos), walkK);
-      place();
-      if (Math.abs(target - pos) < .001) { pos = target; act(); return; }
-    } else if (mode === 'act') {
-      const k = Math.max(0, Math.floor((now - t0) / 260));
-      if (k >= 8) { mode = 'idle'; scene(at, 0); place(); idle(); return; }
-      scene(at, [0, 1, 2, 3, 2, 1, 2, 3][k]);
+  const portal = (p, e) => { p.style.opacity = cl(e * 1.6); p.style.transform = 'scale(' + e + ',' + (.3 + .7 * e) + ')'; };
+
+  function travel(a, b, done) {
+    clearInterval(actT);
+    if (RM) { paint(av, sc(b)); rest(b); mark(b); return done(); }
+    const up = b < a, y0 = +cards[a].dataset.y, y1 = +cards[b].dataset.y;
+    const Df = cl(300 + Math.abs(Y[b] - Y[a]) * .55, 520, 1100), F0 = 380, F1 = F0 + Df, END = F1 + 620;
+    const pa = portals[a], pb = portals[b];
+    let t0 = 0, phase = 0;
+    when.classList.toggle('up', up);
+    stops[a].classList.add('gone');
+    function f(now) {
+      raf = 0; if (!alive) return;
+      if (!t0) t0 = now;
+      const t = now - t0, ya = Y[a], yb = Y[b];
+      portal(pa, eOut(seg(t, 0, 220)) * (1 - eIn(seg(t, 400, 200))));
+      if (t < F0) { pod.style.transform = 'translateY(' + (ya - H() + 4) + 'px)'; av.style.transform = 'translateY(' + eIn(seg(t, 80, 320)) * 100 + '%)'; }
+      if (phase === 0 && t >= F0) { phase = 1; labels[a].classList.remove('on'); paint(av, sc(b)); }
+      if (phase === 1 && t >= 600) { phase = 2; stops[a].classList.remove('gone', 'on'); }
+      const d = eIO(seg(t, F0, Df));
+      when.style.transform = 'translate(-50%,' + (ya + (yb - ya) * d) + 'px)';
+      whenY.textContent = t >= F0 ? Math.round(y0 + (y1 - y0) * d) : y0;
+      if (t >= F1 - 180 && phase < 3) { phase = 3; stops[b].classList.add('gone'); }
+      portal(pb, eOut(seg(t, F1 - 180, 220)) * (1 - eIn(seg(t, F1 + 400, 220))));
+      if (t >= F0) { pod.style.transform = 'translateY(' + (yb - H() + 4) + 'px)'; av.style.transform = 'translateY(' + (1 - eOut(seg(t, F1 + 40, 460))) * 100 + '%)'; }
+      if (phase === 3 && t >= F1) { phase = 4; mark(b); stops[b].classList.add('gone'); }
+      labels[a].style.opacity = 1 - eOut(seg(t, 260, 120)) + eOut(seg(t, F0 + Math.min(320, Df * .55), 200));
+      labels[b].style.opacity = 1 - eOut(seg(t, F1 - 200, 140)) + eOut(seg(t, F1 + 240, 220));
+      when.style.opacity = eOut(seg(t, F0, 120)) - eIn(seg(t, F1 + 60, 160));
+      if (t < END) { raf = requestAnimationFrame(f); return; }
+      stops[b].classList.remove('gone'); when.style.opacity = 0; pa.style.opacity = pb.style.opacity = 0; labels[a].style.opacity = labels[b].style.opacity = '';
+      done();
     }
-    loop();
+    raf = requestAnimationFrame(f);
   }
-  function idle() {
-    clearTimeout(timer); if (!alive || RM.matches) return;
-    timer = setTimeout(() => { if (mode !== 'idle' || !alive) return; scene(at, 0, true); timer = setTimeout(() => { if (mode === 'idle' && alive) { scene(at, 0); idle(); } }, 140); }, 2600 + Math.random() * 1800);
+  function go() {
+    if (busy || want === at || !alive) return;
+    busy = true;
+    const b = want;
+    travel(at, b, () => {
+      at = b;
+      if (want !== at) setTimeout(() => { busy = false; go(); }, 160);
+      else { busy = false; rest(at); act(at); }
+    });
   }
-  btns.forEach((b, i) => {
-    b.addEventListener('click', () => go(i), sig);
-    b.addEventListener('mouseenter', () => { if (!vertical) go(i); }, sig);
-    b.addEventListener('focus', () => go(i), sig);
-  });
-  const ro = new ResizeObserver(layout); ro.observe(root);
-  scene(5, 0); mark(5); layout(); idle();
-  return () => { alive = false; ac.abort(); ro.disconnect(); cancelAnimationFrame(raf); clearTimeout(timer); root.innerHTML = ''; };
+  function readingLine() {
+    const vh = innerHeight, left = document.documentElement.scrollHeight - vh - scrollY;
+    return vh * (.4 + .5 * (1 - cl(left / (vh * .5))));
+  }
+  function desired(from) {
+    const L = readingLine(), top = cards.map(c => c.getBoundingClientRect().top);
+    let k = from;
+    while (k < N - 1 && top[k + 1] <= L - HYS) k++;
+    while (k > 0 && top[k] > L + HYS) k--;
+    return k;
+  }
+  function check() {
+    if (lockY !== null) { if (Math.abs(scrollY - lockY) < LOCK) return; lockY = null; }
+    const d = desired(want);
+    if (d === want) { pending = -1; clearTimeout(dwellT); return; }
+    if (d === pending) return;
+    pending = d; clearTimeout(dwellT);
+    dwellT = setTimeout(() => { const d2 = desired(want); pending = -1; if (d2 !== want) { want = d2; go(); } }, DWELL);
+  }
+  cards.forEach((c, j) => c.addEventListener('click', e => { if (e.target.closest('a,button')) return; lockY = scrollY; pending = -1; clearTimeout(dwellT); if (want !== j) { want = j; go(); } }, sig));
+  addEventListener('scroll', check, { passive: true, signal: ac.signal });
+  addEventListener('resize', check, sig);
+  const ro = new ResizeObserver(() => { measure(); check(); }); ro.observe(root);
+
+  const more = root.querySelector('.jmore'), early = root.querySelector('.jcollapse');
+  if (more && early) {
+    more.addEventListener('click', () => { const o = more.getAttribute('aria-expanded') !== 'true'; more.setAttribute('aria-expanded', String(o)); early.classList.toggle('open', o); more.firstChild.textContent = o ? 'Hide the full journey ' : 'See the full journey '; }, sig);
+    early.addEventListener('transitionend', measure, sig);
+  }
+
+  measure();
+  want = at = desired(0);
+  paint(av, sc(at)); mark(at); rest(at);
+  const t1 = setTimeout(() => !busy && act(at), 400);
+  return () => { alive = false; ac.abort(); ro.disconnect(); cancelAnimationFrame(raf); clearInterval(actT); clearTimeout(dwellT); clearTimeout(t1); made.forEach(e => e.remove()); };
 }
 export { sprite, render, walker, arm, adult, OUT, P, SW, SH };
