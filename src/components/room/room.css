@@ -9,7 +9,7 @@
   --dvar:normal;
   /* type roles: the tuner sets these; Copy CSS exports the same names */
   --disp-ff:var(--ff-display);--disp-fs:76px;--disp-fw:640;--disp-lh:1.02;--disp-ls:-.032em;--disp-dk:100%;--disp-mw:none;--disp-k:1;--disp-c:color-mix(in srgb,var(--ink) var(--disp-dk),var(--paper));
-  --head-ff:var(--ff-display);--head-fs:46px;--head-fw:640;--head-lh:1.06;--head-ls:-.032em;--head-dk:100%;--head-mw:none;--head-k:1;--head-c:color-mix(in srgb,var(--ink) var(--head-dk),var(--paper));
+  --head-ff:var(--ff-display);--head-fs:46px;--head-fw:640;--head-lh:1.06;--head-ls:-.028em;--head-dk:100%;--head-mw:none;--head-k:1;--head-c:color-mix(in srgb,var(--ink) var(--head-dk),var(--paper));
   --hero-ff:var(--ff-text);--hero-fs:19px;--hero-fw:400;--hero-lh:1.5;--hero-ls:0em;--hero-dk:90%;--hero-mw:52ch;--hero-k:1;--hero-c:color-mix(in srgb,var(--ink) var(--hero-dk),var(--paper));
   --body-ff:var(--ff-text);--body-fs:18px;--body-fw:400;--body-lh:1.6;--body-ls:0em;--body-dk:88%;--body-mw:62ch;--body-k:1;--body-c:color-mix(in srgb,var(--ink) var(--body-dk),var(--paper));
   --card-ff:var(--ff-text);--card-fs:17.5px;--card-fw:400;--card-lh:1.55;--card-ls:0em;--card-dk:88%;--card-mw:56ch;--card-k:1;--card-c:color-mix(in srgb,var(--ink) var(--card-dk),var(--paper));
@@ -178,7 +178,7 @@
 /* phone */
 @media (max-width:760px){
       .rp{--disp-k:.56;--head-k:.77;--h3-r:.57;--hero-k:.92;--body-k:.945;--card-k:.945;--label-k:.96;--ui-k:1;--top:58px;--gutter:20px;--sec-gap:72px;
-    --disp-fw:580;--head-fw:540;--disp-ls:-.026em;--head-ls:-.022em;
+    --disp-fw:600;--head-fw:600;--disp-ls:-.026em;--head-ls:-.022em;
     --t-display:clamp(31px,calc(7vw + 7px),42px);--t-h2:clamp(25px,calc(3.6vw + 12px),32px);--t-h3:clamp(19px,calc(1.6vw + 13px),23px);
     --t-lead:16.5px;--t-body:16px;--t-card:15.5px;--t-small:14.5px}
   .rp .label{margin-bottom:var(--s-2)}
