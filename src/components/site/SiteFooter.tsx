@@ -7,6 +7,7 @@ export default function SiteFooter() {
       <nav aria-label="Footer">
         <a href="#work">Work</a>
         <a href="#journey">Journey</a>
+        <a href="#how">How I work</a>
         <a href="#writing">Writing</a>
         <a href="#contact">Contact</a>
         <a href="#top">Top<span aria-hidden="true"> ↑</span></a>

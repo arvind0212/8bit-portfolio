@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const LINKS = [["work", "Work"], ["journey", "Journey"], ["writing", "Writing"], ["contact", "Contact"]];
+const LINKS = [["work", "Work"], ["journey", "Journey"], ["how", "How", " I work"], ["writing", "Writing"], ["contact", "Contact"]];
 
 /* the one top bar: name on the left, sections on the right; on the home page it lights the section you are in */
 export default function TopBar({ home = true, room = false }: { home?: boolean; room?: boolean }) {
@@ -37,7 +37,7 @@ export default function TopBar({ home = true, room = false }: { home?: boolean; 
     <header className="top">
       <a className="who" href={home ? "#top" : "/"} aria-label={home ? "Arvind Guruprasad, back to top" : "Arvind Guruprasad, home"}><i aria-hidden="true">AG</i><b>Arvind Guruprasad</b></a>
       <nav aria-label="Main" ref={nav}>
-        {LINKS.map(([id, name]) => <a key={id} href={to + id} data-sec={home ? id : undefined}>{name}</a>)}
+        {LINKS.map(([id, name, more]) => <a key={id} href={to + id} data-sec={home ? id : undefined}>{name}{more && <span className="more">{more}</span>}</a>)}
         {room && <span className="sep" aria-hidden="true"></span>}
         {room && <a href="#room" data-act="room" className="toroom" aria-label="Step back into the room"><span aria-hidden="true">⌂</span> Room</a>}
       </nav>

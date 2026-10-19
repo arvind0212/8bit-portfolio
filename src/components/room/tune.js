@@ -41,7 +41,7 @@ const ROLES=[
   {k:'ui',n:'Nav & buttons',sel:'.top nav a,.top .who b,.btn,.read,.links a',d:{ff:'Atkinson Hyperlegible Next',fs:15,fw:600,lh:1.2,ls:0,dk:100,mw:0},fs:[12,22,.5]},
   {k:'card',n:'Case-study text',sel:'.cline,.wsum',d:{ff:'Atkinson Hyperlegible Next',fs:17.5,fw:400,lh:1.55,ls:0,dk:88,mw:56},fs:[13,22,.5]},
   {k:'hero',n:'Hero line',sel:'.value,.hi',d:{ff:'Atkinson Hyperlegible Next',fs:19,fw:400,lh:1.5,ls:0,dk:90,mw:52},fs:[14,30,.5]},
-  {k:'body',n:'Body',sel:'.intro,.mrows p,.fit,.jcap,.jstops b,.facts b,.facts span',d:{ff:'Atkinson Hyperlegible Next',fs:18,fw:400,lh:1.6,ls:0,dk:88,mw:62},fs:[14,22,.5]},
+  {k:'body',n:'Body',sel:'.intro,.fit,.jcap,.jstops b,.facts b,.facts span',d:{ff:'Atkinson Hyperlegible Next',fs:18,fw:400,lh:1.6,ls:0,dk:88,mw:62},fs:[14,22,.5]},
   {k:'head',n:'Headings',sel:'h2,h3,.card.all b,.posts .pt',d:{ff:'Bricolage Grotesque',fs:46,fw:560,lh:1.06,ls:-.028,dk:100,mw:0},fs:[22,64,1]},
   {k:'disp',n:'Hero headline',sel:'h1',d:{ff:'Bricolage Grotesque',fs:76,fw:560,lh:1,ls:-.028,dk:100,mw:0},fs:[40,128,1]},
 ];

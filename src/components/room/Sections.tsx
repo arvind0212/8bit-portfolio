@@ -3,6 +3,7 @@ import WorkSection from "../work/WorkSection";
 import WritingSection from "../site/WritingSection";
 import ContactSection from "../site/ContactSection";
 import SiteFooter from "../site/SiteFooter";
+import HowLoop from "../site/HowLoop";
 
 export const CV = "https://drive.google.com/file/d/1NuS61X_awnnDSR8uW-5jEng5P1QcZ2f3/view?usp=drive_link";
 
@@ -86,13 +87,13 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
 
       <section className="sec" id="how" aria-labelledby="h-how">
         <p className="label"><span className="n">03</span>How I work</p>
-        <h2 id="h-how">I own the intent and the checks.</h2>
-        <ol className="mrows">
-          <li><span className="n">01</span><h3>Frame</h3><p>Decide what done looks like.</p></li>
-          <li><span className="n">02</span><h3>Design</h3><p>Pick the simplest system that works.</p></li>
-          <li><span className="n">03</span><h3>Build</h3><p>Agents build. I own the intent and the checks.</p></li>
-          <li><span className="n">04</span><h3>Check</h3><p>Test the real thing. Get a second reviewer.</p></li>
-        </ol>
+        <div className="howgrid">
+          <div>
+            <h2 id="h-how">People set the intent. Agents do the work.</h2>
+            <p className="intro">I start from what people need and write the brief. Agents build it and check it against that brief, and what we learn starts the next round.</p>
+          </div>
+          <HowLoop />
+        </div>
       </section>
 
       <WritingSection />
