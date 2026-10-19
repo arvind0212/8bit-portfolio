@@ -17,8 +17,8 @@ export default function WorkIndex() {
         <p className="crumb"><a href="/">← Home</a></p>
         <p className="label">All work · {WORK.length}</p>
         <h1 id="h-all">Everything, with the limits <em>written down.</em></h1>
-        <p className="dek">Case studies I can show in full. The lit bars mark the layers I owned, from discovery to rollout.</p>
-        <ol className="wgrid">
+        <p className="dek">Case studies I can show in full, each starting with the outcome. Team results follow below.</p>
+        <ol className="cards wgrid">
           {cases.map((w, i) => <WorkCard key={w.slug} w={w} n={i + 1} />)}
         </ol>
         {team.length > 0 && (

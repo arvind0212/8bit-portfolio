@@ -10,17 +10,32 @@ export type Case = {
   role: string;
   when: string;
   team: string;
+  tldr: string;
   stats: { v: string; l: string }[];
   sketchNote?: string;
+  why: string;
+  how: string;
   flow: Flow;
   flowCaption: string;
-  problem: string;
-  decision: string;
-  outcome: string;
-  notDone: string;
+  notes: string[];
+  chart?: Chart;
+  hard: { issue: string; fix: string }[];
+  alternatives: { option: string; why: string }[];
+  ship: string;
+  tryIt?: { repo: string; steps: string[] };
   limits: string[];
   stack: string[];
   links: { label: string; href: string }[];
+};
+
+export type Chart = {
+  title: string;
+  unit: string;
+  min: number;
+  max: number;
+  series: [string, string];
+  rows: { label: string; values: [number, number] }[];
+  caption: string;
 };
 
 export type Work = {
@@ -59,12 +74,15 @@ export const WORK: Work[] = [
       role: "Sole author",
       when: "2026 · MSc, KI and KTH",
       team: "Supervised by Vladimir Li, Arkus AI",
+      tldr: "Agents kept lab results almost perfectly intact and got medications right about 91% of the time, on synthetic data. The agents with tools scored highest but sometimes failed to finish; the simplest agent never failed. Passing a schema check told me nothing about whether the meaning survived.",
       stats: [
         { v: "~100%", l: "lab results kept their meaning, best agent" },
         { v: "~91%", l: "medications kept their meaning, best agent" },
         { v: "0", l: "failed runs for the simplest agent" },
         { v: "32% → <10%", l: "likely-wrong code mappings once agents could look codes up" },
       ],
+      why: "Hospitals record data their own way, so research means reshaping it into a shared standard. That step is quietly risky: a lab value in the wrong unit, a drug mapped to a less specific code, or an order read as a dose given all pass structural checks. I wanted to know whether AI agents can do this job without changing what the data means.",
+      how: "I generated synthetic patients with a known correct answer for every record, then made the source data messier in five stacked layers: formats, schema, local codes, units and timing. Three agents, from reasoning only to a sandboxed workspace with lookup tools, ran each layer on two models, and a deterministic scorer graded every field.",
       flow: {
         steps: [
           { glyph: "doc", label: "Messy records", note: "5 layers of noise" },
@@ -73,15 +91,35 @@ export const WORK: Work[] = [
           { glyph: "table", label: "Locked truth", note: "same meaning?", hot: true },
         ],
       },
-      flowCaption: "Fig. 1 · The benchmark. Passing the schema check is where most pipelines stop; this one keeps going.",
-      problem:
-        "A converted table can pass every structural check and still be clinically wrong: a lab value in the wrong unit, a drug mapped to a less specific code, an order read as a dose given.",
-      decision:
-        "I built a synthetic benchmark with a known answer for every record, stacked five layers of realistic messiness, and compared three agents, from reasoning only to a sandboxed workspace with tools.",
-      outcome:
-        "Labs came through almost intact; medications topped out around 91%. Agents with tools scored highest but sometimes failed to finish. The reasoning-only agent never failed.",
-      notDone:
-        "I didn't test on real patients. A known-correct answer for every record is impossible with real data, so I chose synthetic data I could grade field by field and share openly.",
+      flowCaption: "Fig. 1 · The benchmark. Most pipelines stop at the schema check; this one keeps going.",
+      notes: [
+        "Labs mostly survived every layer of messiness. Medications broke on dosing instructions, drug specificity, route and timing.",
+        "Kimi-K2.6 used about three times the tokens of GPT-5.4 on the hardest agent, and took longer.",
+      ],
+      chart: {
+        title: "Medications kept their meaning, by agent",
+        unit: "% accepted accuracy",
+        min: 89,
+        max: 92,
+        series: ["GPT-5.4", "Kimi-K2.6"],
+        rows: [
+          { label: "A · reasoning only", values: [90.6, 89.9] },
+          { label: "B · with lookup tools", values: [91.3, 90.4] },
+          { label: "C · sandboxed workspace", values: [91.5, 91.4] },
+        ],
+        caption: "Fig. 2 · All five layers of messiness stacked. More autonomy helped a little on medications; labs were 99–100% for every agent.",
+      },
+      hard: [
+        { issue: "Agents with tools sometimes failed to finish a run.", fix: "Kept the reasoning-only agent as a reliable baseline and reported failures next to accuracy." },
+        { issue: "Grading by exact match punished clinically equivalent answers, like the same glucose value in different units.", fix: "Scored exact and accepted separately, crediting only documented equivalences." },
+      ],
+      alternatives: [
+        { option: "Real patient records", why: "There is no known-correct answer for every record, and they can't be shared. Synthetic data could be graded field by field and published." },
+        { option: "One agent design", why: "It wouldn't show what autonomy buys. A ladder of three shows where tools help and where they add failures." },
+        { option: "Web search for the agents", why: "Left off, so every run used the same local terminology tools and can be repeated." },
+      ],
+      ship: "Defended in June 2026. The benchmark code is public, and a plain-language summary sits alongside the full thesis.",
+      tryIt: { repo: "https://github.com/arvind0212/agentic-clinical-etl-benchmark", steps: [] },
       limits: [
         "Synthetic data in a lab setting, not a deployment.",
         "Only lab results and medications.",
@@ -89,10 +127,7 @@ export const WORK: Work[] = [
         "The ~100% counts documented, clinically equivalent conversions as correct.",
       ],
       stack: ["Python", "Synthea", "OMOP CDM 5.4", "LOINC", "RxNorm", "UMLS", "GPT-5.4", "Kimi-K2.6"],
-      links: [
-        { label: "Read the full thesis summary", href: "/thesis-summary.html" },
-        { label: "Benchmark code on GitHub", href: "https://github.com/arvind0212/agentic-clinical-etl-benchmark" },
-      ],
+      links: [{ label: "Read the full thesis summary", href: "/thesis-summary.html" }],
     },
   },
   {
@@ -114,12 +149,15 @@ export const WORK: Work[] = [
       role: "Research Assistant, Applied AI for Medical Data",
       when: "Apr–Oct 2025",
       team: "Zheng Chang's group, psychiatric pharmacoepidemiology · built solo",
+      tldr: "Every one of 1,000 prescription records came back: 99.4% as valid, rule-checked output and 1.1% flagged for a person to review. The old process had dropped about 90% of them.",
       stats: [
         { v: "99.4%", l: "came back as valid, rule-checked output" },
         { v: "1.1%", l: "flagged for a person to review" },
         { v: "0", l: "records lost" },
         { v: "~90%", l: "lost by the old process" },
       ],
+      why: "The group studies how psychiatric medicines are used, and prescriptions are the raw material. Their old pipeline couldn't read free-text dosage instructions, so most of a Swedish prescription dataset never reached the research.",
+      how: "I agreed labelling rules with the researchers, wrote a JSON schema for a structured prescription, and iterated prompts on Gemini 2.5 Pro. Every row the model returned then went through a deterministic layer: clinical logic rules, a duplicate check, a confidence score and review flags.",
       flow: {
         steps: [
           { glyph: "doc", label: "Free text", note: "Swedish dosage" },
@@ -129,14 +167,18 @@ export const WORK: Work[] = [
         ],
       },
       flowCaption: "Fig. 1 · The pipeline. The model handles language; anything that must be exact is checked in code.",
-      problem:
-        "The group's old pipeline couldn't read free-text dosage instructions, so about 90% of a Swedish prescription dataset never reached the research.",
-      decision:
-        "Split the work by strength. The model reads Swedish, works out titration schedules and normalises indications. Code enforces clinical logic rules, catches duplicates, scores confidence and flags doubts.",
-      outcome:
-        "Every record came back: 99.4% as valid, rule-checked output and 1.1% flagged for a person to review. Nothing was dropped.",
-      notDone:
-        "I didn't let the model decide what's safe. High-dose regimens and low-confidence rows go to a person instead of being guessed.",
+      notes: [
+        "The model was strongest exactly where rules break: reading Swedish phrasing, working out titration schedules and normalising indications to English.",
+      ],
+      hard: [
+        { issue: "Titration schedules hide arithmetic, like doses that step up week by week.", fix: "Let the model work the schedule out, then checked the result against clinical logic rules in code." },
+        { issue: "Some regimens were unusually high.", fix: "Flagged them for clinical review instead of letting the pipeline decide." },
+      ],
+      alternatives: [
+        { option: "Keep a rules-only parser", why: "That was the old process, and it lost about 90% of the records." },
+        { option: "Trust the model's output", why: "Integrity and safety stay in code. Every row is checked, and doubtful ones go to a person." },
+      ],
+      ship: "I set the pipeline up for the group and ran it on their real prescription data. It's a research pipeline, not a production rollout.",
       limits: [
         "99.4% is the share of valid, rule-checked output, not accuracy against a gold standard.",
         "A validated research pipeline, not a live clinical system.",
@@ -165,9 +207,12 @@ export const WORK: Work[] = [
       role: "Solo, personal project",
       when: "2026 · in progress",
       team: "Just me and my agent harness",
+      tldr: "A working Windows prototype, built for my own use. It brings my agent into any app, shows what it read, and pastes nothing back without a yes. Offline technical checks pass.",
       stats: [],
       sketchNote:
         "This is a sketch. The build isn't public yet, so there's no link or screenshot, and the visuals here are illustrative.",
+      why: "Asking an agent for help meant leaving the app I was in, copying context across and pasting the answer back by hand.",
+      how: "The island rests as a small pill at the top of the active screen and opens downward for a question. Context from the screen, an app, the clipboard or audio is taken only when I ask for it, shown so I can check it, and paste-back waits for approval.",
       flow: {
         steps: [
           { glyph: "doc", label: "Any app" },
@@ -177,14 +222,14 @@ export const WORK: Work[] = [
         ],
       },
       flowCaption: "Fig. 1 · The loop. Nothing touches your app without a yes.",
-      problem:
-        "Asking an agent for help means leaving the app you're in, copying context across and pasting the answer back by hand.",
-      decision:
-        "Bring the agent to the app instead. Context is taken only when asked for and shown so you can check it, and paste-back waits for approval.",
-      outcome:
-        "Offline technical checks pass. First real use showed setup was too fiddly, so I rebuilt it; setting up is now much simpler.",
-      notDone:
-        "No always-on screen reading. The island sees your screen, clipboard or audio only when you ask it to.",
+      notes: [],
+      hard: [
+        { issue: "On first real use, setting it up was too fiddly.", fix: "I rebuilt the setup; it's now much simpler." },
+      ],
+      alternatives: [
+        { option: "Always-on screen reading", why: "It would be convenient, but the island sees your screen, clipboard or audio only when you ask." },
+      ],
+      ship: "A packaged Windows build for my own use. It isn't public yet.",
       limits: [
         "Built for my own use; no other users yet.",
         "Live checks on the Windows desktop and with live model providers are still open.",
