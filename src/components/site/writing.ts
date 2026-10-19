@@ -6,11 +6,25 @@ export type Post = {
   dek: string;
   live: boolean;
   preview: string;
+  long?: boolean;
+  bottom?: string;
+  parts?: { title: string; hook: string; body: string[] }[];
 };
 
 export const TOPICS = ["Agents", "Clinical data", "Evaluation", "How I work", "Career", "Building in public"];
 
 export const POSTS: Post[] = [
+  {
+    slug: "thesis",
+    date: "Jun 2026",
+    topics: ["Agents", "Clinical data", "Evaluation"],
+    title: "Can AI agents standardise clinical data without losing its meaning?",
+    dek: "My master's thesis as a long read: three agent designs, five layers of messy hospital data, and where meaning breaks.",
+    live: true,
+    long: true,
+    preview:
+      '<p class="pk">Kept their meaning, best agent</p><div class="pm"><span>Lab results</span><b>~100%</b><i style="--w:100%"></i></div><div class="pm"><span>Medications</span><b>~91%</b><i style="--w:91%"></i></div>',
+  },
   {
     slug: "where-meaning-breaks",
     date: "Jun 2026",

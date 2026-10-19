@@ -134,7 +134,7 @@ export const WORK: Work[] = [
         "The ~100% counts documented, clinically equivalent conversions as correct.",
       ],
       stack: ["Python", "Synthea", "OMOP CDM 5.4", "LOINC", "RxNorm", "UMLS", "GPT-5.4", "Kimi-K2.6"],
-      links: [{ label: "Read the full thesis summary", href: "/thesis-summary.html" }],
+      links: [{ label: "Read the long read", href: "/writing/thesis" }],
     },
   },
   {

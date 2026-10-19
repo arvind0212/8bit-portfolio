@@ -13,7 +13,7 @@ export default function WritingSection() {
         <a className="read wr-all" href="/writing">All writing<span aria-hidden="true"> →</span></a>
       </div>
       <ol className="wcards">
-        {POSTS.filter((p) => p.live).slice(0, 2).map((p) => <PostCard key={p.slug} p={p} />)}
+        {POSTS.filter((p) => p.live && !p.long).slice(0, 2).map((p) => <PostCard key={p.slug} p={p} />)}
       </ol>
       <a className="read wr-mob" href="/writing">All writing<span aria-hidden="true"> →</span></a>
     </section>
