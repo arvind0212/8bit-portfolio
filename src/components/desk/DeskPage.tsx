@@ -24,7 +24,7 @@ export default function DeskPage() {
     <div ref={ref} data-mode="scene" className={["rp", "dk", FONT_VARS].join(" ")}>
       <div className="scene" id="scene" role="img" aria-labelledby="roomdesc">
         <p className="sr" id="roomdesc">A voxel model of Arvind&apos;s room in Stockholm builds itself, and the view moves into the monitor on his desk, where the site is.</p>
-        <button type="button" className="skip" id="skip">Skip<span aria-hidden="true"> »</span></button>
+        <button type="button" className="skip" id="skip">Skip intro<span aria-hidden="true"> »</span></button>
         <div className="roomhint" id="roomhint" hidden>
           <span>Click the monitor to sit back down.</span>
           <button type="button" id="sitback">Back to the desk</button>

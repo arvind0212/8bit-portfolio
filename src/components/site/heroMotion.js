@@ -5,15 +5,15 @@
 const EASE = 'cubic-bezier(.22,1,.36,1)';
 const RISE = [{ opacity: 0, transform: 'translateY(14px)', filter: 'blur(6px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }];
 const STEPS = [
-  ['hello', 0, 760, RISE],
-  ['role', 420, 700, RISE],
-  ['city', 640, 640, [{ opacity: 0, transform: 'scale(.88)' }, { opacity: 1, transform: 'none' }]],
-  ['q', 900, 900, RISE],
-  ['a', 1180, 900, RISE],
-  ['line', 1480, 760, RISE],
-  ['cta', 1640, 760, RISE],
+  ['hello', 0, 680, RISE],
+  ['role', 200, 620, RISE],
+  ['q', 380, 680, RISE],
+  ['a', 600, 680, RISE],
+  ['line', 1000, 680, RISE],
+  ['cta', 1150, 680, RISE],
+  ['next', 1650, 800, [{ opacity: 0, transform: 'translateY(24px)' }, { opacity: 1, transform: 'none' }]],
   ['orb', 120, 1900, [{ opacity: 0, transform: 'scale(.55)' }, { opacity: 1, transform: 'none' }], 160],
-  ['dot', 1500, 900, [{ opacity: 0, transform: 'scale(0)' }, { opacity: 1, transform: 'none' }], 160]
+  ['dot', 1000, 800, [{ opacity: 0, transform: 'scale(0)' }, { opacity: 1, transform: 'none' }], 160]
 ];
 
 export function initHeroMotion(page) {
@@ -25,7 +25,7 @@ export function initHeroMotion(page) {
     anims.forEach(a => a.cancel());
     anims = [];
     for (const [key, delay, duration, frames, stagger = 0] of STEPS)
-      hero.querySelectorAll('[data-in="' + key + '"]').forEach((el, i) => {
+      (key === 'next' ? page.querySelectorAll('#work') : hero.querySelectorAll('[data-in="' + key + '"]')).forEach((el, i) => {
         const a = el.animate(frames, { delay: delay + i * stagger, duration, easing: EASE, fill: 'backwards' });
         a.pause(); a.currentTime = 0; anims.push(a);
       });

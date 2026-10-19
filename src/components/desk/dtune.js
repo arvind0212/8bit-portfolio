@@ -7,6 +7,7 @@ const GROUPS = [
     ['screenOn0', 'Live: site appears from', 0, 1, .01],
     ['screenOn1', 'Live: site appears until', 0, 1, .01],
     ['heroAt', 'Hero load-in starts at', 0, 1, .01],
+    ['roomOut0', 'Live: room fades to paper from', 0, 1, .01],
     ['glow0', 'Glow: screen lights from', 0, 1, .01],
     ['glow1', 'Glow: screen lights until', 0, 1, .01],
     ['fadeMs', 'Glow: site fade', 0, 1500, 10, 'ms'],

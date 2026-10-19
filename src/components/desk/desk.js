@@ -19,7 +19,7 @@ export const DEF = {
   az0: 42, el0: 30, fov0: 14, fov1: 38, el1: 0,
   panLead: .1, perspLead: .25, turnStart: 0, turnEnd: .85,
   over: 1.04, backMul: .85,
-  screenMode: 'live', screenOn0: .45, screenOn1: .78, heroAt: .5,
+  screenMode: 'live', screenOn0: .45, screenOn1: .7, heroAt: .48, roomOut0: .7,
   glow0: .55, glow1: .95, fadeMs: 420, dissolveMs: 650, tile: 18,
   skipRate: 4, skipRamp: 260,
   popEase: [.34, 1.56, .64, 1], riseEase: [.22, 1, .36, 1], dropEase: [.55, 0, 1, .45], landEase: [.3, 1.8, .5, 1], camEase: [.62, 0, .16, 1]
@@ -43,7 +43,7 @@ export function initDesk(page, { tune = false } = {}) {
   const curves = () => { E = Object.fromEntries(['popEase', 'riseEase', 'dropEase', 'landEase', 'camEase'].map(k => [k, bezier(S[k])])); };
   curves();
 
-  const scene3 = $('#scene'), screen = $('#screen'), site = $('#site'), hint = $('#roomhint'), dis = $('#dissolve');
+  const skipBtn = $('#skip'), scene3 = $('#scene'), screen = $('#screen'), site = $('#site'), hint = $('#roomhint'), dis = $('#dissolve');
   const GL = webgl();
 
   /* three.js: the world, a WebGL renderer for it and a CSS3D renderer that carries the site on the screen */
@@ -85,7 +85,10 @@ export function initDesk(page, { tune = false } = {}) {
     const d = h / (2 * Math.tan(fov * D2R / 2));
     dir.set(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el));
     camera.fov = fov; camera.position.copy(T).addScaledVector(dir, d); camera.lookAt(T); camera.updateProjectionMatrix();
-    W && (W.glow.opacity = S.screenMode === 'glow' ? win(t, S.glow0, S.glow1) : 0);
+    W && (W.glow.opacity = S.screenMode === 'glow' ? win(t, S.glow0, S.glow1) : S.screenMode === 'live' ? win(t, S.screenOn0 - .1, S.screenOn0 + .04) : 0);
+    const out = S.screenMode === 'live' ? (1 - win(t, S.roomOut0, 1)).toFixed(3) : '';
+    if (GL) renderer.domElement.style.opacity = out;
+    skipBtn.style.opacity = out;
     if (place === 'css3d') screen.style.opacity = S.screenMode === 'live' ? win(t, S.screenOn0, S.screenOn1).toFixed(3) : '0';
     if (S.screenMode === 'live' && (mode === 'intro' || mode === 'in') && t >= S.heroAt) heroIn();
   }

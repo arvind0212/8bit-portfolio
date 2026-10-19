@@ -21,7 +21,7 @@ const C = {
   door: '#2F5D50', door2: '#264D42', door3: '#3A6E60', handle: '#E2B33C', matB: '#8A6440', matB2: '#A07A4F',
   ball: '#F2EEE6', ballD: '#2A2724', lampP: '#2E3036', lampS: '#E6C27A',
   nY: '#F4D35E', pg: '#F8F3E6', coin: '#E2B33C', cabG: '#6E7680', metal: '#A5ABB3',
-  pcSea: '#2E7FA8', pcSand: '#E3C58F', pcSky: '#F7D9A4', paper: '#F3EEE4'
+  pcSea: '#2E7FA8', pcSand: '#E3C58F', pcSky: '#F7D9A4', paper: '#E9EDF0'
 };
 const hash = (x, y, z) => { let h = (Math.imul(x | 0, 374761393) + Math.imul(y | 0, 668265263) + Math.imul(z | 0, 2246822519)) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 

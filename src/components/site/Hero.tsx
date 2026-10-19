@@ -2,13 +2,14 @@ import "./hero.css";
 
 /* the copy lives here so it is easy to swap */
 const HERO = {
-  hello: "Hi, I'm Arvind,",
   role: "AI engineer",
   city: "Stockholm",
-  question: "Curious where AI is taking us?",
+  name: "I'm Arvind.",
+  question: ["Curious where AI is taking us?"],
   answer: "So am I.",
-  line: "I find out by building, then write down what I learn.",
+  line: ["Founding engineer at Arkus\u00a0AI, a\u00a0healthcare\u00a0AI\u00a0startup.", "I build agents, measure them, and write down what\u00a0I\u00a0learn."],
   cta: "Get in touch",
+  more: "See my work",
 };
 
 const RINGS = [
@@ -17,7 +18,7 @@ const RINGS = [
   { r: "c", dot: "accent" },
 ];
 
-/* centred hero over thin orbit rings that breathe and pulse; heroMotion.js plays the load-in */
+/* left-aligned hero over thin orbit rings that breathe and pulse; heroMotion.js plays the load-in */
 export default function Hero({ slot = false }: { slot?: boolean }) {
   return (
     <section className="hero oh" id="hero" aria-labelledby="h1">
@@ -34,19 +35,17 @@ export default function Hero({ slot = false }: { slot?: boolean }) {
         ))}
       </div>
       <div className="hcore">
-        <p className="hi">
-          <span data-in="hello">{HERO.hello}</span>{" "}
-          <span data-in="role">an <b>{HERO.role}</b> in</span>{" "}
-          <span className="city" data-in="city"><i></i>{HERO.city}</span>
-        </p>
+        <p className="role" data-in="role"><b>{HERO.role}</b> in <span className="city"><i></i>{HERO.city}</span></p>
         <h1 id="h1">
-          <span className="ln" data-in="q">{HERO.question}</span>{" "}
-          <em className="ln" data-in="a">{HERO.answer}</em>
+          <span className="ln me" data-in="hello">{HERO.name}</span>{" "}
+          {HERO.question.map((q) => <span key={q} className="ln q" data-in="q">{q} </span>)}
+          <em className="ln q" data-in="a">{HERO.answer}</em>
         </h1>
-        <p className="value" data-in="line">{HERO.line}</p>
+        <p className="value" data-in="line">{HERO.line.map((l, i) => <span key={i}>{l} </span>)}</p>
         {slot && <div className="slot" id="slot" aria-hidden="true"></div>}
         <div className="acts" data-in="cta">
           <a className="btn" href="#contact">{HERO.cta}<span aria-hidden="true">→</span></a>
+          <a className="read" href="#work">{HERO.more}<span aria-hidden="true">↓</span></a>
         </div>
       </div>
     </section>
