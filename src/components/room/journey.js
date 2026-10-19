@@ -324,10 +324,10 @@ const paint = (cv, s, k = 0) => { const g = cv.getContext('2d'); g.clearRect(0, 
 const cl = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const eOut = t => 1 - Math.pow(1 - t, 3), eIn = t => t * t * t, eIO = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const seg = (t, a, d) => cl((t - a) / d);
-const HYS = 28, DWELL = 140, LOCK = 160;
+const HYS = 24, DWELL = 80, LOCK = 160;
 
 /* the journey rail: newest first; the avatar sinks into a portal at one stop, the year slides down the rail, and he climbs out at the next.
-   The active card is the last one whose top has crossed a reading line 40% down the viewport (sliding to 90% over the last half-screen),
+   The active card is the last one whose top has crossed a reading line 70% down the viewport (sliding to 92% over the last half-screen),
    with hysteresis and a short dwell so small scrolls never retrigger. Returns a cleanup. */
 export function initJourney(root) {
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches, ac = new AbortController(), sig = { signal: ac.signal };
@@ -368,7 +368,7 @@ export function initJourney(root) {
     clearInterval(actT);
     if (RM) { paint(av, sc(b)); rest(b); mark(b); return done(); }
     const up = b < a, y0 = +cards[a].dataset.y, y1 = +cards[b].dataset.y;
-    const Df = cl(300 + Math.abs(Y[b] - Y[a]) * .55, 520, 1100), F0 = 380, F1 = F0 + Df, END = F1 + 620;
+    const Df = cl(180 + Math.abs(Y[b] - Y[a]) * .3, 300, 620), F0 = 200, F1 = F0 + Df, END = F1 + 380;
     const pa = portals[a], pb = portals[b];
     let t0 = 0, phase = 0;
     when.classList.toggle('up', up);
@@ -377,20 +377,20 @@ export function initJourney(root) {
       raf = 0; if (!alive) return;
       if (!t0) t0 = now;
       const t = now - t0, ya = Y[a], yb = Y[b];
-      portal(pa, eOut(seg(t, 0, 220)) * (1 - eIn(seg(t, 400, 200))));
-      if (t < F0) { pod.style.transform = 'translateY(' + (ya - H() + 4) + 'px)'; av.style.transform = 'translateY(' + eIn(seg(t, 80, 320)) * 100 + '%)'; }
+      portal(pa, eOut(seg(t, 0, 140)) * (1 - eIn(seg(t, 220, 140))));
+      if (t < F0) { pod.style.transform = 'translateY(' + (ya - H() + 4) + 'px)'; av.style.transform = 'translateY(' + eIn(seg(t, 30, 170)) * 100 + '%)'; }
       if (phase === 0 && t >= F0) { phase = 1; labels[a].classList.remove('on'); paint(av, sc(b)); }
-      if (phase === 1 && t >= 600) { phase = 2; stops[a].classList.remove('gone', 'on'); }
+      if (phase === 1 && t >= 360) { phase = 2; stops[a].classList.remove('gone', 'on'); }
       const d = eIO(seg(t, F0, Df));
       when.style.transform = 'translate(-50%,' + (ya + (yb - ya) * d) + 'px)';
       whenY.textContent = t >= F0 ? Math.round(y0 + (y1 - y0) * d) : y0;
-      if (t >= F1 - 180 && phase < 3) { phase = 3; stops[b].classList.add('gone'); }
-      portal(pb, eOut(seg(t, F1 - 180, 220)) * (1 - eIn(seg(t, F1 + 400, 220))));
-      if (t >= F0) { pod.style.transform = 'translateY(' + (yb - H() + 4) + 'px)'; av.style.transform = 'translateY(' + (1 - eOut(seg(t, F1 + 40, 460))) * 100 + '%)'; }
+      if (t >= F1 - 120 && phase < 3) { phase = 3; stops[b].classList.add('gone'); }
+      portal(pb, eOut(seg(t, F1 - 120, 140)) * (1 - eIn(seg(t, F1 + 240, 140))));
+      if (t >= F0) { pod.style.transform = 'translateY(' + (yb - H() + 4) + 'px)'; av.style.transform = 'translateY(' + (1 - eOut(seg(t, F1 + 20, 280))) * 100 + '%)'; }
       if (phase === 3 && t >= F1) { phase = 4; mark(b); stops[b].classList.add('gone'); }
-      labels[a].style.opacity = 1 - eOut(seg(t, 260, 120)) + eOut(seg(t, F0 + Math.min(320, Df * .55), 200));
-      labels[b].style.opacity = 1 - eOut(seg(t, F1 - 200, 140)) + eOut(seg(t, F1 + 240, 220));
-      when.style.opacity = eOut(seg(t, F0, 120)) - eIn(seg(t, F1 + 60, 160));
+      labels[a].style.opacity = 1 - eOut(seg(t, 140, 80)) + eOut(seg(t, F0 + Math.min(220, Df * .55), 140));
+      labels[b].style.opacity = 1 - eOut(seg(t, F1 - 140, 100)) + eOut(seg(t, F1 + 160, 160));
+      when.style.opacity = eOut(seg(t, F0, 80)) - eIn(seg(t, F1 + 40, 120));
       if (t < END) { raf = requestAnimationFrame(f); return; }
       stops[b].classList.remove('gone'); when.style.opacity = 0; pa.style.opacity = pb.style.opacity = 0; labels[a].style.opacity = labels[b].style.opacity = '';
       done();
@@ -403,13 +403,13 @@ export function initJourney(root) {
     const b = want;
     travel(at, b, () => {
       at = b;
-      if (want !== at) setTimeout(() => { busy = false; go(); }, 160);
+      if (want !== at) setTimeout(() => { busy = false; go(); }, 60);
       else { busy = false; rest(at); act(at); }
     });
   }
   function readingLine() {
     const vh = innerHeight, left = document.documentElement.scrollHeight - vh - scrollY;
-    return vh * (.4 + .5 * (1 - cl(left / (vh * .5))));
+    return vh * (.7 + .22 * (1 - cl(left / (vh * .5))));
   }
   function desired(from) {
     const L = readingLine(), top = cards.map(c => c.getBoundingClientRect().top);
