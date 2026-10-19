@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Shell from "@/components/work/Shell";
-import WorkCard from "@/components/work/WorkCard";
+import WorkTile from "@/components/work/WorkTile";
 import { WORK } from "@/components/room/work";
 
 export const metadata: Metadata = {
@@ -18,8 +18,8 @@ export default function WorkIndex() {
         <p className="label">All work · {WORK.length}</p>
         <h1 id="h-all">Everything, with the limits <em>written down.</em></h1>
         <p className="dek">Case studies I can show in full, each starting with the outcome. Team results follow below.</p>
-        <ol className="cards wgrid">
-          {cases.map((w, i) => <WorkCard key={w.slug} w={w} n={i + 1} />)}
+        <ol className="bento wgrid">
+          {cases.map((w, i) => <WorkTile key={w.slug} w={w} n={i + 1} span={i === cases.length - 1 && i % 2 === 0 ? 12 : [7, 5, 5, 7][i % 4]} />)}
         </ol>
         {team.length > 0 && (
           <div className="wsub">

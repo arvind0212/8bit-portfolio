@@ -34,9 +34,12 @@ export type Chart = {
   min: number;
   max: number;
   series: [string, string];
-  rows: { label: string; values: [number, number] }[];
+  rows: { label: string; short: string; values: [number, number] }[];
   caption: string;
 };
+
+/* the window each tile shows; "chart" draws case.chart, the others render html */
+export type Screen = { file: string; flag: string; kind: "chart" | "code" | "ui"; html?: string; tone: "accent" | "plain" };
 
 export type Work = {
   slug: string;
@@ -49,8 +52,10 @@ export type Work = {
   line: string;
   pillar: string;
   owned: Layer[];
-  frame: string;
-  preview: string;
+  chips: string[];
+  outcome: { v: string; l: string };
+  screen: Screen;
+  peek: boolean;
   case?: Case;
 };
 
@@ -61,14 +66,15 @@ export const WORK: Work[] = [
     featured: true,
     tag: "Master's thesis",
     year: "2026",
-    hook: "Valid",
-    hookEm: " is not correct.",
+    hook: "Three AI agents,",
+    hookEm: " one clinical benchmark",
     line: "Clinical data agents can pass every check and still change what the data means. I measured where.",
     pillar: "Knowing what to check",
     owned: ["Discovery", "Strategy", "Architecture", "Build"],
-    frame: "",
-    preview:
-      '<p class="fk">Synthetic patient record</p><div class="vc"><div><span>Schema check</span><b>Valid ✓</b></div><div><span>Same clinical meaning</span><b class="no">Not always ✗</b></div></div>',
+    chips: ["Master's thesis", "2026", "Code public"],
+    outcome: { v: "91.5%", l: "of medications kept their meaning" },
+    screen: { file: "benchmark / medications.csv", flag: "synthetic data", kind: "chart", tone: "accent" },
+    peek: true,
     case: {
       dek: "A controlled benchmark of three AI agent designs that reshape messy, synthetic hospital records into a research standard (OMOP), graded field by field against a locked answer key.",
       role: "Sole author",
@@ -103,9 +109,9 @@ export const WORK: Work[] = [
         max: 92,
         series: ["GPT-5.4", "Kimi-K2.6"],
         rows: [
-          { label: "A · reasoning only", values: [90.6, 89.9] },
-          { label: "B · with lookup tools", values: [91.3, 90.4] },
-          { label: "C · sandboxed workspace", values: [91.5, 91.4] },
+          { label: "A · reasoning only", short: "A reason", values: [90.6, 89.9] },
+          { label: "B · with lookup tools", short: "B tools", values: [91.3, 90.4] },
+          { label: "C · sandboxed workspace", short: "C sandbox", values: [91.5, 91.4] },
         ],
         caption: "Fig. 2 · All five layers of messiness stacked. More autonomy helped a little on medications; labs were 99–100% for every agent.",
       },
@@ -136,14 +142,21 @@ export const WORK: Work[] = [
     featured: true,
     tag: "Karolinska Institutet",
     year: "2025",
-    hook: "1,000 prescriptions,",
-    hookEm: " none lost.",
+    hook: "1,000 Swedish prescriptions,",
+    hookEm: " structured",
     line: "The old pipeline dropped about 90% of the data. LLM parsing plus rule checks kept every record.",
     pillar: "Builds whatever it takes",
     owned: ["Discovery", "Strategy", "Architecture", "Build", "Rollout"],
-    frame: "ki",
-    preview:
-      '<p class="fk">Prescription pipeline</p><p class="stat">99.4%</p><p class="fs">valid, rule-checked output · 0 records lost</p>',
+    chips: ["Karolinska Institutet", "2025", "Built solo"],
+    outcome: { v: "0", l: "records lost. The old process lost ~90%" },
+    screen: {
+      file: "parse_prescriptions.py",
+      flag: "example row",
+      kind: "code",
+      tone: "plain",
+      html: '<p class="raw">"1 tablett 50 mg dagligen i 7 dagar, sedan 2 tabletter"</p><p class="via">Gemini 2.5 Pro + rule checks</p><pre class="json">{ <b>"dose_mg"</b>: [50, 100],\n  <b>"per_day"</b>: 1, <b>"days"</b>: [7, null],\n  <b>"check"</b>: <i>"passed"</i> }</pre>',
+    },
+    peek: true,
     case: {
       dek: "Free-text Swedish dosage instructions, turned into structured records a research group could use. The model reads; code checks every row it returns.",
       role: "Research Assistant, Applied AI for Medical Data",
@@ -194,14 +207,21 @@ export const WORK: Work[] = [
     featured: true,
     tag: "Prototype",
     year: "2026",
-    hook: "An assistant that",
-    hookEm: " asks before it pastes.",
+    hook: "My agent,",
+    hookEm: " inside any Windows app",
     line: "A Windows prototype that brings my agent into any app, shows what it read and waits for a yes.",
     pillar: "Product-minded",
     owned: ["Discovery", "Architecture", "Build"],
-    frame: "ui",
-    preview:
-      '<p class="fk">Illustrative</p><span class="island"><i></i>Using: this window</span><div class="ask"><p>Paste the answer back?</p><b>Yes</b><span>Not now</span></div>',
+    chips: ["Prototype", "2026", "Sketch"],
+    outcome: { v: "1 yes", l: "before anything is pasted" },
+    screen: {
+      file: "Ambient Island",
+      flag: "illustrative",
+      kind: "ui",
+      tone: "plain",
+      html: '<span class="pill"><i></i>Read 3 fields from this window</span><div class="ask"><p>Paste the answer into the form?</p><p class="ctx">Using: window · clipboard</p><p class="btns"><b>Yes</b><span>Not now</span></p></div>',
+    },
+    peek: true,
     case: {
       dek: "A small island at the top of the screen. Call it from any app, see exactly what context it took, and approve before anything goes back into your work.",
       role: "Solo, personal project",
@@ -246,10 +266,12 @@ export const WORK: Work[] = [
     year: "2022–24",
     hook: "HL7v2 to FHIR,",
     hookEm: " drafted first.",
-    line: "As technical program manager I led the team behind a GenAI accelerator that drafted HL7v2-to-FHIR mappings for engineers to review. It reached about 65–70% end-to-end accuracy on the samples we had; the result belongs to the team.",
+    line: "I was part of the team behind a GenAI accelerator that drafted HL7v2-to-FHIR mappings for engineers to review. It reached about 65–70% end-to-end accuracy on the samples we had; the result belongs to the team.",
     pillar: "Strategy-focused",
     owned: ["Discovery", "Strategy", "Rollout"],
-    frame: "",
-    preview: "",
+    chips: ["Quantiphi", "2022–24", "Team result"],
+    outcome: { v: "65–70%", l: "end-to-end accuracy on available samples" },
+    screen: { file: "", flag: "", kind: "ui", tone: "plain" },
+    peek: false,
   },
 ];
