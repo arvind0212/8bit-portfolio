@@ -1,3 +1,4 @@
+.rp .shead{display:flex;align-items:flex-end;gap:var(--s-5)}
 /* selected work, all work and case studies; every size, colour and gap comes from the site system tokens in room.css */
 
 /* cards: a quiet preview frame, then meta, title and one line */
