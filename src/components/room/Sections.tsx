@@ -17,15 +17,13 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
         {room && <div className="slot" id="slot" aria-hidden="true"></div>}
         <p className="value">As a consultant I drew the cloud architectures, wrote the proposals and unblocked the engineers. AI let me take the last step myself.</p>
         <div className="acts">
-          <a className="btn" href="#work">See the work<span aria-hidden="true">↓</span></a>
-          <a className="read" href="#contact">Get in touch<span aria-hidden="true">→</span></a>
+          <a className="btn" href="#contact">Get in touch<span aria-hidden="true">→</span></a>
         </div>
       </section>
 
       <WorkSection />
 
       <section className="sec" id="journey" aria-labelledby="h-journey">
-        <p className="label"><span className="n">02</span>Journey</p>
         <h2 id="h-journey">The road here.</h2>
         <p className="intro">Newest first. From consulting to building, by way of Stockholm.</p>
         <div className="jr" id="jroot">
@@ -86,7 +84,6 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
       </section>
 
       <section className="sec" id="how" aria-labelledby="h-how">
-        <p className="label"><span className="n">03</span>How I work</p>
         <div className="howgrid">
           <div>
             <h2 id="h-how">People set the intent. Agents do the work.</h2>

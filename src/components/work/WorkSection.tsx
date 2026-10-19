@@ -10,10 +10,8 @@ export default function WorkSection() {
     <section className="sec" id="work" aria-labelledby="h-work">
       <div className="shead">
         <div>
-          <p className="label"><span className="n">01</span>Selected work</p>
           <h2 id="h-work">What I&apos;ve built and measured.</h2>
         </div>
-        <div className="lane" id="lane"></div>
       </div>
       <ol className="bento" id="cards">
         {featured.map((w, i) => <WorkTile key={w.slug} w={w} span={SPANS[i] ?? 6} />)}

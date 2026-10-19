@@ -17,7 +17,6 @@ const LINKS: [string, string, () => React.JSX.Element][] = [
 export default function ContactSection({ room, back }: { room: boolean; back?: ReactNode }) {
   return (
     <section className="sec cx" id="contact" aria-labelledby="h-contact">
-      <p className="label"><span className="n">05</span>Contact</p>
       <h2 id="h-contact">Bring me a problem.</h2>
       {room && <div className="slot cslot" id="cslot" aria-hidden="true"></div>}
       <p className="cx-line">Good fit when you need one person to take an AI idea from the first client conversation to a working system.</p>

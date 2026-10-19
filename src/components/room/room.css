@@ -53,6 +53,7 @@
 .rp .top nav a:hover{color:var(--ink);background:var(--paper2)}
 .rp .top nav a.on{color:var(--paper);background:var(--ink)}
 .rp .top nav .sep{width:1px;height:20px;margin:0 4px;background:var(--line)}
+.rp .top .menu{display:none}
 
 /* the scene: one fixed stage clipped to the room's current box (hero, dock or contact) */
 .rp .stage{position:fixed;inset:0;z-index:40;pointer-events:none}
@@ -101,8 +102,6 @@
 .rp .btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(31,111,74,.25)}
 .rp .acts .read{color:var(--ink);font-weight:700;font-size:calc(var(--t-ui)*1.07)}
 .rp #work{padding-top:clamp(var(--s-7),7vh,72px)}
-.rp .lane{position:relative;flex:1;align-self:stretch;min-width:64px}
-.rp .lane .avatar{position:absolute;right:0;bottom:-2px;image-rendering:pixelated;cursor:pointer;will-change:transform}
 
 /* journey rail: newest first; years sit by each dot; the avatar travels between stops through portals */
 .rp .jr{position:relative;margin-top:var(--s-6);padding-top:var(--s-9);display:grid;grid-template-columns:var(--jrail,132px) minmax(0,1fr);column-gap:var(--s-5);--jpod:96px;--jlab:24px}
@@ -206,7 +205,6 @@
 
 /* phone */
 @media (max-width:760px){
-  .rp .top nav .more{display:none}
   .rp .howgrid{grid-template-columns:1fr}
   .rp .howloop .hl-wide{display:none}.rp .howloop .hl-tall{display:block}
   .rp{--disp-k:.56;--head-k:.77;--h3-r:.57;--hero-k:.92;--body-k:.945;--card-k:.945;--label-k:.96;--ui-k:1;--top:58px;--gutter:20px;--sec-gap:72px;
@@ -215,11 +213,17 @@
     --t-lead:16.5px;--t-body:16px;--t-card:15.5px;--t-small:14.5px}
   .rp .label{margin-bottom:var(--s-2)}
   .rp .intro{margin-top:var(--s-2);font-size:var(--t-card);color:var(--ink-2)}
-  .rp .top{padding:0 12px 0 var(--gutter)}
-  .rp .top .who b{display:none}
-  .rp .top nav{padding:2px}
-  .rp .top nav a{padding:0 10px;font-size:calc(var(--t-ui)*.94)}
-  .rp .top nav .sep{display:none}
+  .rp .top{padding:0 var(--gutter)}
+  .rp .top .menu{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 14px 0 16px;border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--card) 88%,transparent);font:500 var(--t-ui)/1 var(--ui-ff);color:var(--ink);cursor:pointer;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .rp .top .menu i{position:relative;width:14px;height:8px;border-block:1.5px solid currentColor;transition:transform var(--d-fast) var(--ease)}
+  .rp .top.open .menu i{height:0;border-bottom:0;transform:rotate(45deg)}
+  .rp .top.open .menu i::after{content:"";position:absolute;inset:-1.5px 0 auto;border-top:1.5px solid currentColor;transform:rotate(-90deg)}
+  .rp .top nav{position:absolute;top:calc(100% - 4px);left:var(--gutter);right:var(--gutter);flex-direction:column;align-items:stretch;gap:0;padding:6px;border-radius:16px;background:var(--card);box-shadow:0 16px 40px color-mix(in srgb,var(--ink) 14%,transparent);opacity:0;transform:translateY(-6px);pointer-events:none;visibility:hidden;transition:opacity var(--d-fast) var(--ease),transform var(--d-fast) var(--ease),visibility 0s linear var(--d-fast)}
+  .rp .top.open nav{opacity:1;transform:none;pointer-events:auto;visibility:visible;transition:opacity var(--d-fast) var(--ease),transform var(--d-fast) var(--ease)}
+  .rp .top nav a{display:block;line-height:48px;min-height:48px;padding:0 14px;border-radius:10px;font-size:var(--t-body)}
+  .rp .top nav a.on{color:var(--ink);background:var(--paper2)}
+  .rp .top nav .more{display:inline}
+  .rp .top nav .sep{width:auto;height:1px;margin:4px 8px}
   .rp .hero{padding-top:calc(var(--top) + var(--s-6))}
   .rp .hero .hi{font-size:var(--t-card)}.rp .hero .hi b{font-weight:600}
   .rp .btn{min-height:46px;padding:0 18px;font-weight:600;font-size:var(--t-ui)}
@@ -260,11 +264,6 @@
   .rp .posts .pt{font-size:calc(var(--head-fs)*.63*var(--head-k))}
   .rp .cslot{height:clamp(200px,32vh,280px)}
   .rp .links{grid-template-columns:1fr 1fr}
-}
-
-@media (max-width:380px){
-  .rp .top{gap:var(--s-2);padding:0 8px 0 14px}
-  .rp .top nav a{padding:0 7px}
 }
 
 @media (prefers-reduced-motion:reduce){

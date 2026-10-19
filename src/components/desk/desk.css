@@ -21,9 +21,7 @@
 @keyframes dk-in{from{opacity:0;transform:translate(-50%,10px)}}
 
 @media (max-width:760px){
-  .dk .top nav .toroom{padding:0 12px}
-  .dk .top nav .toroom{font-size:0;gap:0}
-  .dk .top nav .toroom span{font-size:18px}
+  .dk .top nav .toroom span{margin-right:8px}
   .dk .roomhint{left:16px;right:16px;transform:none;justify-content:space-between;white-space:normal;animation-name:dk-in-m}
   .dk .skip{left:16px;bottom:16px}
 }

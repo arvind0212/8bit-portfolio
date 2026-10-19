@@ -1,5 +1,5 @@
-/* hero accents: a whiteboard and a parcel set into the headline, and the avatar walking over to the work */
-import { sprite, render, walker, arm, adult, OUT, P, SW, SH } from './journey';
+/* hero accents: a whiteboard and a parcel set into the headline */
+import { sprite, render, P, SW, SH } from './journey';
 
 const crop = c => {
   const d = c.getContext('2d').getImageData(0, 0, SW, SH).data;
@@ -30,14 +30,6 @@ function parcel(k) {
   s.part({ auto: false }); s.rect(14, y + 11, 4, 4, P.white); s.rect(15, y + 12, 2, 1, P.forest);
   return s;
 }
-function wave(k) {
-  const s = sprite(), x = 29, y = 4, f = OUT[5];
-  adult(s, x, y, { ...f, face: { mouth: 'smile' } });
-  arm(s, [[x, y + 16], [x - 1, y + 25], [x - 1, y + 32]], f.top);
-  arm(s, [[x + 13, y + 16], [x + 18, y + 10], [x + 19 + (k ? 2 : 0), y + 2]], f.top);
-  return s;
-}
-
 const cache = new Map();
 const pic = (k, make) => { let c = cache.get(k); if (!c) { c = crop(render(make())); cache.set(k, c); } return c; };
 function paint(cv, img, scale) {
@@ -72,35 +64,8 @@ export function initHero(page) {
     d(wb, 250); d(bx, 500); later(scribble, 900);
   };
 
-  /* the avatar walks into the work section's lane when it first comes into view */
-  const lane = page.querySelector('#lane');
-  let av = null, walked = false, waving = 0;
-  const big = () => innerWidth > 760;
-  const pose = img => { paint(av, img, 2); av.style.height = big() ? '' : '100px'; };
-  const stand = () => pose(pic('w1', () => walker(5, 1, 1)));
-  const doWave = () => { if (waving) return; let i = 0; waving = setInterval(() => { pose(pic('v' + (i % 2), () => wave(i % 2))); if (++i > 5) { clearInterval(waving); waving = 0; stand(); } }, 180); };
-  const walk = () => {
-    if (walked) return; walked = true;
-    if (RM) return stand();
-    const from = -lane.clientWidth - 40, dur = 2400, t0 = performance.now() + 300; let k = 0, last = 0;
-    const step = now => {
-      raf = 0; const u = Math.min(1, Math.max(0, (now - t0) / dur)), e = 1 - Math.pow(1 - u, 2.2);
-      av.style.transform = `translateX(${from * (1 - e)}px)`;
-      if (u < 1) { if (now - last > 125) { k = (k + 1) % 4; last = now; pose(pic('w' + k, () => walker(5, k, 1))); } raf = requestAnimationFrame(step); }
-      else { stand(); later(doWave, 250); }
-    };
-    pose(pic('w0', () => walker(5, 0, 1))); av.style.transform = `translateX(${from}px)`; raf = requestAnimationFrame(step);
-  };
-  let io = null;
-  if (lane) {
-    av = document.createElement('canvas'); av.className = 'avatar'; av.setAttribute('role', 'img'); av.setAttribute('aria-label', 'Pixel Arvind walks over to the work and waves');
-    lane.appendChild(av); stand(); av.style.transform = RM ? '' : 'translateX(-200vw)';
-    av.addEventListener('pointerenter', doWave, sig); av.addEventListener('click', doWave, sig);
-    addEventListener('resize', () => { if (av && !waving && walked) stand(); }, sig);
-  }
   const begin = () => {
     drop();
-    if (lane && !io) { io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); walk(); } }, { threshold: .6 }); io.observe(lane); }
   };
 
   /* on the desk home, wait until the monitor has become the site */
@@ -109,7 +74,7 @@ export function initHero(page) {
   else begin();
 
   return () => {
-    alive = false; ac.abort(); mo?.disconnect(); io?.disconnect(); cancelAnimationFrame(raf);
-    clearInterval(scrib); clearInterval(waving); timers.forEach(clearTimeout); av?.remove();
+    alive = false; ac.abort(); mo?.disconnect(); cancelAnimationFrame(raf);
+    clearInterval(scrib); timers.forEach(clearTimeout);
   };
 }
