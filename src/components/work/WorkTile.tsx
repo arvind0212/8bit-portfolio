@@ -28,14 +28,13 @@ function MiniChart({ w }: { w: Work }) {
   );
 }
 
-export default function WorkTile({ w, span, n }: { w: Work; span: number; n: number }) {
+export default function WorkTile({ w, span }: { w: Work; span: number }) {
   const s = w.screen;
   const href = "/work/" + w.slug;
   return (
-    <li className={`tile w${span} t-${s.tone}` + (w.peek ? " peek" : "")}>
+    <li className={`tile w${span} t-${s.tone}` + (w.peek ? " peek from-" + w.peek : "")}>
       <div className="thead">
-        <p className="chips"><span className="n">{String(n).padStart(2, "0")}</span>{w.chips.map((c, i) => <span key={c} className={i === 2 && w.kind === "case" ? "ok" : undefined}>{c}</span>)}</p>
-        <h3><a href={href}>{w.hook}{w.hookEm}</a></h3>
+        <h3><a href={href}>{w.hook}{w.hookEm}. <span className="tctx">{w.ctx}</span></a></h3>
         <p className="out"><b>{w.outcome.v}</b><span>{w.outcome.l}</span></p>
       </div>
       <div className="shot" aria-hidden="true">

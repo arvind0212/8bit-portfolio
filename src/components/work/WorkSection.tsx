@@ -16,7 +16,7 @@ export default function WorkSection() {
         <div className="lane" id="lane"></div>
       </div>
       <ol className="bento" id="cards">
-        {featured.map((w, i) => <WorkTile key={w.slug} w={w} span={SPANS[i] ?? 6} n={i + 1} />)}
+        {featured.map((w, i) => <WorkTile key={w.slug} w={w} span={SPANS[i] ?? 6} />)}
         <li className="tile w6 all">
           <p className="label">All work · {WORK.length}</p>
           <ul>
