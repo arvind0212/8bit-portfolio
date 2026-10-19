@@ -41,7 +41,13 @@
 /* contact */
 .rp .cx{padding-bottom:0}
 .rp .cx .cslot{margin:var(--s-5) 0}
-.rp .cx-line{margin-top:var(--s-3);color:var(--ink-2);max-width:var(--measure)}
+.rp .cx-line{margin-top:var(--s-3);font:var(--hero-fw) var(--t-lead)/var(--hero-lh) var(--hero-ff);color:var(--ink-2);max-width:34ch}
+.rp .cx-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:var(--s-6) 0 0;border-block:1px solid var(--line)}
+.rp .cx-facts>div{display:flex;flex-direction:column;gap:var(--s-2);padding:var(--s-5) var(--s-5) var(--s-5) 0}
+.rp .cx-facts>div+div{padding-left:var(--s-5);border-left:1px solid var(--line)}
+.rp .cx-facts dt{font:var(--label-fw) var(--t-label)/1 var(--label-ff);letter-spacing:var(--label-ls);text-transform:uppercase;color:var(--ink-3)}
+.rp .cx-facts dd{display:flex;align-items:center;gap:var(--s-2);margin:0;font:var(--head-fw) var(--t-h3)/1.15 var(--head-ff);letter-spacing:var(--head-ls);font-variation-settings:var(--dvar);color:var(--ink)}
+.rp .cx-dot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
 .rp .cx-act{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s-6);align-items:start;margin-top:var(--s-6)}
 .rp .cx-ic{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:var(--r-s)}
 .rp .cx-mail{display:flex;align-items:stretch;border-radius:var(--r-m);background:var(--accent);color:#fff;transition:box-shadow var(--d-fast),transform var(--d-fast) var(--ease)}
@@ -89,9 +95,14 @@
   .rp .wr-topics button{flex:none}
   .rp .cx-mail>a{padding:var(--s-4)}
   .rp .cx-act{grid-template-columns:1fr;gap:var(--s-5);margin-top:var(--s-5)}
+  .rp .cx-facts{grid-template-columns:1fr;margin-top:var(--s-5)}
+  .rp .cx-facts>div,.rp .cx-facts>div+div{flex-direction:row;align-items:baseline;justify-content:space-between;gap:var(--s-4);padding:var(--s-4) 0;border-left:0}
+  .rp .cx-facts>div+div{border-top:1px solid var(--line)}
+  .rp .cx-facts dd{font-size:calc(var(--t-h3)*.8);text-align:right}
   .rp .cx-v{font-size:var(--t-ui)}
   .rp .cx-copy{min-width:72px}
   .rp .cx-back .read{width:100%;justify-content:center}
   .rp footer.sf{grid-template-columns:1fr;margin-top:var(--s-7);padding-bottom:var(--s-6)}
-  .rp .sf nav{justify-content:flex-start;margin-left:calc(-1*var(--s-3))}
+  .rp .sf nav{justify-content:flex-start;margin-left:calc(-1*var(--s-2))}
+  .rp .sf nav a,.rp .sf nav a:last-child{padding:0 var(--s-2);margin-left:0}
 }
