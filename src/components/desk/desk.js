@@ -19,10 +19,10 @@ export const DEF = {
   az0: 42, el0: 30, fov0: 14, fov1: 38, el1: 0,
   panLead: .1, perspLead: .25, turnStart: 0, turnEnd: .85,
   over: 1.04, backMul: .85,
-  screenMode: 'live', screenOn0: .45, screenOn1: .8,
+  screenMode: 'live', screenOn0: .45, screenOn1: .78, heroAt: .5,
   glow0: .55, glow1: .95, fadeMs: 420, dissolveMs: 650, tile: 18,
   skipRate: 4, skipRamp: 260,
-  popEase: [.34, 1.56, .64, 1], riseEase: [.22, 1, .36, 1], dropEase: [.55, 0, 1, .45], landEase: [.3, 1.8, .5, 1], camEase: [.65, 0, .25, 1]
+  popEase: [.34, 1.56, .64, 1], riseEase: [.22, 1, .36, 1], dropEase: [.55, 0, 1, .45], landEase: [.3, 1.8, .5, 1], camEase: [.62, 0, .16, 1]
 };
 
 const KEY = 'dk-tune-v2', SEEN = 'dk-seen';
@@ -87,6 +87,7 @@ export function initDesk(page, { tune = false } = {}) {
     camera.fov = fov; camera.position.copy(T).addScaledVector(dir, d); camera.lookAt(T); camera.updateProjectionMatrix();
     W && (W.glow.opacity = S.screenMode === 'glow' ? win(t, S.glow0, S.glow1) : 0);
     if (place === 'css3d') screen.style.opacity = S.screenMode === 'live' ? win(t, S.screenOn0, S.screenOn1).toFixed(3) : '0';
+    if (S.screenMode === 'live' && (mode === 'intro' || mode === 'in') && t >= S.heroAt) heroIn();
   }
 
   /* build plan: phases overlap; each object has a start time and a duration */
@@ -151,6 +152,11 @@ export function initDesk(page, { tune = false } = {}) {
   }
 
   /* state: intro → reveal → site; back: hide → out → room; enter: in → reveal → site */
+  /* the hero's own load-in starts while the site is still on the monitor, and keeps the intro's speed */
+  let heroed = false;
+  const emit = (type, detail) => page.dispatchEvent(new CustomEvent(type, { detail }));
+  const heroIn = () => { if (heroed) return; heroed = true; emit('dk:screen'); if (rateT !== 1) emit('dk:rate', rateT); };
+
   let mode = 'intro', vt = 0, lastNow = 0, rate = 1, rateT = 1, camStart = Infinity, camT = 0, revStart = 0, saved = 0, raf = 0;
   const revDur = () => S.screenMode === 'glow' ? S.fadeMs : S.screenMode === 'dissolve' ? S.dissolveMs : 0;
   function reveal(r) {
@@ -161,7 +167,7 @@ export function initDesk(page, { tune = false } = {}) {
     camT = 1; cam(1);
     if (S.screenMode === 'live' || !revDur()) return toSite();
     if (S.screenMode === 'dissolve') takeSnapshot();
-    setPlace('overlay'); mode = 'reveal'; revStart = vt; reveal(0);
+    setPlace('overlay'); mode = 'reveal'; revStart = vt; reveal(0); heroIn();
   }
   function frame(now) {
     raf = 0;
@@ -180,7 +186,7 @@ export function initDesk(page, { tune = false } = {}) {
   const kick = () => { if (!raf) { lastNow = 0; raf = requestAnimationFrame(frame); } };
 
   function toSite() {
-    mode = 'site'; camT = 1; rate = rateT = 1;
+    heroIn(); mode = 'site'; camT = 1; rate = rateT = 1;
     if (raf) { cancelAnimationFrame(raf); raf = 0; }
     setPlace('flow'); dis.hidden = true;
     page.dataset.mode = 'site'; site.style.transform = ''; scene3.hidden = true;
@@ -199,15 +205,15 @@ export function initDesk(page, { tune = false } = {}) {
     else { if (S.screenMode === 'dissolve') takeSnapshot(); setPlace('overlay'); reveal(1); mode = 'hide'; }
     kick();
   }
-  function toRoom() { mode = 'room'; camT = 0; page.dataset.mode = 'room'; hint.hidden = false; draw(); }
+  function toRoom() { heroed = false; emit('dk:back'); mode = 'room'; camT = 0; page.dataset.mode = 'room'; hint.hidden = false; draw(); }
   function enter() {
     if (mode !== 'room') return;
     hint.hidden = true; page.dataset.mode = 'scene';
     if (!GL || RM.matches) return toSite();
-    mode = 'in'; camStart = vt; rate = rateT = 1; kick();
+    heroed = false; mode = 'in'; camStart = vt; rate = rateT = 1; kick();
   }
   function start({ build = true } = {}) {
-    plan = makePlan(); vt = 0; rate = rateT = 1; camT = 0; saved = 0;
+    plan = makePlan(); vt = 0; rate = rateT = 1; camT = 0; saved = 0; heroed = false;
     camStart = S.delay + S.camAt;
     hint.hidden = true; dis.hidden = true; page.dataset.mode = 'scene'; scene3.hidden = false;
     site.style.transform = ''; setPlace('css3d');
@@ -230,10 +236,10 @@ export function initDesk(page, { tune = false } = {}) {
   const skip = e => {
     if (mode !== 'intro' && mode !== 'in' && mode !== 'reveal') return;
     if (e.target instanceof Element && e.target.closest('.dtune,.skip')) return;
-    rateT = S.skipRate;
+    if (rateT !== S.skipRate) { rateT = S.skipRate; if (heroed) emit('dk:rate', rateT); }
   };
   for (const ev of ['wheel', 'touchstart', 'keydown', 'pointerdown']) addEventListener(ev, skip, { passive: true, signal: ac.signal });
-  $('#skip').addEventListener('click', () => { rateT = S.skipRate; }, sig);
+  $('#skip').addEventListener('click', () => { rateT = S.skipRate; if (heroed) emit('dk:rate', rateT); }, sig);
   page.querySelectorAll('[data-act=room]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); back(); }, sig));
   $('#sitback').addEventListener('click', () => enter(), sig);
   addEventListener('resize', () => { size(); if (mode !== 'site') draw(); }, sig);

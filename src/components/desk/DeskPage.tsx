@@ -6,7 +6,7 @@ import Sections from "../room/Sections";
 import TopBar from "../room/TopBar";
 import Tune from "../room/Tune";
 import { initDesk } from "./desk";
-import { initHero } from "../room/heroPixels";
+import { initHeroMotion } from "../site/heroMotion";
 import "../room/room.css";
 import "./desk.css";
 
@@ -17,7 +17,7 @@ export default function DeskPage() {
     if (!ref.current) return;
     const w = window as Window & { __DK_TUNE?: boolean };
     const tune = !!w.__DK_TUNE || new URLSearchParams(location.search).has("tune") || process.env.NODE_ENV !== "production";
-    const page = ref.current, endDesk = initDesk(page, { tune }), endHero = initHero(page);
+    const page = ref.current, endDesk = initDesk(page, { tune }), endHero = initHeroMotion(page);
     return () => { endHero(); endDesk(); };
   }, []);
   return (

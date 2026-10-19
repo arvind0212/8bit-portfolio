@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Hero from "../site/Hero";
 import WorkSection from "../work/WorkSection";
 import WritingSection from "../site/WritingSection";
 import ContactSection from "../site/ContactSection";
@@ -8,14 +9,7 @@ import SiteFooter from "../site/SiteFooter";
 export default function Sections({ room, back }: { room: boolean; back?: ReactNode }) {
   return (
     <main className="col" id="top">
-      <section className="hero" id="hero" aria-labelledby="h1">
-        <p className="hi">Hi, I&apos;m Arvind, an <b>AI-native tech generalist</b> in Stockholm.</p>
-        <h1 id="h1"><span className="ln">I designed the <span className="nb">systems.<canvas className="px" id="wb" aria-hidden="true" width="0" height="0"></canvas></span></span> <span className="ln">Now I <span className="nb"><em>build</em> them too.<canvas className="px" id="bx" aria-hidden="true" width="0" height="0"></canvas></span></span></h1>
-        {room && <div className="slot" id="slot" aria-hidden="true"></div>}
-        <div className="acts">
-          <a className="btn" href="#contact">Get in touch<span aria-hidden="true">→</span></a>
-        </div>
-      </section>
+      <Hero slot={room} />
 
       <WorkSection />
 
