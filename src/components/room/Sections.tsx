@@ -44,23 +44,29 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
               <div className="jmeta"><span className="jsr">2025 to 2026</span><span className="jlogos"><img src="/images/journey/arkus-ai.png" alt="Arkus AI" /></span></div>
               <h3>Founding AI engineer at a healthcare startup.</h3>
               <p className="jhook">I was the first AI engineer at Arkus AI, a no-code platform where clinicians describe a problem and an agent builds the workflow.</p>
+              <button type="button" className="jmore jdet" aria-expanded="false" aria-controls="jx-arkus">What I did <span aria-hidden="true">↓</span></button>
+              <div className="jx" id="jx-arkus"><div>
               <ul className="jbul">
                 <li><b>Built the agent tools</b> the platform runs on: one tool over three EHRs (Epic, AthenaOne, Kaddio), ICD-11 and SNOMED CT coding, PubMed and ClinicalTrials.gov search.</li>
                 <li><b>Set up the evals</b> and the prompt workflow, so changes to agents were measured, not guessed.</li>
                 <li><b>Shipped the web app</b> and presented the product at the May 2026 launch.</li>
               </ul>
               <p className="jcoda">I left in September to look for work that&apos;s more interesting to me and that I can sustain for the long run.</p>
+              </div></div>
             </li>
             <li className="jcard" data-s="3" data-y="2024" data-to="–26" data-act="at a laptop with a thesis chart">
               <div className="jmeta"><span className="jsr">2024 to 2026</span><span className="jlogos"><img src="/images/journey/karolinska.png" alt="Karolinska Institutet" /><img src="/images/journey/kth.png" alt="KTH" /><img src="/images/journey/stockholm-university.png" alt="Stockholm University" /></span></div>
               <h3>I hit my technical ceiling, so I went back to school.</h3>
               <p className="jhook">Four years of consulting taught me to scope and sell AI. I wanted to understand it deeply, so I turned down a go-to-market lead role and moved to Stockholm.</p>
+              <button type="button" className="jmore jdet" aria-expanded="false" aria-controls="jx-ki">What I did <span aria-hidden="true">↓</span></button>
+              <div className="jx" id="jx-ki"><div>
               <ul className="jbul">
                 <li><b>MSc Biostatistics &amp; Data Science,</b> a joint degree from KI, KTH and Stockholm University, focused on healthcare AI.</li>
                 <li><b>Research assistant at KI:</b> an LLM pipeline that read 1,000+ Swedish prescriptions with 99.4% success.</li>
                 <li><b>Thesis with Arkus AI:</b> benchmarking agent architectures for clinical data standardisation.</li>
                 <li><b>Built the programme&apos;s degree-project portal,</b> where researchers post thesis ideas for students.</li>
               </ul>
+              </div></div>
             </li>
             <li className="jcard jghost" data-s="2" data-y="2020" data-to="and before" data-stack="" data-act="presenting at a whiteboard">
               <div className="jrow">

@@ -161,6 +161,7 @@
 .rp .jerow p{grid-column:2 / 4;color:var(--ink-2);font-size:var(--t-small)}
 .rp .cvline{margin-top:var(--s-6)}
 .rp .intro .ph-only{display:none}
+.rp .jdet{display:none}
 
 /* how I work */
 .rp .mrows{display:grid;grid-template-columns:1fr 1fr;gap:0 40px;margin-top:28px}
@@ -187,24 +188,48 @@
 
 /* phone */
 @media (max-width:760px){
-  .rp{--disp-k:.56;--head-k:.77;--h3-r:.57;--hero-k:.92;--body-k:.945;--card-k:.945;--label-k:.96;--ui-k:1;--top:58px;--gutter:20px;--sec-gap:88px}
+  .rp{--disp-k:.56;--head-k:.77;--h3-r:.57;--hero-k:.92;--body-k:.945;--card-k:.945;--label-k:.96;--ui-k:1;--top:58px;--gutter:20px;--sec-gap:72px;
+    --disp-fw:500;--head-fw:470;--disp-ls:-.022em;--head-ls:-.018em;
+    --t-display:clamp(31px,calc(7vw + 7px),42px);--t-h2:clamp(25px,calc(3.6vw + 12px),32px);--t-h3:clamp(19px,calc(1.6vw + 13px),23px);
+    --t-lead:16.5px;--t-body:16px;--t-card:15.5px;--t-small:14.5px}
+  .rp .label{margin-bottom:var(--s-2)}
+  .rp .intro{margin-top:var(--s-2);font-size:var(--t-card);color:var(--ink-2)}
   .rp .top{padding:0 12px 0 var(--gutter)}
   .rp .top .who b{display:none}
   .rp .top nav{padding:2px}
   .rp .top nav a{padding:0 10px;font-size:calc(var(--t-ui)*.94)}
   .rp .top nav .sep{display:none}
-  .rp .hero{padding-top:calc(var(--top) + var(--s-8))}
+  .rp .hero{padding-top:calc(var(--top) + var(--s-6))}
+  .rp .hero .hi{font-size:var(--t-card)}.rp .hero .hi b{font-weight:600}
+  .rp .btn{min-height:46px;padding:0 18px;font-weight:600;font-size:var(--t-ui)}
+  .rp .acts .read{font-weight:600;font-size:var(--t-ui)}
   .rp .hero h1{margin-top:var(--s-4)}
   .rp .value{margin-top:var(--s-4)}
   .rp .acts{margin-top:var(--s-5);gap:var(--s-2) var(--s-5)}
   .rp .slot{height:clamp(200px,34vh,300px);margin:14px 0 14px}
-  .rp .jr{--jrail:60px;--jpod:64px;--jlab:20px;column-gap:var(--s-3);padding-top:var(--s-8);margin-top:var(--s-5)}
+  .rp .jr{--jrail:48px;--jpod:56px;--jlab:18px;column-gap:var(--s-3);padding-top:var(--s-7);margin-top:var(--s-4)}
+  .rp .jyl{font-size:11px}
+  .rp .jcard h3{margin-top:var(--s-3);line-height:1.18}
+  .rp .jhook{font-size:var(--t-card);line-height:1.55}
+  .rp .jlogos img{height:20px}
+  .rp .jlinks{gap:6px;margin-top:var(--s-4)}
+  .rp .jlinks a{min-height:40px;padding:0 var(--s-3);font-weight:500;font-size:14.5px}
+  .rp .jdet{display:inline-flex;margin-top:var(--s-2);min-height:40px}
+  .rp .jx{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}
+  .rp .jx.open{grid-template-rows:1fr}
+  .rp .jx > div{min-height:0;overflow:hidden}
+  .rp .jbul{margin-top:var(--s-3);gap:var(--s-2)}
+  .rp .jbul li{font-size:14.5px}
+  .rp .jbul b,.rp .jerow b{font-weight:600}
+  .rp .jcoda{margin-top:var(--s-4);font-size:14px}
+  .rp .cvline{margin-top:var(--s-4)}
   .rp .jstop{width:18px;height:18px;margin:-9px 0 0 -9px}
   .rp .jyl{flex-direction:column;align-items:center;letter-spacing:0;padding:3px 5px}
   .rp .jyl.stack{white-space:normal;text-align:center;width:min-content}
   .rp .jportal{width:56px;height:16px;margin:-8px 0 0 -28px}
-  .rp .jcard,.rp .jcard.jghost{padding:var(--s-5)}
-  .rp .jcards{gap:var(--s-6)}
+  .rp .jcard,.rp .jcard.jghost{padding:var(--s-4) var(--s-4) var(--s-4) 18px}
+  .rp .jcards{gap:var(--s-5)}
+  .rp .jghost h3{font-size:var(--t-h3)}
   .rp .jerow{grid-template-columns:44px 1fr}
   .rp .jerow canvas{width:44px;height:44px}
   .rp .jyr{grid-column:2;justify-self:start}

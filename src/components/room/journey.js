@@ -431,11 +431,17 @@ export function initJourney(root) {
   addEventListener('resize', check, sig);
   const ro = new ResizeObserver(() => { measure(); check(); }); ro.observe(root);
 
-  const more = root.querySelector('.jmore'), early = root.querySelector('.jcollapse');
+  const more = root.querySelector('.jmore:not(.jdet)'), early = root.querySelector('.jcollapse');
   if (more && early) {
     more.addEventListener('click', () => { const o = more.getAttribute('aria-expanded') !== 'true'; more.setAttribute('aria-expanded', String(o)); early.classList.toggle('open', o); more.firstChild.textContent = o ? 'Hide the full journey ' : 'See the full journey '; }, sig);
     early.addEventListener('transitionend', measure, sig);
   }
+
+  root.querySelectorAll('.jdet').forEach(b => {
+    const x = root.querySelector('#' + b.getAttribute('aria-controls'));
+    b.addEventListener('click', () => { const o = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', String(o)); x.classList.toggle('open', o); b.firstChild.textContent = o ? 'Less ' : 'What I did '; }, sig);
+    x.addEventListener('transitionend', measure, sig);
+  });
 
   measure();
   want = at = desired(0);

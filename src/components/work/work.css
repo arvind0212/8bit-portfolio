@@ -205,9 +205,22 @@
 
 @media (max-width:760px){
   .rp .bento{grid-template-columns:minmax(0,1fr);gap:var(--s-4)}
-  .rp .tile.w5,.rp .tile.w6,.rp .tile.w7,.rp .tile.w12{grid-column:auto;min-height:420px}
+  .rp .bento{margin-top:var(--s-5);gap:var(--s-3)}
+  .rp .tile.w5,.rp .tile.w6,.rp .tile.w7,.rp .tile.w12{grid-column:auto;min-height:330px}
   .rp .tile.all,.rp .tile.enter-top{min-height:0}
-  .rp .tile.enter-top .thead{margin-top:var(--s-6)}
+  .rp .tile.enter-top .thead{margin-top:var(--s-4);padding-top:var(--s-5)}
+  .rp .tile.enter-top .shot{margin-top:var(--s-3)}
+  .rp .thead{padding:var(--s-4) calc(var(--s-4) + 24px) 0 var(--s-4);gap:var(--s-1)}
+  .rp .tile h3,.rp .tile.w7 h3,.rp .tile.w12 h3{font-size:var(--t-h3);line-height:1.2}
+  .rp .go{top:var(--s-4);right:var(--s-4)}
+  .rp .out{margin-top:var(--s-3)}
+  .rp .out b{font-weight:500;font-size:26px}
+  .rp .out span{font-size:14px}
+  .rp .tile.all{padding:var(--s-4)}
+  .rp .tile.all li{font-size:15.5px;padding:10px 0}
+  .rp .cs h1{font-size:calc(var(--t-h2)*1.15);line-height:1.08}
+  .rp .tt{font-weight:400;font-size:var(--t-card)}
+  .rp .stats b{font-size:26px}
   .rp .tile.enter-corner .shot,.rp .tile.w5.enter-corner .shot,.rp .tile.w12.enter-corner .shot{width:86%;right:-24px}
   .rp .tile.enter-bottom .shot{left:var(--s-4);right:var(--s-4)}
 
