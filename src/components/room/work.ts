@@ -55,8 +55,8 @@ export type Work = {
   ctx: string;
   outcome: { v: string; l: string };
   screen: Screen;
-  /* true peeks from the tile's outer edge; "left" or "right" overrides it */
-  peek: boolean | "left" | "right";
+  /* how the screen enters its tile: along the bottom, out of a corner, or down from the top */
+  enter: "bottom" | "corner" | "top" | false;
   case?: Case;
 };
 
@@ -75,7 +75,7 @@ export const WORK: Work[] = [
     ctx: "My master's thesis, 2026.",
     outcome: { v: "91.5%", l: "of medications kept their meaning" },
     screen: { file: "benchmark / medications.csv", flag: "synthetic data", kind: "chart", tone: "accent" },
-    peek: true,
+    enter: "bottom",
     case: {
       dek: "A controlled benchmark of three AI agent designs that reshape messy, synthetic hospital records into a research standard (OMOP), graded field by field against a locked answer key.",
       role: "Sole author",
@@ -157,7 +157,7 @@ export const WORK: Work[] = [
       tone: "plain",
       html: '<p class="raw">"1 tablett 50 mg dagligen i 7 dagar, sedan 2 tabletter"</p><p class="via">Gemini 2.5 Pro + rule checks</p><pre class="json">{ <b>"dose_mg"</b>: [50, 100],\n  <b>"per_day"</b>: 1, <b>"days"</b>: [7, null],\n  <b>"check"</b>: <i>"passed"</i> }</pre>',
     },
-    peek: true,
+    enter: "corner",
     case: {
       dek: "Free-text Swedish dosage instructions, turned into structured records a research group could use. The model reads; code checks every row it returns.",
       role: "Research Assistant, Applied AI for Medical Data",
@@ -222,7 +222,7 @@ export const WORK: Work[] = [
       tone: "plain",
       html: '<span class="pill"><i></i>Read 3 fields from this window</span><div class="ask"><p>Paste the answer into the form?</p><p class="ctx">Using: window · clipboard</p><p class="btns"><b>Yes</b><span>Not now</span></p></div>',
     },
-    peek: true,
+    enter: "top",
     case: {
       dek: "A small island at the top of the screen. Call it from any app, see exactly what context it took, and approve before anything goes back into your work.",
       role: "Solo, personal project",
@@ -273,6 +273,6 @@ export const WORK: Work[] = [
     ctx: "A team result at Quantiphi, 2022–24.",
     outcome: { v: "65–70%", l: "end-to-end accuracy on available samples" },
     screen: { file: "", flag: "", kind: "ui", tone: "plain" },
-    peek: false,
+    enter: false,
   },
 ];

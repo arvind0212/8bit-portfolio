@@ -2,7 +2,7 @@
 .rp .shead>div:first-child{flex:1 1 auto;min-width:0}
 /* selected work, all work and case studies; every size, colour and gap comes from the site system tokens in room.css */
 
-/* selected work: a bento of tiles; each shows tags, a hook and one outcome, and its screen peeks out of the corner */
+/* selected work: a bento of tiles; each shows tags, a hook and one outcome, and its screen enters the tile the way the real thing behaves */
 .rp .bento{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--s-5);margin-top:var(--s-6)}
 .rp .tile{position:relative;display:flex;flex-direction:column;min-width:0;min-height:360px;border-radius:16px;background:var(--card);box-shadow:0 0 0 1px var(--line);overflow:hidden;transition:transform var(--d-med) var(--ease),box-shadow var(--d-med) var(--ease)}
 .rp .tile.w7{grid-column:span 7;min-height:440px}.rp .tile.w5{grid-column:span 5;min-height:440px}.rp .tile.w6{grid-column:span 6}.rp .tile.w12{grid-column:span 12}
@@ -22,15 +22,22 @@
 .rp .go{position:absolute;top:var(--s-5);right:var(--s-5);z-index:2;font:500 18px/1 var(--label-ff);color:var(--accent);transition:transform var(--d-fast) var(--ease)}
 .rp .tile:hover .go{transform:translateX(4px)}
 .rp .shot{margin:var(--s-5) var(--s-5) var(--s-5)}
-.rp .tile.peek .shot{position:absolute;right:-28px;bottom:-56px;width:min(64%,440px);margin:0;transform:rotate(-2deg);transition:transform var(--d-slow) var(--ease)}
-.rp .tile.peek:hover .shot{transform:rotate(0) translate(-8px,-10px)}
-.rp .tile.w7.peek .shot{width:min(76%,540px);bottom:-34px}
-.rp .tile.w5.peek .shot{width:min(84%,420px)}
-.rp .tile.w6.peek .shot{width:min(76%,420px)}
-.rp .tile.w12.peek .shot{width:min(46%,460px);right:var(--s-7)}
-.rp .tile.from-left .shot{right:auto;left:-8px;transform:rotate(2deg)}
-.rp .tile.from-left:hover .shot{transform:rotate(0) translate(8px,-10px)}
-.rp .tile.w12.from-left .shot{left:var(--s-7)}
+.rp .tile.enter-corner .shot{position:absolute;right:-28px;bottom:-56px;width:min(64%,440px);margin:0;transform:rotate(-2deg);transition:transform var(--d-slow) var(--ease)}
+.rp .tile.enter-corner:hover .shot{transform:rotate(0) translate(-8px,-10px)}
+.rp .tile.w5.enter-corner .shot{width:min(84%,420px)}
+.rp .tile.w12.enter-corner .shot{width:min(46%,460px);right:var(--s-7)}
+.rp .tile.enter-bottom .shot{position:absolute;left:var(--s-5);right:var(--s-5);bottom:-22px;margin:0;transition:transform var(--d-slow) var(--ease)}
+.rp .tile.enter-bottom:hover .shot{transform:translateY(-10px)}
+.rp .tile.enter-top .shot{order:-1;margin:var(--s-4) auto 0;width:min(86%,380px);transition:transform var(--d-slow) var(--ease)}
+.rp .tile.enter-top:hover .shot{transform:translateY(6px)}
+.rp .tile.enter-top .scr{display:flex;flex-direction:column-reverse;background:none;box-shadow:none;overflow:visible}
+.rp .tile.enter-top .sbar{border:0;padding:var(--s-3) 0 0}
+.rp .tile.enter-top .sbar i,.rp .tile.enter-top .sbar em{display:none}
+.rp .tile.enter-top .sbar span{margin:0 auto}
+.rp .tile.enter-top .sb.ui{background:none;min-height:0;padding:0}
+.rp .tile.enter-top .pill{box-shadow:0 10px 24px rgba(20,24,32,.18)}
+.rp .tile.enter-top .ask{box-shadow:0 12px 28px rgba(20,24,32,.10)}
+.rp .tile.enter-top .thead{margin-top:auto;padding-bottom:var(--s-5)}
 .rp .tile.all{padding:var(--s-5);gap:var(--s-3);min-height:0}
 .rp .tile.all ul{list-style:none;margin:0;padding:0}
 .rp .tile.all li{font:var(--head-fw) calc(var(--t-body)*.95)/1.3 var(--head-ff);letter-spacing:-.01em;padding:var(--s-3) 0;border-top:1px solid var(--line)}
@@ -198,9 +205,10 @@
 @media (max-width:760px){
   .rp .bento{grid-template-columns:minmax(0,1fr);gap:var(--s-4)}
   .rp .tile.w5,.rp .tile.w6,.rp .tile.w7,.rp .tile.w12{grid-column:auto;min-height:420px}
-  .rp .tile.all{min-height:0}
-  .rp .tile.peek .shot,.rp .tile.w5.peek .shot,.rp .tile.w6.peek .shot,.rp .tile.w12.peek .shot{width:86%;right:-24px}
-  .rp .tile.from-left .shot,.rp .tile.w12.from-left .shot{right:auto;left:-8px}
+  .rp .tile.all,.rp .tile.enter-top{min-height:0}
+  .rp .tile.enter-top .thead{margin-top:var(--s-6)}
+  .rp .tile.enter-corner .shot,.rp .tile.w5.enter-corner .shot,.rp .tile.w12.enter-corner .shot{width:86%;right:-24px}
+  .rp .tile.enter-bottom .shot{left:var(--s-4);right:var(--s-4)}
 
   .rp .trows li{grid-template-columns:1fr}
   .rp .trows .cmeta{grid-column:1;grid-row:auto}

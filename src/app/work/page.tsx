@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Shell from "@/components/work/Shell";
-import WorkTile, { place } from "@/components/work/WorkTile";
+import WorkTile from "@/components/work/WorkTile";
 import { WORK } from "@/components/room/work";
 
 export const metadata: Metadata = {
@@ -12,7 +12,6 @@ export default function WorkIndex() {
   const cases = WORK.filter((w) => w.kind !== "team");
   const team = WORK.filter((w) => w.kind === "team");
   const spans = cases.map((_, i) => (i === cases.length - 1 && i % 2 === 0 ? 12 : [7, 5, 5, 7][i % 4]));
-  const edges = place(spans);
   return (
     <Shell>
       <section className="cs" aria-labelledby="h-all">
@@ -21,7 +20,7 @@ export default function WorkIndex() {
         <h1 id="h-all">Everything, with the limits <em>written down.</em></h1>
         <p className="dek">Case studies I can show in full, each starting with the outcome. Team results follow below.</p>
         <ol className="bento wgrid">
-          {cases.map((w, i) => <WorkTile key={w.slug} w={w} span={spans[i]} edge={edges[i]} />)}
+          {cases.map((w, i) => <WorkTile key={w.slug} w={w} span={spans[i]} />)}
         </ol>
         {team.length > 0 && (
           <div className="wsub">

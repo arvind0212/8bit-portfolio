@@ -1,9 +1,8 @@
 import { WORK } from "../room/work";
-import WorkTile, { place } from "./WorkTile";
+import WorkTile from "./WorkTile";
 import "./work.css";
 
 const SPANS = [7, 5, 6];
-const EDGES = place([...SPANS, 6]);
 
 export default function WorkSection() {
   const featured = WORK.filter((w) => w.kind !== "team" && w.featured).slice(0, 3);
@@ -17,7 +16,7 @@ export default function WorkSection() {
         <div className="lane" id="lane"></div>
       </div>
       <ol className="bento" id="cards">
-        {featured.map((w, i) => <WorkTile key={w.slug} w={w} span={SPANS[i] ?? 6} edge={EDGES[i] ?? "right"} />)}
+        {featured.map((w, i) => <WorkTile key={w.slug} w={w} span={SPANS[i] ?? 6} />)}
         <li className="tile w6 all">
           <p className="label">All work · {WORK.length}</p>
           <ul>
