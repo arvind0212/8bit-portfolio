@@ -28,7 +28,7 @@
 .rp .tile.w5.peek .shot{width:min(84%,420px)}
 .rp .tile.w6.peek .shot{width:min(76%,420px)}
 .rp .tile.w12.peek .shot{width:min(46%,460px);right:var(--s-7)}
-.rp .tile.from-left .shot{right:auto;left:-28px;transform:rotate(2deg)}
+.rp .tile.from-left .shot{right:auto;left:-8px;transform:rotate(2deg)}
 .rp .tile.from-left:hover .shot{transform:rotate(0) translate(8px,-10px)}
 .rp .tile.w12.from-left .shot{left:var(--s-7)}
 .rp .tile.all{padding:var(--s-5);gap:var(--s-3);min-height:0}
@@ -200,7 +200,7 @@
   .rp .tile.w5,.rp .tile.w6,.rp .tile.w7,.rp .tile.w12{grid-column:auto;min-height:420px}
   .rp .tile.all{min-height:0}
   .rp .tile.peek .shot,.rp .tile.w5.peek .shot,.rp .tile.w6.peek .shot,.rp .tile.w12.peek .shot{width:86%;right:-24px}
-  .rp .tile.from-left .shot,.rp .tile.w12.from-left .shot{right:auto;left:-24px}
+  .rp .tile.from-left .shot,.rp .tile.w12.from-left .shot{right:auto;left:-8px}
 
   .rp .trows li{grid-template-columns:1fr}
   .rp .trows .cmeta{grid-column:1;grid-row:auto}
