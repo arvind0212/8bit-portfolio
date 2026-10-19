@@ -106,7 +106,7 @@
 /* journey rail: newest first; years sit by each dot; the avatar travels between stops through portals */
 .rp .jr{position:relative;margin-top:var(--s-6);padding-top:var(--s-9);display:grid;grid-template-columns:var(--jrail,132px) minmax(0,1fr);column-gap:var(--s-5);--jpod:96px;--jlab:24px}
 .rp .jrail{position:relative}
-.rp .jline{position:absolute;left:50%;top:0;width:0;border-left:2px dotted color-mix(in srgb,var(--ink-3) 55%,var(--paper));transform:translateX(-1px)}
+.rp .jline{position:absolute;left:50%;top:0;width:0;border-left:2px dotted color-mix(in srgb,var(--ink-3) 55%,var(--paper));transform:translateX(-1px);-webkit-mask-image:linear-gradient(#000 calc(100% - var(--jfade,0px)),transparent);mask-image:linear-gradient(#000 calc(100% - var(--jfade,0px)),transparent)}
 .rp .jstop{position:absolute;left:50%;top:0;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--paper);border:2px solid var(--ink-3);transition:background-color .35s var(--ease),border-color .35s var(--ease),box-shadow .35s var(--ease),transform .25s var(--ease),opacity .2s;z-index:1}
 .rp .jstop.on{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 7px var(--accent-soft)}
 .rp .jstop.gone{transform:scale(.2);opacity:0}
@@ -127,8 +127,6 @@
 .rp .jcards{display:grid;gap:var(--s-7);min-width:0}
 .rp .jcard{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r-m);padding:var(--s-6);transition:border-color .35s,box-shadow .35s,background-color .35s}
 .rp .jcard.on{border-color:color-mix(in srgb,var(--accent) 40%,var(--line));box-shadow:0 12px 32px color-mix(in srgb,var(--ink) 8%,transparent)}
-.rp .jcard.jnow{background:none}
-.rp .jcard.jnow.on{background:var(--card)}
 .rp .jcard h3{margin-top:var(--s-4);font:var(--head-fw) var(--t-h3)/1.15 var(--ff-display);letter-spacing:var(--head-ls);color:var(--ink)}
 .rp .jmeta{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-4);min-height:24px}
 .rp .jpill{font:500 var(--t-label)/1 var(--ff-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:6px 8px;border-radius:var(--r-s)}
@@ -144,9 +142,8 @@
 .rp .jlinks a{display:inline-flex;align-items:center;gap:var(--s-2);min-height:44px;padding:0 var(--s-4);border:1px solid var(--line);border-radius:999px;text-decoration:none;font:600 var(--t-ui)/1.2 var(--ff-text);background:var(--paper);transition:border-color .2s,background-color .2s}
 .rp .jlinks a:hover{border-color:var(--accent);background:var(--accent-soft)}
 .rp .jlinks a span{color:var(--accent)}
-.rp .jcard.jghost{background:none;border-style:dashed;padding:var(--s-5) var(--s-6)}
-.rp .jrow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-3)}
-.rp .jghost h3{margin:0;font-size:calc(var(--t-h3) - 4px)}
+.rp .jghost{margin-top:calc(var(--s-4) - var(--s-7));padding:0 var(--s-6)}
+.rp .jrow{display:flex;align-items:center}
 .rp .jmore{display:inline-flex;align-items:center;gap:var(--s-2);min-height:44px;border:0;background:none;padding:0;cursor:pointer;font:600 var(--t-ui)/1.2 var(--ff-text);color:var(--accent)}
 .rp .jmore span{display:inline-block;transition:transform .3s var(--ease)}
 .rp .jmore[aria-expanded="true"] span{transform:rotate(180deg)}
@@ -158,35 +155,10 @@
 .rp .jerow canvas{grid-row:span 2;width:56px;height:56px;image-rendering:pixelated}
 .rp .jyr{font:500 var(--t-label)/1.3 var(--ff-mono);letter-spacing:.06em;color:var(--ink-3);font-variant-numeric:tabular-nums;justify-self:end}
 .rp .jerow p{grid-column:2 / 4;color:var(--ink-2);font-size:var(--t-small)}
-.rp .cvline{margin-top:var(--s-6)}
 .rp .intro .ph-only{display:none}
 .rp .jdet{display:none}
 
-/* how I work */
-
 /* writing */
-.rp .howgrid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:var(--s-5) 40px;align-items:center}
-.rp .howloop svg{display:block;width:100%;height:auto;overflow:visible}
-.rp .howloop .hl-tall{display:none;max-width:420px;margin:0 auto}
-.rp .howloop .zone{fill:#DCE3EA}
-.rp .howloop .ln{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-.rp .howloop .ln.p{stroke:var(--accent)}
-.rp .howloop .ln.a{stroke:#4A5A6C;stroke-dasharray:6 6}
-.rp .howloop .ny{fill:none;stroke:#4A5A6C;stroke-width:1.8;stroke-linecap:round}
-.rp .howloop .ah.p{fill:var(--accent)}.rp .howloop .ah.a{fill:#4A5A6C}
-.rp .howloop .node.p{fill:var(--accent)}
-.rp .howloop .node.a{fill:var(--card);stroke:#4A5A6C;stroke-width:2.2;stroke-dasharray:4 3}
-.rp .howloop .ic{fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.rp .howloop .ic.p{stroke:var(--card)}.rp .howloop .ic.a{stroke:#4A5A6C}
-.rp .howloop .nm{font:560 21px var(--head-ff);letter-spacing:-.02em;fill:var(--ink)}
-.rp .howloop .sm{font:500 12px var(--label-ff);fill:var(--ink-3)}
-.rp .howloop .zl{font:500 12px var(--label-ff);letter-spacing:.08em}
-.rp .howloop .zl.p{fill:var(--accent)}.rp .howloop .zl.a{fill:#4A5A6C}
-.rp .howloop .zs{font:500 11px var(--label-ff);fill:var(--ink-3)}
-.rp .howloop .dot{fill:var(--accent)}.rp .howloop .halo{fill:var(--accent);opacity:.18}
-.rp .howloop .hl-tall .nm{font-size:28px}.rp .howloop .hl-tall .sm{font-size:18px}
-.rp .howloop .hl-tall .zl{font-size:19px}.rp .howloop .hl-tall .zs{font-size:16px}
-.rp .howloop .hl-tall .ln{stroke-width:4}
 .rp .posts{margin:24px 0 6px}
 .rp .posts li{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:16px 0;border-top:1px solid var(--line)}
 .rp .posts li:last-child{border-bottom:1px solid var(--line)}
@@ -205,9 +177,7 @@
 
 /* phone */
 @media (max-width:760px){
-  .rp .howgrid{grid-template-columns:1fr}
-  .rp .howloop .hl-wide{display:none}.rp .howloop .hl-tall{display:block}
-  .rp{--disp-k:.56;--head-k:.77;--h3-r:.57;--hero-k:.92;--body-k:.945;--card-k:.945;--label-k:.96;--ui-k:1;--top:58px;--gutter:20px;--sec-gap:72px;
+      .rp{--disp-k:.56;--head-k:.77;--h3-r:.57;--hero-k:.92;--body-k:.945;--card-k:.945;--label-k:.96;--ui-k:1;--top:58px;--gutter:20px;--sec-gap:72px;
     --disp-fw:500;--head-fw:470;--disp-ls:-.022em;--head-ls:-.018em;
     --t-display:clamp(31px,calc(7vw + 7px),42px);--t-h2:clamp(25px,calc(3.6vw + 12px),32px);--t-h3:clamp(19px,calc(1.6vw + 13px),23px);
     --t-lead:16.5px;--t-body:16px;--t-card:15.5px;--t-small:14.5px}
@@ -247,14 +217,13 @@
   .rp .jbul li{font-size:14.5px}
   .rp .jbul b,.rp .jerow b{font-weight:600}
   .rp .jcoda{margin-top:var(--s-4);font-size:14px}
-  .rp .cvline{margin-top:var(--s-4)}
   .rp .jstop{width:18px;height:18px;margin:-9px 0 0 -9px}
   .rp .jyl{flex-direction:column;align-items:center;letter-spacing:0;padding:3px 5px}
   .rp .jyl.stack{white-space:normal;text-align:center;width:min-content}
   .rp .jportal{width:56px;height:16px;margin:-8px 0 0 -28px}
-  .rp .jcard,.rp .jcard.jghost{padding:var(--s-4) var(--s-4) var(--s-4) 18px}
+  .rp .jcard{padding:var(--s-4) var(--s-4) var(--s-4) 18px}
+  .rp .jghost{padding:0 0 0 18px}
   .rp .jcards{gap:var(--s-5)}
-  .rp .jghost h3{font-size:var(--t-h3)}
   .rp .jerow{grid-template-columns:44px 1fr}
   .rp .jerow canvas{width:44px;height:44px}
   .rp .jyr{grid-column:2;justify-self:start}
@@ -267,8 +236,7 @@
 }
 
 @media (prefers-reduced-motion:reduce){
-  .rp .howloop .mv{display:none}
-  .rp *,.rp *::before,.rp *::after{transition-duration:0s!important;animation-duration:0s!important;transition-delay:0s!important}
+    .rp *,.rp *::before,.rp *::after{transition-duration:0s!important;animation-duration:0s!important;transition-delay:0s!important}
 }
 
 /* sub pages: all work, writing */

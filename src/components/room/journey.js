@@ -331,7 +331,7 @@ const HYS = 24, DWELL = 80, LOCK = 160;
    with hysteresis and a short dwell so small scrolls never retrigger. Returns a cleanup. */
 export function initJourney(root) {
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches, ac = new AbortController(), sig = { signal: ac.signal };
-  const rail = root.querySelector('.jrail'), cards = [...root.querySelectorAll('.jcard')], N = cards.length;
+  const rail = root.querySelector('.jrail'), tail = root.querySelector('.jghost .jrow'), cards = [...root.querySelectorAll('.jcard')], N = cards.length;
   root.querySelectorAll('canvas[data-spr]').forEach(c => paint(c, +c.dataset.spr));
   const made = [];
   const el = (tag, cls, html = '') => { const e = document.createElement(tag); e.className = cls; e.innerHTML = html; rail.appendChild(e); made.push(e); return e; };
@@ -348,7 +348,8 @@ export function initJourney(root) {
     const rt = rail.getBoundingClientRect().top;
     Y = cards.map(c => c.getBoundingClientRect().top - rt + 40);
     [stops, portals, labels].forEach(g => g.forEach((e, i) => e.style.top = Y[i] + 'px'));
-    line.style.top = Y[0] + 'px'; line.style.height = (Y[N - 1] - Y[0]) + 'px';
+    const end = tail ? tail.getBoundingClientRect().top - rt + tail.offsetHeight / 2 : Y[N - 1];
+    line.style.top = Y[0] + 'px'; line.style.height = (end - Y[0]) + 'px'; line.style.setProperty('--jfade', (end - Y[N - 1]) + 'px');
     if (!busy) rest(at);
   }
   function rest(i) { pod.style.transform = 'translateY(' + (Y[i] - H() + 4) + 'px)'; av.style.transform = 'translateY(0)'; }

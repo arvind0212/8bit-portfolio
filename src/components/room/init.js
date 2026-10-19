@@ -22,8 +22,8 @@ const hotspots=[
   hot(ID.fAmbient,'Framed picture: Ambient Island','frame → the work','#work'),
   hot(ID.fHq,'Framed picture: the work','frame → the work','#work'),
   hot(ID.fHouse,'Framed picture: the work','frame → the work','#work'),
-  hot(ID.board,'Whiteboard: how I work','whiteboard → how i work','#how'),
-  hot(ID.bench,'Workbench: how I work','workbench → how i work','#how'),
+  hot(ID.board,'Whiteboard: the journey','whiteboard → the journey','#journey'),
+  hot(ID.bench,'Workbench: the work','workbench → the work','#work'),
   hot(ID.window,'Window onto Stockholm','stockholm, outside',null,()=>{}),
   hot(ID.term,'Terminal: writing','terminal → writing','#writing'),
   hot(ID.door,'Door: contact','door → contact','#contact'),
@@ -37,7 +37,7 @@ const hotspots=[
 /* where the camera looks for each station, in room pixels */
 const FOCUS={hero:[160,128],desk:[190,140],frames:[262,100],board:[200,80],bench:[176,112],term:[92,124],door:[58,120]};
 const LABEL={desk:'the desk',frames:'the framed wall',board:'the whiteboard',bench:'the workbench',term:'the terminal',door:'the door'};
-const secs=[['hero','desk'],['work','frames'],['journey','desk'],['how','board'],['writing','term'],['contact','door']].map(([id,node])=>({el:page.querySelector('#'+id),id,node}));
+const secs=[['hero','desk'],['work','frames'],['journey','board'],['writing','term'],['contact','door']].map(([id,node])=>({el:page.querySelector('#'+id),id,node}));
 const navLinks=[...page.querySelectorAll('.top nav a[data-sec]')];
 const slot=$('#slot'),cslot=$('#cslot'),stage=$('#stage'),dock=$('#dock'),dockl=$('#dockl'),col=$('.col');
 

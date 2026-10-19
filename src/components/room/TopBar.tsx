@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const LINKS = [["work", "Work"], ["journey", "Journey"], ["how", "How", " I work"], ["writing", "Writing"], ["contact", "Contact"]];
+const LINKS = [["work", "Work"], ["journey", "Journey"], ["writing", "Writing"], ["contact", "Contact"]];
 
 /* the one top bar: name on the left, sections on the right; on the home page it lights the section you are in */
 export default function TopBar({ home = true, room = false }: { home?: boolean; room?: boolean }) {
