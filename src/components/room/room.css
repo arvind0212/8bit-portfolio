@@ -8,9 +8,9 @@
   --head:var(--ff-display);--body:var(--ff-text);--mono:var(--ff-mono);--pix:var(--rf-pix),monospace;
   --dvar:'opsz' 96;
   /* type roles: the tuner sets these; Copy CSS exports the same names */
-  --disp-ff:var(--ff-display);--disp-fs:104px;--disp-fw:560;--disp-lh:1;--disp-ls:-.028em;--disp-dk:100%;--disp-mw:none;--disp-k:1;--disp-c:color-mix(in srgb,var(--ink) var(--disp-dk),var(--paper));
+  --disp-ff:var(--ff-display);--disp-fs:76px;--disp-fw:560;--disp-lh:1;--disp-ls:-.028em;--disp-dk:100%;--disp-mw:none;--disp-k:1;--disp-c:color-mix(in srgb,var(--ink) var(--disp-dk),var(--paper));
   --head-ff:var(--ff-display);--head-fs:46px;--head-fw:560;--head-lh:1.06;--head-ls:-.028em;--head-dk:100%;--head-mw:none;--head-k:1;--head-c:color-mix(in srgb,var(--ink) var(--head-dk),var(--paper));
-  --hero-ff:var(--ff-text);--hero-fs:21px;--hero-fw:400;--hero-lh:1.5;--hero-ls:0em;--hero-dk:90%;--hero-mw:46ch;--hero-k:1;--hero-c:color-mix(in srgb,var(--ink) var(--hero-dk),var(--paper));
+  --hero-ff:var(--ff-text);--hero-fs:19px;--hero-fw:400;--hero-lh:1.5;--hero-ls:0em;--hero-dk:90%;--hero-mw:52ch;--hero-k:1;--hero-c:color-mix(in srgb,var(--ink) var(--hero-dk),var(--paper));
   --body-ff:var(--ff-text);--body-fs:18px;--body-fw:400;--body-lh:1.6;--body-ls:0em;--body-dk:88%;--body-mw:62ch;--body-k:1;--body-c:color-mix(in srgb,var(--ink) var(--body-dk),var(--paper));
   --card-ff:var(--ff-text);--card-fs:17.5px;--card-fw:400;--card-lh:1.55;--card-ls:0em;--card-dk:88%;--card-mw:56ch;--card-k:1;--card-c:color-mix(in srgb,var(--ink) var(--card-dk),var(--paper));
   --label-ff:var(--ff-mono);--label-fs:12px;--label-fw:500;--label-lh:1.3;--label-ls:.06em;--label-dk:76%;--label-mw:none;--label-k:1;--label-c:color-mix(in srgb,var(--ink) var(--label-dk),var(--paper));
@@ -86,10 +86,11 @@
 
 /* hero: centred; a hello, the line with two pixel objects set into it, one action, then the work peeks in */
 .rp .hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:calc(var(--top) + clamp(var(--s-8),13vh,140px)) 0 0}
-.rp .hero .hi{font:500 calc(var(--t-lead)*.95)/1.3 var(--hero-ff);color:var(--ink-2)}
+.rp .hero .hi{font:400 calc(var(--t-lead)*1.05)/1.4 var(--hero-ff);color:var(--ink-2);text-wrap:balance}.rp .hero .hi b{font-weight:700;color:var(--ink)}
 .rp .hero h1{margin-top:var(--s-5);font:var(--disp-fw) var(--t-display)/var(--disp-lh) var(--disp-ff);letter-spacing:var(--disp-ls);color:var(--disp-c)}
 .rp .hero h1 em{font-style:normal;color:var(--accent)}
 .rp .hero h1 .nb{white-space:nowrap}
+.rp .hero h1 .ln{display:inline-block}
 .rp .hero .px{display:inline-block;width:auto;height:.66em;vertical-align:-.02em;margin:0 .06em 0 .1em;image-rendering:pixelated;cursor:pointer;touch-action:manipulation}
 .rp .hero #bx{height:.5em}
 .rp .slot{width:100%;height:clamp(240px,42vh,440px);margin:18px 0 20px}
@@ -99,8 +100,6 @@
 .rp .btn{display:inline-flex;align-items:center;gap:var(--s-3);min-height:50px;padding:0 22px;border-radius:8px;background:var(--accent);color:#fff;font:700 calc(var(--t-ui)*1.07)/1 var(--ui-ff);text-decoration:none;transition:transform var(--d-fast) var(--ease),box-shadow var(--d-fast)}
 .rp .btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(31,111,74,.25)}
 .rp .acts .read{color:var(--ink);font-weight:700;font-size:calc(var(--t-ui)*1.07)}
-.rp .status{display:inline-flex;align-items:center;gap:var(--s-2);margin-top:var(--s-5);font:500 var(--t-small)/1.3 var(--hero-ff);color:var(--ink-3)}
-.rp .status i{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .rp #work{padding-top:clamp(var(--s-7),7vh,72px)}
 .rp .lane{position:relative;flex:1;align-self:stretch;min-width:64px}
 .rp .lane .avatar{position:absolute;right:0;bottom:-2px;image-rendering:pixelated;cursor:pointer;will-change:transform}
@@ -204,7 +203,7 @@
 
 /* phone */
 @media (max-width:760px){
-  .rp{--disp-k:.5;--head-k:.77;--h3-r:.57;--hero-k:.864;--body-k:.945;--card-k:.945;--label-k:.96;--ui-k:1;--top:58px;--gutter:20px;--sec-gap:88px}
+  .rp{--disp-k:.56;--head-k:.77;--h3-r:.57;--hero-k:.92;--body-k:.945;--card-k:.945;--label-k:.96;--ui-k:1;--top:58px;--gutter:20px;--sec-gap:88px}
   .rp .top{padding:0 12px 0 var(--gutter)}
   .rp .top .who b{display:none}
   .rp .top nav{padding:2px}

@@ -9,15 +9,14 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
   return (
     <main className="col" id="top">
       <section className="hero" id="hero" aria-labelledby="h1">
-        <p className="hi">Hi, I&apos;m Arvind.</p>
-        <h1 id="h1"><span className="nb">Strategy<canvas className="px" id="wb" aria-hidden="true" width="0" height="0"></canvas></span> that <span className="nb"><em>ships.</em><canvas className="px" id="bx" aria-hidden="true" width="0" height="0"></canvas></span></h1>
+        <p className="hi">Hi, I&apos;m Arvind, an <b>AI-native tech generalist</b> in Stockholm.</p>
+        <h1 id="h1"><span className="ln">I designed the <span className="nb">systems.<canvas className="px" id="wb" aria-hidden="true" width="0" height="0"></canvas></span></span> <span className="ln">Now I <span className="nb"><em>build</em> them too.<canvas className="px" id="bx" aria-hidden="true" width="0" height="0"></canvas></span></span></h1>
         {room && <div className="slot" id="slot" aria-hidden="true"></div>}
-        <p className="value">A <b>tech generalist</b> in Stockholm. I turn strategy into working systems, from scoping the deal to writing the agent.</p>
+        <p className="value">As a consultant I drew the cloud architectures, wrote the proposals and unblocked the engineers. AI let me take the last step myself.</p>
         <div className="acts">
           <a className="btn" href="#work">See the work<span aria-hidden="true">↓</span></a>
           <a className="read" href="#contact">Get in touch<span aria-hidden="true">→</span></a>
         </div>
-        <p className="status"><i aria-hidden="true"></i>Open to new roles in Sweden and Europe</p>
       </section>
 
       <section className="sec" id="work" aria-labelledby="h-work">
