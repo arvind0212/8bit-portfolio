@@ -14,7 +14,7 @@
 .rp .tile h3{font:var(--head-fw) calc(var(--t-h3)*.9)/1.15 var(--head-ff);letter-spacing:var(--head-ls)}
 .rp .tile.w7 h3,.rp .tile.w12 h3{font-size:calc(var(--t-h3)*1.05)}
 .rp .tile h3 a{text-decoration:none}
-.rp .tile h3 .tctx{color:var(--ink-3)}
+.rp .trole{font:500 var(--t-label)/1.3 var(--label-ff);letter-spacing:.02em;color:var(--ink-3)}
 .rp .tile h3 a::after{content:"";position:absolute;inset:0;z-index:3}
 .rp .out{display:flex;align-items:center;gap:var(--s-3);margin-top:var(--s-5)}
 .rp .out b{flex:none;font:600 calc(var(--t-h3)*1.25)/1 var(--head-ff);letter-spacing:-.03em;color:var(--accent);font-variant-numeric:tabular-nums}

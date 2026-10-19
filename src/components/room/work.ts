@@ -141,7 +141,7 @@ export const WORK: Work[] = [
     slug: "ki-pipeline",
     kind: "case",
     featured: true,
-    tag: "Karolinska Institutet",
+    tag: "Research assistant, KI",
     year: "2025",
     hook: "1,000 Swedish prescriptions,",
     hookEm: " structured",
