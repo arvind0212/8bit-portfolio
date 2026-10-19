@@ -1,5 +1,5 @@
-import PostRow from "./PostRow";
-import { DRAFTS, PUBLISHED } from "./writing";
+import PostCard from "./PostCard";
+import { POSTS } from "./writing";
 import "./site.css";
 
 export default function WritingSection() {
@@ -12,8 +12,8 @@ export default function WritingSection() {
         </div>
         <a className="read wr-all" href="/writing">All writing<span aria-hidden="true"> →</span></a>
       </div>
-      <ol className="wr-list">
-        {[...PUBLISHED.slice(0, 2), DRAFTS[0]].map((p) => <PostRow key={p.slug} p={p} />)}
+      <ol className="wcards">
+        {POSTS.filter((p) => p.live).slice(0, 2).map((p) => <PostCard key={p.slug} p={p} />)}
       </ol>
       <a className="read wr-mob" href="/writing">All writing<span aria-hidden="true"> →</span></a>
     </section>

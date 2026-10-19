@@ -1,10 +1,18 @@
 import type { ReactNode } from "react";
 import CopyEmail from "./CopyEmail";
-import { LINKEDIN } from "./writing";
+import { DocIcon, GitHubIcon, LinkedInIcon, MailIcon } from "./Icons";
 import "./site.css";
 
 export const EMAIL = "arvindguruprasad33@gmail.com";
 export const CV = "https://drive.google.com/file/d/1NuS61X_awnnDSR8uW-5jEng5P1QcZ2f3/view?usp=drive_link";
+
+export const LINKEDIN = "https://www.linkedin.com/in/arvind-guruprasad-73479a142/";
+
+const LINKS: [string, string, string, () => React.JSX.Element][] = [
+  ["LinkedIn", "Arvind Guruprasad", LINKEDIN, LinkedInIcon],
+  ["GitHub", "arvind0212", "https://github.com/arvind0212", GitHubIcon],
+  ["CV", "PDF", CV, DocIcon],
+];
 
 const ROLES: [string, string[]][] = [
   ["Solutions and deployment", ["AI Solutions Engineer", "Deployment Lead", "Applied AI Consultant"]],
@@ -21,13 +29,19 @@ export default function ContactSection({ room, back }: { room: boolean; back?: R
       <p className="cx-line">Based in Stockholm. Open to roles across Sweden and Europe, including remote.</p>
       <div className="cx-act">
         <div className="cx-mail">
-          <a href={"mailto:" + EMAIL}><span className="cx-k">Email</span><span className="cx-v">{EMAIL}</span></a>
+          <a href={"mailto:" + EMAIL}><span className="cx-ic"><MailIcon /></span><span className="cx-mt"><span className="cx-k">Email me</span><span className="cx-v">{EMAIL.split("@")[0]}@<wbr />{EMAIL.split("@")[1]}</span></span></a>
           <CopyEmail email={EMAIL} />
         </div>
         <ul className="cx-links">
-          <li><a href={LINKEDIN} target="_blank" rel="noopener noreferrer">LinkedIn<span aria-hidden="true"> ↗</span></a></li>
-          <li><a href="https://github.com/arvind0212" target="_blank" rel="noopener noreferrer">GitHub<span aria-hidden="true"> ↗</span></a></li>
-          <li><a href={CV} target="_blank" rel="noopener noreferrer">CV<span aria-hidden="true"> ↗</span></a></li>
+          {LINKS.map(([name, sub, href, Icon]) => (
+            <li key={name}>
+              <a href={href} target="_blank" rel="noopener noreferrer">
+                <span className="cx-ic"><Icon /></span>
+                <span className="cx-ln"><b>{name}</b><span>{sub}</span></span>
+                <span className="cx-go" aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
       <div className="cx-roles">
