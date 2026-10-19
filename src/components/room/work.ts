@@ -112,8 +112,8 @@ export const WORK: Work[] = [
     case: {
       dek: "Free-text Swedish dosage instructions, turned into structured records a research group could use. The model reads; code checks every row it returns.",
       role: "Research Assistant, Applied AI for Medical Data",
-      when: "{{Mar or Apr}}–Oct 2025",
-      team: "{{Research group}} · built solo",
+      when: "Apr–Oct 2025",
+      team: "Zheng Chang's group, psychiatric pharmacoepidemiology · built solo",
       stats: [
         { v: "99.4%", l: "came back as valid, rule-checked output" },
         { v: "1.1%", l: "flagged for a person to review" },
@@ -182,7 +182,7 @@ export const WORK: Work[] = [
       decision:
         "Bring the agent to the app instead. Context is taken only when asked for and shown so you can check it, and paste-back waits for approval.",
       outcome:
-        "Offline technical checks pass. First real use showed setup is too fiddly and the open view too cramped, so a redesign is next.",
+        "Offline technical checks pass. First real use showed setup was too fiddly and the open view too cramped, so I'm reworking the setup and the open view now.",
       notDone:
         "No always-on screen reading. The island sees your screen, clipboard or audio only when you ask it to.",
       limits: [

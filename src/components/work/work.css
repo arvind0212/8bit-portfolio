@@ -7,16 +7,17 @@
 .rp .rownav button{width:46px;height:46px;border-radius:50%;border:1px solid var(--ink);background:var(--card);font-size:18px;cursor:pointer;transition:background var(--d-fast),color var(--d-fast),opacity var(--d-fast)}
 .rp .rownav button:hover:not(:disabled){background:var(--ink);color:var(--paper)}
 .rp .rownav button:disabled{opacity:.3;cursor:default}
-.rp .cards{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 2 * var(--s-5)) / 3.15);gap:var(--s-5);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:var(--s-4);scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+/* the padding gives hovered frames and their shadows room inside the scroller; the negative margin keeps the column edge */
+.rp .cards{--pad:var(--s-3);display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 2 * var(--s-6)) / 3);gap:var(--s-6);overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:var(--pad);margin:calc(-1 * var(--pad)) calc(-1 * var(--pad)) 0;padding:var(--pad) var(--pad) var(--s-5);scrollbar-width:thin;scrollbar-color:var(--line) transparent}
 
 /* card */
 .rp .card{scroll-snap-align:start;display:flex;flex-direction:column}
 .rp .card .cv{display:block}
 .rp .frame{position:relative;aspect-ratio:16/10;background:var(--paper2);border-radius:var(--r-m);overflow:hidden;container-type:inline-size;box-shadow:0 0 0 1px var(--line);transition:transform var(--d-med) var(--ease),box-shadow var(--d-med) var(--ease)}
-.rp .card:hover .frame{transform:translateY(-4px);box-shadow:0 0 0 1px var(--line),0 14px 28px rgba(31,26,21,.1)}
+.rp .card:hover .frame{transform:translateY(-4px);box-shadow:0 0 0 1px var(--line),0 10px 18px -10px rgba(31,26,21,.28)}
 .rp .frame.ki{background:var(--accent-soft)}
 .rp .card.sketch .frame{background:repeating-linear-gradient(-45deg,transparent 0 9px,rgba(31,26,21,.035) 9px 10px),var(--paper2)}
-.rp .fr{position:absolute;inset:0;padding:6cqw 8cqw;display:flex;flex-direction:column;justify-content:center;gap:2.6cqw;font-size:clamp(11px,4.2cqw,16px);color:var(--ink)}
+.rp .fr{position:absolute;inset:0;padding:6cqw 7cqw;display:flex;flex-direction:column;justify-content:center;gap:2.4cqw;font-size:clamp(10px,4cqw,16px);color:var(--ink)}
 .rp .frame.ui .fr{align-items:center}
 .rp .fk{font:500 .78em/1.3 var(--f-mono);color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
 .rp .big{font:2.1em/1.05 var(--f-display)}
@@ -27,8 +28,8 @@
 .rp .vc div{display:flex;justify-content:space-between;align-items:center;gap:1em;background:var(--card);border:1px solid var(--line);border-radius:var(--r-s);padding:.6em .9em}
 .rp .vc b{font:500 .9em var(--f-mono);white-space:nowrap}
 .rp .vc .no{color:var(--warn)}
-.rp .pipe{display:flex;align-items:center;gap:.45em;flex-wrap:wrap}
-.rp .pipe span{background:var(--card);border:1px solid var(--ink);border-radius:var(--r-s);padding:.4em .6em;font-size:.85em}
+.rp .pipe{display:flex;align-items:center;gap:.35em;white-space:nowrap}
+.rp .pipe span{background:var(--card);border:1px solid var(--ink);border-radius:var(--r-s);padding:.35em .5em;font-size:.8em}
 .rp .pipe .acc{border-color:var(--accent);color:var(--accent)}
 .rp .pipe i{font-style:normal;color:var(--ink-3)}
 .rp .island{display:inline-flex;align-items:center;gap:.7em;background:var(--ink);color:var(--paper);border-radius:999px;padding:.7em 1.2em;font-size:.95em}
@@ -145,7 +146,7 @@
 @media (max-width:760px){
   .rp .shead{margin-bottom:var(--s-5)}
   .rp .rownav{display:none}
-  .rp .cards{grid-auto-flow:row;grid-auto-columns:auto;overflow:visible;scroll-snap-type:none;gap:var(--s-7);padding:0}
+  .rp .cards{grid-auto-flow:row;grid-auto-columns:auto;overflow:visible;scroll-snap-type:none;gap:var(--s-7);margin:0;padding:0}
   .rp .card{position:relative}
   .rp .fr{padding:7cqw 8cqw;font-size:clamp(14px,4.6cqw,19px);gap:3.6cqw}
   .rp .frame .sm-hide{display:none}
