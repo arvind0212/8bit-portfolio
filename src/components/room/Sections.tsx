@@ -1,11 +1,10 @@
 import type { ReactNode } from "react";
-import { WORK } from "./work";
+import WorkSection from "../work/WorkSection";
 
 export const CV = "https://drive.google.com/file/d/1NuS61X_awnnDSR8uW-5jEng5P1QcZ2f3/view?usp=drive_link";
 
 /* the site itself: V7 draws the room into the hero and contact slots, the desk version shows it on the monitor */
 export default function Sections({ room, back }: { room: boolean; back?: ReactNode }) {
-  const featured = WORK.filter((w) => w.featured);
   return (
     <main className="col" id="top">
       <section className="hero" id="hero" aria-labelledby="h1">
@@ -19,39 +18,7 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
         </div>
       </section>
 
-      <section className="sec" id="work" aria-labelledby="h-work">
-        <div className="shead">
-          <div>
-            <p className="label"><span className="n">01</span>Selected work</p>
-            <h2 id="h-work">Proof, with the limits written down.</h2>
-          </div>
-          <div className="lane" id="lane"></div>
-          <div className="rownav" aria-label="Scroll the work">
-            <button type="button" id="prev" aria-label="Previous">←</button>
-            <button type="button" id="next" aria-label="Next">→</button>
-          </div>
-        </div>
-        <ol className="cards" id="cards">
-          {featured.map((w, i) => (
-            <li className="card" key={w.slug}>
-              <a className="cv" href={w.href} tabIndex={-1} aria-hidden="true">
-                <div className={"frame " + w.frame}>
-                  <div className="fr" dangerouslySetInnerHTML={{ __html: w.preview }} />
-                </div>
-              </a>
-              <div className="ct">
-                <p className="cmeta"><span className="n">0{i + 1}</span>{w.tag}</p>
-                <h3><a href={w.href}>{w.hook}<em>{w.hookEm}</em></a></h3>
-                <p className="cline">{w.line}</p>
-                <a className="read" href={w.href} aria-label={"Read: " + w.hook + w.hookEm}>Read<span aria-hidden="true"> →</span></a>
-              </div>
-            </li>
-          ))}
-          <li className="card all">
-            <a href="/work"><span className="k">All work</span><b>See everything I&apos;ve shipped, including team work.</b><span className="read">All work<span aria-hidden="true"> →</span></span></a>
-          </li>
-        </ol>
-      </section>
+      <WorkSection />
 
       <section className="sec" id="journey" aria-labelledby="h-journey">
         <p className="label"><span className="n">02</span>Journey</p>
