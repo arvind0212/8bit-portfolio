@@ -1,18 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Instrument_Serif, Silkscreen } from "next/font/google";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { FONT_VARS } from "../room/fonts";
 import Sections from "../room/Sections";
 import TopBar from "../room/TopBar";
 import Tune from "../room/Tune";
 import { initDesk } from "./desk";
+import { initHero } from "../room/heroPixels";
 import "../room/room.css";
 import "./desk.css";
 
-const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", variable: "--rf-instrument" });
-const pix = Silkscreen({ subsets: ["latin"], weight: "400", variable: "--rf-pix" });
 
 export default function DeskPage() {
   const ref = useRef<HTMLDivElement>(null);
@@ -20,10 +17,11 @@ export default function DeskPage() {
     if (!ref.current) return;
     const w = window as Window & { __DK_TUNE?: boolean };
     const tune = !!w.__DK_TUNE || new URLSearchParams(location.search).has("tune") || process.env.NODE_ENV !== "production";
-    return initDesk(ref.current, { tune });
+    const page = ref.current, endDesk = initDesk(page, { tune }), endHero = initHero(page);
+    return () => { endHero(); endDesk(); };
   }, []);
   return (
-    <div ref={ref} data-mode="scene" className={["rp", "dk", instrument.variable, GeistSans.variable, GeistMono.variable, pix.variable].join(" ")}>
+    <div ref={ref} data-mode="scene" className={["rp", "dk", FONT_VARS].join(" ")}>
       <div className="scene" id="scene" role="img" aria-labelledby="roomdesc">
         <p className="sr" id="roomdesc">A voxel model of Arvind&apos;s room in Stockholm builds itself, and the view moves into the monitor on his desk, where the site is.</p>
         <button type="button" className="skip" id="skip">Skip<span aria-hidden="true"> »</span></button>
