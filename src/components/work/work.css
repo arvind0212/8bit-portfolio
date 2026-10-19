@@ -1,10 +1,9 @@
 .rp .shead{display:flex;align-items:flex-end;gap:var(--s-5)}
+.rp .shead>div:first-child{flex:1 1 auto;min-width:0}
 /* selected work, all work and case studies; every size, colour and gap comes from the site system tokens in room.css */
 
 /* cards: a quiet preview frame, then meta, title and one line */
-.rp .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-8) var(--s-7);margin-top:var(--s-7)}
-.rp .cards .more{display:flex;flex-direction:column;justify-content:center;gap:var(--s-2);padding-left:var(--s-6);border-left:1px solid var(--line)}
-.rp .cards .more .read{font-size:var(--t-h3)}
+.rp .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-7) var(--s-6);margin-top:var(--s-6)}
 .rp .card{position:relative;min-width:0}
 .rp .card h3 a{text-decoration:none}
 .rp .card h3 a::after{content:"";position:absolute;inset:0;z-index:1;border-radius:var(--r-m)}
@@ -165,9 +164,11 @@
 .rp .nextcs b em{font-style:normal;color:var(--ink-3)}
 .rp .nextcs:hover b{color:var(--accent)}
 
+@media (max-width:1000px){
+  .rp .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 @media (max-width:760px){
   .rp .cards{grid-template-columns:1fr;gap:var(--s-7);margin-top:var(--s-5)}
-  .rp .cards .more{padding:var(--s-4) 0 0;border-left:0;border-top:1px solid var(--line)}
   .rp .fr{padding:7cqw 8cqw;font-size:clamp(14px,4.6cqw,19px);gap:3.6cqw}
   .rp .frame .sm-hide{display:none}
   .rp .frame .fk{font-size:max(12px,.76em)}

@@ -16,11 +16,8 @@ export default function WorkSection() {
       </div>
       <ol className="cards" id="cards">
         {featured.map((w, i) => <WorkCard key={w.slug} w={w} n={i + 1} />)}
-        <li className="more">
-          <p className="cmeta">All work · {WORK.length}</p>
-          <a className="read" href="/work">Every case, plus team results<span aria-hidden="true"> →</span></a>
-        </li>
       </ol>
+      <a className="read more-work" href="/work">All work, including team results<span aria-hidden="true"> →</span></a>
     </section>
   );
 }

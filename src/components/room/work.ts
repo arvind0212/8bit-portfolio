@@ -68,7 +68,7 @@ export const WORK: Work[] = [
     owned: ["Discovery", "Strategy", "Architecture", "Build"],
     frame: "",
     preview:
-      '<p class="fk">Synthetic patient record</p><div class="vc"><div><span>Schema check</span><b>Valid ✓</b></div><div><span>Same clinical meaning</span><b class="no">Not always ✗</b></div></div><p class="big sm-hide">Valid <em>is not correct.</em></p>',
+      '<p class="fk">Synthetic patient record</p><div class="vc"><div><span>Schema check</span><b>Valid ✓</b></div><div><span>Same clinical meaning</span><b class="no">Not always ✗</b></div></div>',
     case: {
       dek: "A controlled benchmark of three AI agent designs that reshape messy, synthetic hospital records into a research standard (OMOP), graded field by field against a locked answer key.",
       role: "Sole author",
@@ -143,7 +143,7 @@ export const WORK: Work[] = [
     owned: ["Discovery", "Strategy", "Architecture", "Build", "Rollout"],
     frame: "ki",
     preview:
-      '<p class="fk">Prescription pipeline</p><p class="stat">99.4%</p><p class="fs">valid, rule-checked output · 0 records lost</p><div class="pipe sm-hide"><span>Free text</span><i>→</i><span class="acc">LLM parsing</span><i>→</i><span>Rules check</span></div>',
+      '<p class="fk">Prescription pipeline</p><p class="stat">99.4%</p><p class="fs">valid, rule-checked output · 0 records lost</p>',
     case: {
       dek: "Free-text Swedish dosage instructions, turned into structured records a research group could use. The model reads; code checks every row it returns.",
       role: "Research Assistant, Applied AI for Medical Data",
