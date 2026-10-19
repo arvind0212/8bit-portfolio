@@ -1,17 +1,24 @@
 /* type tuner: per-role font dials plus a bounding-box editor; returns a cleanup that removes everything it added */
-const KEY='rp-tune-v2';
+const KEY='rp-tune-v3';
 const GF='https://fonts.googleapis.com/css2?family=';
 const FONTS=[
   ['Serif',[
-    ['Instrument Serif',"var(--rf-instrument),'Instrument Serif',Georgia,serif",''],
+    ['Instrument Serif',"'Instrument Serif',Georgia,serif",'Instrument+Serif'],
     ['Newsreader',"'Newsreader',Georgia,serif",'Newsreader:ital,wght@0,300..700;1,300..700'],
     ['Source Serif 4',"'Source Serif 4',Georgia,serif",'Source+Serif+4:ital,wght@0,300..700;1,300..700'],
     ['Literata',"'Literata',Georgia,serif",'Literata:ital,wght@0,300..700;1,300..700'],
     ['Fraunces',"'Fraunces',Georgia,serif",'Fraunces:wght@300..700'],
     ['DM Serif Display',"'DM Serif Display',Georgia,serif",'DM+Serif+Display'],
   ]],
+  ['Display sans',[
+    ['Bricolage Grotesque',"var(--rf-display),'Bricolage Grotesque',system-ui,sans-serif",''],
+    ['Familjen Grotesk',"'Familjen Grotesk',system-ui,sans-serif",'Familjen+Grotesk:wght@400..700'],
+    ['Schibsted Grotesk',"'Schibsted Grotesk',system-ui,sans-serif",'Schibsted+Grotesk:wght@400..800'],
+  ]],
   ['Sans',[
-    ['Geist',"var(--font-geist-sans),'Geist',system-ui,sans-serif",''],
+    ['Atkinson Hyperlegible Next',"var(--rf-text),'Atkinson Hyperlegible Next',system-ui,sans-serif",''],
+    ['Figtree',"'Figtree',system-ui,sans-serif",'Figtree:wght@300..800'],
+    ['Geist',"'Geist',system-ui,sans-serif",'Geist:wght@300..800'],
     ['Inter',"'Inter',system-ui,sans-serif",'Inter:wght@300..800'],
     ['IBM Plex Sans',"'IBM Plex Sans',system-ui,sans-serif",'IBM+Plex+Sans:wght@300;400;500;600;700'],
     ['DM Sans',"'DM Sans',system-ui,sans-serif",'DM+Sans:wght@300..800'],
@@ -20,7 +27,8 @@ const FONTS=[
     ['Work Sans',"'Work Sans',system-ui,sans-serif",'Work+Sans:wght@300..800'],
   ]],
   ['Mono',[
-    ['Geist Mono',"var(--font-geist-mono),'Geist Mono',ui-monospace,monospace",''],
+    ['Martian Mono',"var(--rf-mono),'Martian Mono',ui-monospace,monospace",''],
+    ['Geist Mono',"'Geist Mono',ui-monospace,monospace",'Geist+Mono:wght@400;500;600'],
     ['JetBrains Mono',"'JetBrains Mono',ui-monospace,monospace",'JetBrains+Mono:wght@300..800'],
     ['IBM Plex Mono',"'IBM Plex Mono',ui-monospace,monospace",'IBM+Plex+Mono:wght@300;400;500;600;700'],
     ['Space Mono',"'Space Mono',ui-monospace,monospace",'Space+Mono:wght@400;700'],
@@ -29,25 +37,25 @@ const FONTS=[
 const FONT=Object.fromEntries(FONTS.flatMap(([,l])=>l.map(([n,v,g])=>[n,{v,g}])));
 
 const ROLES=[
-  {k:'label',n:'Labels',sel:'.label,.cmeta,.eyebrow,.facts .k,.jstops small,.draft,.card.all .k,footer',d:{ff:'Geist Mono',fs:13,fw:500,lh:1.3,ls:.06,dk:74,mw:0},fs:[10,18,.5]},
-  {k:'ui',n:'Nav & buttons',sel:'.top nav a,.top .who b,.btn,.read,.links a',d:{ff:'Geist',fs:15,fw:600,lh:1.2,ls:0,dk:100,mw:0},fs:[12,22,.5]},
-  {k:'card',n:'Case-study text',sel:'.cline,.wsum',d:{ff:'Geist',fs:18,fw:400,lh:1.55,ls:0,dk:88,mw:56},fs:[13,22,.5]},
-  {k:'hero',n:'Hero line',sel:'.value',d:{ff:'Geist',fs:22,fw:400,lh:1.45,ls:-.005,dk:90,mw:36},fs:[14,30,.5]},
-  {k:'body',n:'Body',sel:'.intro,.mrows p,.fit,.jcap,.jstops b,.facts b,.facts span',d:{ff:'Geist',fs:18,fw:400,lh:1.6,ls:0,dk:88,mw:62},fs:[14,22,.5]},
-  {k:'head',n:'Headings',sel:'h2,h3,.card.all b,.posts .pt',d:{ff:'Instrument Serif',fs:44,fw:400,lh:1.08,ls:-.01,dk:100,mw:0},fs:[22,64,1]},
-  {k:'disp',n:'Hero headline',sel:'h1',d:{ff:'Instrument Serif',fs:88,fw:400,lh:1,ls:-.015,dk:100,mw:0},fs:[40,128,1]},
+  {k:'label',n:'Labels',sel:'.label,.cmeta,.eyebrow,.facts .k,.jstops small,.draft,.card.all .k,footer',d:{ff:'Martian Mono',fs:12,fw:500,lh:1.3,ls:.06,dk:76,mw:0},fs:[10,18,.5]},
+  {k:'ui',n:'Nav & buttons',sel:'.top nav a,.top .who b,.btn,.read,.links a',d:{ff:'Atkinson Hyperlegible Next',fs:15,fw:600,lh:1.2,ls:0,dk:100,mw:0},fs:[12,22,.5]},
+  {k:'card',n:'Case-study text',sel:'.cline,.wsum',d:{ff:'Atkinson Hyperlegible Next',fs:17.5,fw:400,lh:1.55,ls:0,dk:88,mw:56},fs:[13,22,.5]},
+  {k:'hero',n:'Hero line',sel:'.value,.hi,.status',d:{ff:'Atkinson Hyperlegible Next',fs:21,fw:400,lh:1.5,ls:0,dk:90,mw:46},fs:[14,30,.5]},
+  {k:'body',n:'Body',sel:'.intro,.mrows p,.fit,.jcap,.jstops b,.facts b,.facts span',d:{ff:'Atkinson Hyperlegible Next',fs:18,fw:400,lh:1.6,ls:0,dk:88,mw:62},fs:[14,22,.5]},
+  {k:'head',n:'Headings',sel:'h2,h3,.card.all b,.posts .pt',d:{ff:'Bricolage Grotesque',fs:46,fw:560,lh:1.06,ls:-.028,dk:100,mw:0},fs:[22,64,1]},
+  {k:'disp',n:'Hero headline',sel:'h1',d:{ff:'Bricolage Grotesque',fs:104,fw:560,lh:1,ls:-.028,dk:100,mw:0},fs:[40,128,1]},
 ];
 const ORDER=['disp','head','hero','body','card','label','ui'];
 const ROLE=Object.fromEntries(ROLES.map(r=>[r.k,r]));
 const DIALS=[
-  ['fs','Size','px'],['fw','Weight','',[300,800,100]],['lh','Line height','',[1,2.2,.02]],
+  ['fs','Size','px'],['fw','Weight','',[300,800,10]],['lh','Line height','',[1,2.2,.02]],
   ['ls','Letter spacing','em',[-.05,.15,.005]],['dk','Darkness','%',[40,100,1]],['mw','Max line width','ch',[0,100,1]],
 ];
 const PRESETS={
   Current:{},
-  Inter:{hero:{ff:'Inter'},body:{ff:'Inter'},card:{ff:'Inter'},ui:{ff:'Inter'},label:{ff:'JetBrains Mono',ls:.04}},
-  Editorial:{hero:{ff:'Newsreader',fs:24,lh:1.38},body:{ff:'Source Serif 4',fs:19,lh:1.62},card:{ff:'Source Serif 4',fs:18.5,lh:1.58},label:{ff:'IBM Plex Mono'},ui:{ff:'DM Sans'}},
-  Before:{disp:{fs:68,lh:1.02,ls:-.01},head:{fs:38,lh:1.1},hero:{fs:20,lh:1.5,dk:100,mw:34},body:{fs:17,dk:86,mw:68},card:{fs:17,dk:84,mw:60},label:{fs:13,ls:.04,dk:76},ui:{fs:16,fw:700}},
+  Lively:{disp:{fw:640,ls:-.035},head:{fw:640,ls:-.035}},
+  Familjen:{disp:{ff:'Familjen Grotesk',fw:650,ls:-.03},head:{ff:'Familjen Grotesk',fw:650,ls:-.03},hero:{ff:'Figtree'},body:{ff:'Figtree'},card:{ff:'Figtree'},ui:{ff:'Figtree'}},
+  Before:{disp:{ff:'Instrument Serif',fs:88,fw:400,lh:1,ls:-.015},head:{ff:'Instrument Serif',fs:44,fw:400,lh:1.08,ls:-.01},hero:{ff:'Geist'},body:{ff:'Geist'},card:{ff:'Geist'},ui:{ff:'Geist'},label:{ff:'Geist Mono',fs:13}},
 };
 const fresh=()=>Object.fromEntries(ROLES.map(r=>[r.k,{...r.d}]));
 const preset=name=>{const s=fresh();for(const [k,v] of Object.entries(PRESETS[name]||{}))Object.assign(s[k],v);return s};
@@ -62,7 +70,7 @@ const NUDGE=[['mt','Margin top'],['mb','Margin bottom'],['ml','Margin left'],['p
 const CSS_TXT=`
 #tk{position:fixed;left:16px;bottom:16px;z-index:90;font:12px/1.4 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#1F1A15;letter-spacing:0;text-align:left}
 #tk *{box-sizing:border-box;font-family:inherit;letter-spacing:0}
-#tk .fab{width:44px;height:44px;border-radius:50%;border:0;background:#1F1A15;color:#F3EEE4;font:400 18px/1 Georgia,serif;cursor:pointer;box-shadow:0 6px 18px rgba(31,26,21,.25)}
+#tk .fab{width:44px;height:44px;border-radius:50%;border:0;background:#141820;color:#E9EDF0;font:600 17px/1 system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 18px rgba(31,26,21,.25)}
 #tk.open .fab{background:#1F6F4A}
 #tk.r{left:auto;right:16px}
 #tk.r .pn{left:auto;right:0}
@@ -86,7 +94,7 @@ const CSS_TXT=`
 #tk .ft button{flex:1;padding:8px 6px;border-radius:6px;border:1px solid #1F1A15;background:#fff;font-weight:600}
 #tk .ft .go{background:#1F6F4A;border-color:#1F6F4A;color:#fff}
 #tk .ft .on{background:#1F1A15;color:#fff}
-#tk .el{margin-top:10px;padding:10px;border-radius:8px;background:#F3EEE4}
+#tk .el{margin-top:10px;padding:10px;border-radius:8px;background:#E9EDF0}
 #tk .el code{display:block;font:11px/1.35 ui-monospace,monospace;word-break:break-all;color:#4A443B;margin-bottom:4px}
 #tk .ng{display:grid;grid-template-columns:92px 1fr;align-items:center;gap:6px;margin-top:6px}
 #tk .ng div{display:flex;gap:4px;align-items:center}

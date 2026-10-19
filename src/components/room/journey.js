@@ -427,3 +427,4 @@ export function initJourney(root, base = '/images/journey/') {
   scene(5, 0); mark(5); layout(); idle();
   return () => { alive = false; ac.abort(); ro.disconnect(); cancelAnimationFrame(raf); clearTimeout(timer); root.innerHTML = ''; };
 }
+export { sprite, render, walker, arm, adult, OUT, P, SW, SH };

@@ -1,23 +1,24 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Instrument_Serif, Silkscreen } from "next/font/google";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
 import { initRoomPage } from "./init";
+import { initHero } from "./heroPixels";
+import { FONT_VARS } from "./fonts";
 import Sections from "./Sections";
 import Tune from "./Tune";
 import TopBar from "./TopBar";
 import "./room.css";
 
-const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", variable: "--rf-instrument" });
-const pix = Silkscreen({ subsets: ["latin"], weight: "400", variable: "--rf-pix" });
 
 export default function RoomPage() {
   const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => (ref.current ? initRoomPage(ref.current) : undefined), []);
+  useEffect(() => {
+    if (!ref.current) return;
+    const endRoom = initRoomPage(ref.current), endHero = initHero(ref.current);
+    return () => { endHero(); endRoom(); };
+  }, []);
   return (
-    <div ref={ref} className={["rp", instrument.variable, GeistSans.variable, GeistMono.variable, pix.variable].join(" ")}>
+    <div ref={ref} className={["rp", FONT_VARS].join(" ")}>
       <TopBar />
 
       <div className="dock" id="dock" aria-hidden="true"><span className="dl" id="dockl">the desk</span></div>

@@ -1,16 +1,12 @@
-import { Instrument_Serif, Silkscreen } from "next/font/google";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { FONT_VARS } from "./fonts";
 import Tune from "./Tune";
 import TopBar from "./TopBar";
 import "./room.css";
 
-const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", variable: "--rf-instrument" });
-const pix = Silkscreen({ subsets: ["latin"], weight: "400", variable: "--rf-pix" });
 
 export default function SubPage({ label, title, children }: { label: string; title: string; children: React.ReactNode }) {
   return (
-    <div className={["rp", "sub", instrument.variable, GeistSans.variable, GeistMono.variable, pix.variable].join(" ")}>
+    <div className={["rp", "sub", FONT_VARS].join(" ")}>
       <TopBar home={false} />
       <Tune />
       <main className="col">
