@@ -35,7 +35,7 @@ export default function WorkTile({ w, span }: { w: Work; span: number }) {
     <li className={`tile w${span} t-${s.tone}` + (w.enter ? " enter-" + w.enter : "")}>
       <div className="thead">
         <p className="trole">{w.tag} · {w.year}</p>
-        <h3><a href={href}>{w.hook}{w.hookEm}.</a></h3>
+        <h3><a href={href}>{w.hook}<span className="hk2">{w.hookEm}.</span></a></h3>
         <p className="out"><b>{w.outcome.v}</b><span>{w.outcome.l}</span></p>
       </div>
       <div className="shot" aria-hidden="true">

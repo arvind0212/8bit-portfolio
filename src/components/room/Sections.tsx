@@ -14,8 +14,8 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
       <WorkSection />
 
       <section className="sec" id="journey" aria-labelledby="h-journey">
-        <h2 id="h-journey">From drawing the systems to building them.</h2>
-        <p className="intro">As a consultant at Quantiphi I drew the cloud architectures, wrote the proposals and unblocked the engineers. Then I moved to Stockholm to study AI properly, and AI let me take the last step myself.</p>
+        <h2 id="h-journey">Consultant first. Engineer now.</h2>
+        <p className="intro">At Quantiphi I led our R&amp;D on Google Cloud&apos;s Healthcare Data Engine with Google&apos;s product team. Then I moved to Stockholm to learn to build.</p>
         <div className="jr" id="jroot">
           <div className="jrail" aria-hidden="true"></div>
           <ol className="jcards">
@@ -25,23 +25,24 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
               <button type="button" className="jmore jdet" aria-expanded="false" aria-controls="jx-arkus">What I did <span aria-hidden="true">↓</span></button>
               <div className="jx" id="jx-arkus"><div>
               <ul className="jbul">
-                <li><b>Built the agent tools</b> behind its no-code clinical workflows: one tool over three EHRs (Epic, AthenaOne, Kaddio), ICD-11 and SNOMED CT coding, PubMed and ClinicalTrials.gov search.</li>
-                <li><b>Set up the evals</b> and the prompt workflow, so changes to agents were measured, not guessed.</li>
-                <li><b>Shipped the web app</b> and presented the product at the May 2026 launch.</li>
+                <li><b>Built the multi-agent framework</b> behind the builder: main, build and evaluation agents with loop limits.</li>
+                <li><b>Gave them tools</b> for medical codes, papers and trials, and sandbox EHRs (Epic, AthenaOne, Kaddio).</li>
+                <li><b>Set up LangSmith evals</b> with golden datasets, so prompt changes were scored.</li>
+                <li><b>Led the web platform build</b> and presented it at the May 2026 launch.</li>
               </ul>
               </div></div>
             </li>
             <li className="jcard" data-s="3" data-y="2024" data-to="–26" data-act="at a laptop with a thesis chart">
               <div className="jmeta"><span className="jsr">2024 to 2026</span><span className="jlogos"><img src="/images/journey/karolinska.png" alt="Karolinska Institutet" /><img src="/images/journey/kth.png" alt="KTH" /><img src="/images/journey/stockholm-university.png" alt="Stockholm University" /></span></div>
-              <h3>I hit my technical ceiling, so I went back to school.</h3>
-              <p className="jhook">Four years of consulting taught me to scope and sell AI. I wanted to understand it deeply, so I turned down a go-to-market lead role and moved to Stockholm.</p>
+              <h3>I hit a ceiling, so I went back to school.</h3>
+              <p className="jhook">Four years in, I wanted to stop leaning on architects. I turned down a go-to-market lead role to learn the hard parts.</p>
               <button type="button" className="jmore jdet" aria-expanded="false" aria-controls="jx-ki">What I did <span aria-hidden="true">↓</span></button>
               <div className="jx" id="jx-ki"><div>
               <ul className="jbul">
-                <li><b>MSc Biostatistics &amp; Data Science,</b> a joint degree from KI, KTH and Stockholm University, focused on healthcare AI.</li>
-                <li><b>Research assistant at KI:</b> an LLM pipeline that read 1,000+ Swedish prescriptions with 99.4% success.</li>
-                <li><b>Thesis with Arkus AI:</b> benchmarking agent architectures for clinical data standardisation.</li>
-                <li><b>Built the programme&apos;s degree-project portal,</b> where researchers post thesis ideas for students.</li>
+                <li><b>MSc Biostatistics &amp; Data Science,</b> joint from KI, KTH and Stockholm University.</li>
+                <li><b>KI research:</b> built a prescription pipeline solo, from schema to validation.</li>
+                <li><b>Thesis with Arkus AI:</b> graded agents field by field on synthetic hospital data.</li>
+                <li><b>Portal:</b> built my programme&apos;s degree-project portal on the side.</li>
               </ul>
               </div></div>
             </li>
@@ -50,9 +51,9 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
                 <button type="button" className="jmore" aria-expanded="false" aria-controls="jearly">See the full journey <span aria-hidden="true">↓</span></button>
               </div>
               <div className="jcollapse" id="jearly"><div><div className="jearlier">
-                <div className="jerow"><canvas width={72} height={72} data-spr="2" role="img" aria-label="Arvind presenting at a whiteboard"></canvas><b>Quantiphi</b><span className="jyr">2020 – 24</span><p>Business Analyst to Senior BA. Healthcare data on Google Cloud, from delivery to deals.</p></div>
-                <div className="jerow"><canvas width={72} height={72} data-spr="1" role="img" aria-label="Arvind reading"></canvas><b>BMS College of Engineering</b><span className="jyr">2016 – 20</span><p>B.E. Computer Science in Bangalore.</p></div>
-                <div className="jerow"><canvas width={72} height={72} data-spr="0" role="img" aria-label="Arvind as a kid kicking a football"></canvas><b>Muscat, Oman</b><span className="jyr">Until 2016</span><p>Born and raised. Football first.</p></div>
+                <div className="jerow"><canvas width={72} height={72} data-spr="2" role="img" aria-label="Arvind presenting at a whiteboard"></canvas><b>Quantiphi</b><span className="jyr">2020 – 24</span><p>Business Analyst to Senior BA. Ran client discovery and coordinated 20+ engineers on healthcare data.</p></div>
+                <div className="jerow"><canvas width={72} height={72} data-spr="1" role="img" aria-label="Arvind reading"></canvas><b>BMS College of Engineering</b><span className="jyr">2016 – 20</span><p>B.E. Computer Science.</p></div>
+                <div className="jerow"><canvas width={72} height={72} data-spr="0" role="img" aria-label="Arvind as a kid kicking a football"></canvas><b>Muscat, Oman</b><span className="jyr">Until 2016</span><p>Born and raised. Moved to Bangalore in 2016.</p></div>
               </div></div></div>
             </li>
           </ol>
