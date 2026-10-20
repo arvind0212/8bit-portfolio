@@ -342,7 +342,7 @@ export function initJourney(root) {
   const labels = cards.map(c => { const d = c.dataset, l = el('span', 'jyl' + ('stack' in d ? ' stack' : '')); [d.y, d.to].filter(Boolean).forEach(x => { const s = document.createElement('span'); s.textContent = x; l.appendChild(s); }); return l; });
 
   let Y = [], at = 0, want = 0, busy = false, alive = true, actT = 0, raf = 0, dwellT = 0, pending = -1, lockY = null;
-  const H = () => pod.offsetHeight;
+  const H = () => pod.offsetHeight, LIFT = 14;
   const sc = i => +cards[i].dataset.s;
   function measure() {
     const rt = rail.getBoundingClientRect().top;
@@ -352,7 +352,7 @@ export function initJourney(root) {
     line.style.top = Y[0] + 'px'; line.style.height = (end - Y[0]) + 'px'; line.style.setProperty('--jfade', (end - Y[N - 1]) + 'px');
     if (!busy) rest(at);
   }
-  function rest(i) { pod.style.transform = 'translateY(' + (Y[i] - H() + 4) + 'px)'; av.style.transform = 'translateY(0)'; }
+  function rest(i) { pod.style.transform = 'translateY(' + (Y[i] - H() - LIFT) + 'px)'; av.style.transform = 'translateY(0)'; }
   function mark(i) {
     [cards, stops, labels].forEach(g => g.forEach((e, j) => e.classList.toggle('on', j === i)));
     av.setAttribute('aria-label', 'Arvind ' + cards[i].dataset.act);
@@ -379,7 +379,7 @@ export function initJourney(root) {
       if (!t0) t0 = now;
       const t = now - t0, ya = Y[a], yb = Y[b];
       portal(pa, eOut(seg(t, 0, 140)) * (1 - eIn(seg(t, 220, 140))));
-      if (t < F0) { pod.style.transform = 'translateY(' + (ya - H() + 4) + 'px)'; av.style.transform = 'translateY(' + eIn(seg(t, 30, 170)) * 100 + '%)'; }
+      if (t < F0) { pod.style.transform = 'translateY(' + (ya - H() - LIFT) + 'px)'; av.style.transform = 'translateY(' + eIn(seg(t, 30, 170)) * 100 + '%)'; }
       if (phase === 0 && t >= F0) { phase = 1; labels[a].classList.remove('on'); paint(av, sc(b)); }
       if (phase === 1 && t >= 360) { phase = 2; stops[a].classList.remove('gone', 'on'); }
       const d = eIO(seg(t, F0, Df));
@@ -387,7 +387,7 @@ export function initJourney(root) {
       whenY.textContent = t >= F0 ? Math.round(y0 + (y1 - y0) * d) : y0;
       if (t >= F1 - 120 && phase < 3) { phase = 3; stops[b].classList.add('gone'); }
       portal(pb, eOut(seg(t, F1 - 120, 140)) * (1 - eIn(seg(t, F1 + 240, 140))));
-      if (t >= F0) { pod.style.transform = 'translateY(' + (yb - H() + 4) + 'px)'; av.style.transform = 'translateY(' + (1 - eOut(seg(t, F1 + 20, 280))) * 100 + '%)'; }
+      if (t >= F0) { pod.style.transform = 'translateY(' + (yb - H() - LIFT) + 'px)'; av.style.transform = 'translateY(' + (1 - eOut(seg(t, F1 + 20, 280))) * 100 + '%)'; }
       if (phase === 3 && t >= F1) { phase = 4; mark(b); stops[b].classList.add('gone'); }
       labels[a].style.opacity = 1 - eOut(seg(t, 140, 80)) + eOut(seg(t, F0 + Math.min(220, Df * .55), 140));
       labels[b].style.opacity = 1 - eOut(seg(t, F1 - 140, 100)) + eOut(seg(t, F1 + 160, 160));

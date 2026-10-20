@@ -11,23 +11,23 @@
 .rp .tile:hover{transform:translateY(-4px);box-shadow:0 0 0 1px var(--line),0 18px 36px rgba(20,24,32,.10)}
 .rp .tile:has(a:focus-visible){box-shadow:0 0 0 2px var(--accent)}
 .rp .thead{position:relative;z-index:2;display:grid;gap:var(--s-2);padding:var(--s-5) calc(var(--s-5) + 28px) 0 var(--s-5);max-width:34ch}
-.rp .tile h3{font:var(--head-fw) calc(var(--t-h3)*.9)/1.15 var(--head-ff);letter-spacing:var(--head-ls)}
-.rp .tile.w7 h3,.rp .tile.w12 h3{font-size:calc(var(--t-h3)*1.05)}
+.rp .tile :is(h2,h3){font:var(--head-fw) calc(var(--t-h3)*.9)/1.15 var(--head-ff);letter-spacing:var(--head-ls);max-width:none}
+.rp .tile.w7 :is(h2,h3),.rp .tile.w12 :is(h2,h3){font-size:calc(var(--t-h3)*1.05)}
 .rp .tile.w7 .thead,.rp .tile.w12 .thead{max-width:44ch}
-.rp .tile h3 a{text-decoration:none}
+.rp .tile :is(h2,h3) a{text-decoration:none}
 .rp .trole{font:500 var(--t-label)/1.3 var(--label-ff);letter-spacing:.02em;color:var(--ink-3)}
-.rp .tile h3 a::after{content:"";position:absolute;inset:0;z-index:3}
+.rp .tile :is(h2,h3) a::after{content:"";position:absolute;inset:0;z-index:3}
 .rp .out{display:flex;align-items:center;gap:var(--s-3);margin-top:var(--s-5)}
 .rp .out b{flex:none;font:700 calc(var(--t-h3)*1.25)/1 var(--head-ff);letter-spacing:-.04em;color:var(--accent);font-variant-numeric:proportional-nums}
 .rp .out span{font:400 var(--t-small)/1.3 var(--body-ff);color:var(--ink-2);max-width:20ch}
 .rp .go{position:absolute;top:var(--s-5);right:var(--s-5);z-index:2;font:500 18px/1 var(--label-ff);color:var(--accent);transition:transform var(--d-fast) var(--ease)}
 .rp .tile:hover .go{transform:translateX(4px)}
 .rp .shot{margin:var(--s-5) var(--s-5) var(--s-5)}
-.rp .tile.enter-corner .shot{position:absolute;right:-28px;bottom:-56px;width:min(64%,440px);margin:0;transform:rotate(-2deg);transition:transform var(--d-slow) var(--ease)}
+.rp .tile.enter-corner .shot{position:absolute;right:var(--s-5);bottom:var(--s-5);width:min(64%,440px);margin:0;transform:rotate(-2deg);transition:transform var(--d-slow) var(--ease)}
 .rp .tile.enter-corner:hover .shot{transform:rotate(0) translate(-8px,-10px)}
 .rp .tile.w5.enter-corner .shot{width:min(84%,420px)}
 .rp .tile.w12.enter-corner .shot{width:min(46%,460px);right:var(--s-7)}
-.rp .tile.enter-bottom .shot{position:absolute;left:var(--s-5);right:var(--s-5);bottom:-22px;margin:0;transition:transform var(--d-slow) var(--ease)}
+.rp .tile.enter-bottom .shot{margin:auto var(--s-5) var(--s-5);transition:transform var(--d-slow) var(--ease)}
 .rp .tile.enter-bottom:hover .shot{transform:translateY(-10px)}
 .rp .tile.enter-top .shot{order:-1;margin:var(--s-4) auto 0;width:min(86%,380px);transition:transform var(--d-slow) var(--ease)}
 .rp .tile.enter-top:hover .shot{transform:translateY(6px)}
@@ -41,7 +41,7 @@
 .rp .thead .hk2{display:block}
 .rp .tile.enter-top .thead{margin-top:auto;padding-top:var(--s-7);padding-bottom:var(--s-5)}
 .rp .tile.enter-top .out{margin-top:var(--s-3)}
-.rp .tile.w12.enter-top{flex-direction:row;align-items:center;min-height:300px}
+.rp .tile.w12.enter-top{flex-direction:row;align-items:center;min-height:0;padding:var(--s-4) 0}
 .rp .tile.w12.enter-top .thead{flex:1;margin:0;padding:var(--s-5)}
 .rp .tile.w12.enter-top .shot{order:1;flex:none;margin:0 calc(var(--s-7) + 40px) 0 0}
 .rp .tile.all{padding:var(--s-5);gap:var(--s-3);min-height:0}
@@ -90,7 +90,7 @@
 .rp .layers li{display:flex;flex-direction:column;gap:var(--s-2);min-width:0}
 .rp .layers i{display:block;height:8px;border-radius:3px;background:var(--line)}
 .rp .layers li.on i{background:var(--accent)}
-.rp .layers span{font:var(--label-fw) var(--t-label)/1.2 var(--label-ff);letter-spacing:.02em;color:var(--ink-3);opacity:.6;white-space:nowrap}
+.rp .layers span{font:var(--label-fw) var(--t-label)/1.2 var(--label-ff);letter-spacing:.02em;color:var(--ink-3);white-space:nowrap}
 .rp .layers li.on span{color:var(--ink);opacity:1}
 
 /* all work: the same cards, then team work as rows */
@@ -219,7 +219,7 @@
   .rp .tile.enter-top .thead{margin-top:var(--s-4);padding-top:var(--s-5)}
   .rp .tile.enter-top .shot{margin-top:var(--s-3)}
   .rp .thead{padding:var(--s-4) calc(var(--s-4) + 24px) 0 var(--s-4);gap:var(--s-1)}
-  .rp .tile h3,.rp .tile.w7 h3,.rp .tile.w12 h3{font-size:var(--t-h3);line-height:1.2}
+  .rp .tile :is(h2,h3),.rp .tile.w7 :is(h2,h3),.rp .tile.w12 :is(h2,h3){font-size:var(--t-h3);line-height:1.2}
   .rp .go{top:var(--s-4);right:var(--s-4)}
   .rp .out{margin-top:var(--s-3)}
   .rp .out b{font-weight:500;font-size:26px}
@@ -229,8 +229,8 @@
   .rp .cs h1{font-size:calc(var(--t-h2)*1.15);line-height:1.08}
   .rp .tt{font-weight:400;font-size:var(--t-card)}
   .rp .stats b{font-size:26px}
-  .rp .tile.enter-corner .shot,.rp .tile.w5.enter-corner .shot,.rp .tile.w12.enter-corner .shot{width:86%;right:-24px}
-  .rp .tile.enter-bottom .shot{left:var(--s-4);right:var(--s-4)}
+  .rp .tile.enter-corner .shot,.rp .tile.w5.enter-corner .shot,.rp .tile.w12.enter-corner .shot{position:relative;right:auto;bottom:auto;width:auto;margin:var(--s-5) var(--s-4) var(--s-4)}
+  .rp .tile.enter-bottom .shot{margin:var(--s-5) var(--s-4) var(--s-4)}
 
   .rp .trows li{grid-template-columns:1fr}
   .rp .trows .cmeta{grid-column:1;grid-row:auto}

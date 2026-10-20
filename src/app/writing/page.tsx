@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { pageMeta } from "@/lib/meta";
 import Shell from "@/components/work/Shell";
 import TopicFilter from "@/components/site/TopicFilter";
-import { POSTS } from "@/components/site/writing";
+import FeatPost from "@/components/site/FeatPost";
+import { NOTES, NOTES_NEXT, POSTS } from "@/components/site/writing";
 import "@/components/site/site.css";
 import "@/components/writing/read.css";
 
@@ -18,18 +19,11 @@ export default function WritingIndex() {
         <h1 id="wi-h">Notes from building.</h1>
         <p className="intro">A long read on my thesis, and short notes on what I learn while building with agents.</p>
 
-        <a className="feat" href={"/writing/" + long.slug}>
-          <div className="feat-c">
-            <p className="wc-meta"><span className="fk-l">Long read</span><time>{long.date}</time></p>
-            <h2>{long.title}</h2>
-            <p>{long.dek}</p>
-            <span className="read">Read it<span aria-hidden="true"> →</span></span>
-          </div>
-          <div className="wc-frame feat-art"><div className="wc-fr" dangerouslySetInnerHTML={{ __html: long.preview }} /></div>
-        </a>
+        <FeatPost p={long} />
 
-        <h2 className="wi-sub">Notes</h2>
-        <TopicFilter />
+        {NOTES.length > 0
+          ? <><h2 className="wi-sub">Notes</h2><TopicFilter /></>
+          : <p className="wr-next">{NOTES_NEXT}</p>}
       </section>
     </Shell>
   );

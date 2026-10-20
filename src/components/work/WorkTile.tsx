@@ -28,14 +28,14 @@ function MiniChart({ w }: { w: Work }) {
   );
 }
 
-export default function WorkTile({ w, span }: { w: Work; span: number }) {
+export default function WorkTile({ w, span, h: H = "h3" }: { w: Work; span: number; h?: "h2" | "h3" }) {
   const s = w.screen;
   const href = "/work/" + w.slug;
   return (
     <li className={`tile w${span} t-${s.tone}` + (w.enter ? " enter-" + w.enter : "")}>
       <div className="thead">
         <p className="trole">{w.tag} · {w.year}</p>
-        <h3><a href={href}>{w.hook}{w.hookEm && <span className="hk2">{w.hookEm}</span>}</a></h3>
+        <H><a href={href}>{w.hook}{w.hookEm && <span className="hk2">{w.hookEm}</span>}</a></H>
         <p className="out"><b>{w.outcome.v}</b><span>{w.outcome.l}</span></p>
       </div>
       <div className="shot" aria-hidden="true">

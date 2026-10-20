@@ -42,7 +42,7 @@
 
 .rp .stairs{display:grid;gap:var(--s-2)}
 .rp .stairs li{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:var(--s-4);margin-left:calc(var(--i)*var(--s-5));padding:var(--s-3) var(--s-4);border-radius:var(--r-m);background:color-mix(in srgb,var(--accent) calc(6% + var(--i)*5%),var(--card));box-shadow:0 0 0 1px var(--line)}
-.rp .stairs b{font:var(--label-fw) var(--t-label)/1 var(--label-ff);color:var(--accent)}
+.rp .stairs b{font:var(--label-fw) var(--t-label)/1 var(--label-ff);color:color-mix(in srgb,var(--accent) 78%,var(--ink))}
 .rp .stairs h4{font-size:var(--t-small)}
 .rp .stairs p{font:400 var(--t-small)/1.45 var(--body-ff);color:var(--ink-2)}
 
@@ -108,16 +108,8 @@
 .rp .lr-cta>p{margin:var(--s-4) auto 0;font:400 var(--t-body)/1.55 var(--body-ff);color:var(--ink-2);max-width:52ch}
 .rp .lr-cta .lr-acts{justify-content:center}
 
-/* writing index: the long read as a featured card, then the notes */
+/* writing index: the long read as a featured card (site.css), then the notes */
 .rp .wi .intro{margin-top:var(--s-3)}
-.rp .feat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:var(--s-7);margin-top:var(--s-7);padding:var(--s-6);border-radius:16px;background:var(--card);box-shadow:0 0 0 1px var(--line);text-decoration:none;color:inherit;transition:transform var(--d-med) var(--ease),box-shadow var(--d-med) var(--ease)}
-.rp .feat:hover{transform:translateY(-4px);box-shadow:0 0 0 1px var(--line),0 18px 36px rgba(20,24,32,.10)}
-.rp .feat-c{display:grid;gap:var(--s-3)}
-.rp .feat .wc-meta{margin:0}
-.rp .feat h2{font:var(--head-fw) calc(var(--t-h3)*1.3)/1.1 var(--head-ff);font-variation-settings:var(--dvar);letter-spacing:var(--head-ls)}
-.rp .feat-c>p{font:400 var(--t-card)/1.55 var(--body-ff);color:var(--ink-2)}
-.rp .feat .read{margin-top:var(--s-2);font-weight:700}
-.rp .feat-art{aspect-ratio:4/3}
 .rp .wi-sub{margin-top:var(--s-9);font:var(--head-fw) var(--t-h3)/1.15 var(--head-ff);letter-spacing:var(--head-ls)}
 .rp .wi .wr-topics{margin-top:var(--s-4)}
 
@@ -138,8 +130,5 @@
   .rp .bar.ax span,.rp .bar.ax>b{display:none}
   .rp .lr-cta{margin-top:var(--s-8);padding:var(--s-7) var(--s-4)}
   .rp .lr-cta h2{font-size:calc(var(--t-h2)*.8)}
-  .rp .feat{grid-template-columns:1fr;gap:var(--s-5);margin-top:var(--s-6);padding:var(--s-4)}
-  .rp .feat-art{order:-1;aspect-ratio:2/1}
-  .rp .feat h2{font-size:var(--t-h3);line-height:1.18}
   .rp .wi-sub{margin-top:var(--s-8)}
 }

@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import PostCard from "./PostCard";
-import { POSTS, TOPICS } from "./writing";
+import { NOTES as notes, TOPICS } from "./writing";
 
 export default function TopicFilter() {
   const [on, setOn] = useState<string | null>(null);
-  const notes = POSTS.filter((p) => !p.long);
   const shown = on ? notes.filter((p) => p.topics.includes(on)) : notes;
   const used = TOPICS.filter((t) => notes.some((p) => p.topics.includes(t)));
   return (
