@@ -5,7 +5,7 @@ import "./site.css";
 import "./contact.css";
 
 export const EMAIL = "arvindguruprasad33@gmail.com";
-export const CV = "https://drive.google.com/file/d/1NuS61X_awnnDSR8uW-5jEng5P1QcZ2f3/view?usp=drive_link";
+export const CV = "/cv.pdf";
 
 export const LINKEDIN = "https://www.linkedin.com/in/arvind-guruprasad-73479a142/";
 
