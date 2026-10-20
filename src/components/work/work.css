@@ -13,6 +13,7 @@
 .rp .thead{position:relative;z-index:2;display:grid;gap:var(--s-2);padding:var(--s-5) calc(var(--s-5) + 28px) 0 var(--s-5);max-width:34ch}
 .rp .tile h3{font:var(--head-fw) calc(var(--t-h3)*.9)/1.15 var(--head-ff);letter-spacing:var(--head-ls)}
 .rp .tile.w7 h3,.rp .tile.w12 h3{font-size:calc(var(--t-h3)*1.05)}
+.rp .tile.w7 .thead,.rp .tile.w12 .thead{max-width:44ch}
 .rp .tile h3 a{text-decoration:none}
 .rp .trole{font:500 var(--t-label)/1.3 var(--label-ff);letter-spacing:.02em;color:var(--ink-3)}
 .rp .tile h3 a::after{content:"";position:absolute;inset:0;z-index:3}
