@@ -62,8 +62,8 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
 
       <WritingSection />
 
-      <ContactSection room={room} back={back} />
-      <SiteFooter />
+      <ContactSection room={room} />
+      <SiteFooter room={!!back} />
     </main>
   );
 }

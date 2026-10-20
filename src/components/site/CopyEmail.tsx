@@ -14,8 +14,9 @@ export default function CopyEmail({ email }: { email: string }) {
     }
   };
   return (
-    <button type="button" className="cx-copy" onClick={copy} aria-live="polite">
+    <button type="button" className="cx-copy" onClick={copy} aria-label="Copy email address">
       {done ? "Copied" : "Copy"}
+      <span className="sr" role="status">{done ? "Email address copied" : ""}</span>
     </button>
   );
 }
