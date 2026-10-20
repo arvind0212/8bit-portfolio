@@ -48,8 +48,8 @@
 .rp .sf nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 var(--s-3);text-decoration:none;color:var(--ink-3);transition:color var(--d-fast)}
 .rp .sf nav a:hover{color:var(--ink)}
 .rp .sf-note{padding-block:14px}
-.rp .sf-note a{padding-block:14px;color:var(--accent);text-decoration:none;white-space:nowrap}
-.rp .sf-note a:hover{text-decoration:underline;text-underline-offset:4px}
+.rp .sf-note a{padding-block:14px;color:var(--accent);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;white-space:nowrap}
+.rp .sf-note a:hover{text-decoration-thickness:2px}
 
 @media (max-width:1023px){.rp .cx-spr{position:relative;right:auto;width:112px;margin-top:var(--s-4);translate:none}}
 @media (max-width:760px){

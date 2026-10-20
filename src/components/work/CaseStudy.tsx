@@ -25,7 +25,7 @@ export default function CaseStudy({ w }: { w: Work }) {
   return (
     <Shell>
       <article className="cs" aria-labelledby="cs-h">
-        <p className="crumb"><a href="/work">← All work</a><a href="/">Home</a></p>
+        <p className="crumb"><a href="/work">← All work</a></p>
         <p className="label"><span className="n">{w.tag}</span>· {w.year}{w.kind === "sketch" && <span className="badge">Sketch</span>}</p>
         <h1 id="cs-h">{w.hook}<em>{w.hookEm}</em></h1>
         <p className="dek">{c.dek}</p>

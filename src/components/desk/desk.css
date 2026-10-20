@@ -7,9 +7,8 @@
 .dk .screen{background:var(--paper)}
 .dk .dissolve{position:fixed;left:0;top:0;z-index:4;pointer-events:none;image-rendering:pixelated}
 .dk .site{transform-origin:0 0}
+.dk .site:focus,.dk .site [data-land]:focus{outline:none}
 
-.dk .top nav .toroom{color:var(--accent);font-weight:600}
-.dk .top nav .toroom span{font-size:1.1em;line-height:1}
 .dk .backroom{margin-top:26px}
 
 .dk .skip{position:fixed;left:20px;bottom:20px;z-index:5;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent);backdrop-filter:blur(8px);font:var(--label-fw) calc(var(--label-fs)*var(--label-k))/1 var(--label-ff);letter-spacing:var(--label-ls);color:var(--grey);cursor:pointer}
@@ -17,11 +16,13 @@
 .dk:not([data-mode=scene]) .skip{display:none}
 .dk .roomhint{position:fixed;left:50%;bottom:24px;z-index:5;transform:translateX(-50%);display:flex;align-items:center;gap:14px;padding:6px 6px 6px 18px;border-radius:999px;background:var(--ink);color:var(--paper);font:calc(var(--ui-fs)*.9) var(--ui-ff);white-space:nowrap;animation:dk-in .5s var(--ease) both}
 .dk .roomhint[hidden]{display:none}
+.dk .roomhint .coarse{display:none}
+@media (pointer:coarse){.dk .roomhint .fine{display:none}.dk .roomhint .coarse{display:inline}}
+.dk .roomhint button:focus-visible{outline-color:var(--paper)}
 .dk .roomhint button{min-height:40px;padding:0 16px;border:0;border-radius:999px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
 @keyframes dk-in{from{opacity:0;transform:translate(-50%,10px)}}
 
 @media (max-width:760px){
-  .dk .top nav .toroom span{margin-right:8px}
   .dk .roomhint{left:16px;right:16px;transform:none;justify-content:space-between;white-space:normal;animation-name:dk-in-m}
   .dk .skip{left:16px;bottom:16px}
 }

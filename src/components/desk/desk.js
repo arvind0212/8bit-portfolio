@@ -45,6 +45,16 @@ export function initDesk(page, { tune = false } = {}) {
 
   const skipBtn = $('#skip'), scene3 = $('#scene'), screen = $('#screen'), site = $('#site'), hint = $('#roomhint'), dis = $('#dissolve');
   const GL = webgl();
+  /* the site is the live page only while it is in page flow; on the monitor it is a picture */
+  const live = on => { site.inert = !on; if (on) site.removeAttribute('aria-hidden'); else site.setAttribute('aria-hidden', 'true'); };
+  /* focus to move into the site when it comes back, and where it was when the room was asked for */
+  let focusNext = null, ret = null, roomFocus = true;
+  const focusIn = el => {
+    if (!el || !el.isConnected || !site.contains(el)) el = site;
+    if (el !== site && !el.matches('a[href],button,input,select,textarea,[tabindex]')) { el.setAttribute('tabindex', '-1'); el.dataset.land = ''; }
+    el.focus({ preventScroll: true });
+    if (document.activeElement !== el) site.focus({ preventScroll: true });
+  };
 
   /* three.js: the world, a WebGL renderer for it and a CSS3D renderer that carries the site on the screen */
   const W = GL ? buildWorld() : null;
@@ -189,18 +199,22 @@ export function initDesk(page, { tune = false } = {}) {
   const kick = () => { if (!raf) { lastNow = 0; raf = requestAnimationFrame(frame); } };
 
   function toSite() {
-    heroIn(); mode = 'site'; camT = 1; rate = rateT = 1;
+    const fromScene = scene3.contains(document.activeElement) && !site.contains(document.activeElement);
+    heroIn(); mode = 'site'; camT = 1; rate = rateT = 1; live(true);
     if (raf) { cancelAnimationFrame(raf); raf = 0; }
     setPlace('flow'); dis.hidden = true;
     page.dataset.mode = 'site'; site.style.transform = ''; scene3.hidden = true;
     journey();
     scrollTo({ top: saved, behavior: 'instant' });
-    if (landing) { const go = landing; landing = null; requestAnimationFrame(() => go()); }
+    const f = focusNext || (fromScene ? site : null); focusNext = null;
+    if (landing) { const go = landing; landing = null; requestAnimationFrame(() => { go(); if (f) focusIn(f); }); }
+    else if (f) focusIn(f);
     try { sessionStorage.setItem(SEEN, '1'); } catch (e) { /* no storage */ }
   }
-  function back() {
+  function back(focus = true) {
     if (mode !== 'site') return;
-    saved = scrollY;
+    saved = scrollY; roomFocus = focus;
+    ret = site.contains(document.activeElement) ? document.activeElement : null; live(false);
     page.dataset.mode = 'scene'; scene3.hidden = false;
     site.style.transform = 'translateY(' + (-saved) + 'px)';
     rate = rateT = 1; revStart = vt;
@@ -209,9 +223,10 @@ export function initDesk(page, { tune = false } = {}) {
     else { if (S.screenMode === 'dissolve') takeSnapshot(); setPlace('overlay'); reveal(1); mode = 'hide'; }
     kick();
   }
-  function toRoom() { heroed = false; emit('dk:back'); mode = 'room'; camT = 0; page.dataset.mode = 'room'; hint.hidden = false; draw(); }
+  function toRoom() { heroed = false; emit('dk:back'); mode = 'room'; camT = 0; page.dataset.mode = 'room'; hint.hidden = false; draw(); if (roomFocus) $('#sitback').focus(); }
   function enter() {
     if (mode !== 'room') return;
+    focusNext = focusNext || ret || site; ret = null;
     hint.hidden = true; page.dataset.mode = 'scene';
     if (!GL || RM.matches) return toSite();
     heroed = false; mode = 'in'; camStart = vt; rate = rateT = 1; kick();
@@ -220,7 +235,7 @@ export function initDesk(page, { tune = false } = {}) {
     plan = makePlan(); vt = 0; rate = rateT = 1; camT = 0; saved = 0; heroed = false;
     camStart = S.delay + S.camAt;
     hint.hidden = true; dis.hidden = true; page.dataset.mode = 'scene'; scene3.hidden = false;
-    site.style.transform = ''; setPlace('css3d');
+    site.style.transform = ''; setPlace('css3d'); live(false);
     if (!build || !GL || RM.matches) { settle(); return toSite(); }
     mode = 'intro'; poseAll(); kick();
   }
@@ -246,6 +261,14 @@ export function initDesk(page, { tune = false } = {}) {
   $('#skip').addEventListener('click', () => { rateT = S.skipRate; if (heroed) emit('dk:rate', rateT); }, sig);
   page.querySelectorAll('[data-act=room]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); back(); }, sig));
   $('#sitback').addEventListener('click', () => enter(), sig);
+  /* a section link followed while the site is away (Back, or a typed #work) goes in and lands there; #room goes out */
+  addEventListener('hashchange', () => {
+    if (location.hash === '#room') { if (mode === 'site') back(); return; }
+    const t = location.hash.length > 1 && site.querySelector(location.hash.replace(/[^#\w-]/g, ''));
+    if (!t || mode === 'site' || mode === 'out' || mode === 'hide') return;
+    landing = () => t.scrollIntoView({ behavior: 'instant' }); focusNext = t;
+    enter();
+  }, sig);
   addEventListener('resize', () => { size(); if (mode !== 'site') draw(); }, sig);
 
   /* the work row and the journey, as in V7 */
@@ -264,15 +287,18 @@ export function initDesk(page, { tune = false } = {}) {
   const journey = () => { endJourney(); endJourney = initJourney($('#jroot')); };
 
   /* a link to a section (/#contact) or a return with Back lands where it points, once the site is in page flow */
-  const target = location.hash.length > 1 && site.querySelector(location.hash.replace(/[^#\w-]/g, ''));
+  const wantRoom = location.hash === '#room';
+  if (wantRoom) history.replaceState(history.state, '', location.pathname + location.search);
+  const target = !wantRoom && location.hash.length > 1 && site.querySelector(location.hash.replace(/[^#\w-]/g, ''));
   const navType = performance.getEntriesByType('navigation')[0]?.type;
-  let backY = 0; try { backY = navType === 'back_forward' ? +sessionStorage.getItem(SEEN + '-y') || 0 : 0; } catch (e) { /* no storage */ }
+  let backY = 0; try { backY = navType === 'back_forward' && !wantRoom ? +sessionStorage.getItem(SEEN + '-y') || 0 : 0; } catch (e) { /* no storage */ }
   let landing = target ? () => target.scrollIntoView({ behavior: 'instant' }) : backY ? () => scrollTo({ top: backY, behavior: 'instant' }) : null;
   addEventListener('pagehide', () => { try { if (mode === 'site') sessionStorage.setItem(SEEN + '-y', String(scrollY)); } catch (e) { /* no storage */ } }, sig);
 
   size();
   let seen = false; try { seen = !!sessionStorage.getItem(SEEN); } catch (e) { /* no storage */ }
-  start({ build: tune || (!seen && !landing) });
+  start({ build: tune || (!seen && !landing && !wantRoom) });
+  if (wantRoom) back(false);
 
   const endTune = tune ? initDeskTune(page, S, DEF, {
     change(key) {

@@ -8,7 +8,7 @@ export default function PostRead({ p }: { p: Post }) {
   return (
     <Shell>
       <article className="lr" aria-labelledby="lr-h">
-        <p className="crumb"><a href="/writing">← All writing</a><a href="/">Home</a></p>
+        <p className="crumb"><a href="/writing">← All writing</a></p>
 
         <header className="lr-hero">
           <div className="lr-copy">
