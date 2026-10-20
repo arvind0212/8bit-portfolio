@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/meta";
 import Shell from "@/components/work/Shell";
 import WorkTile from "@/components/work/WorkTile";
 import { WORK } from "@/components/room/work";
 
-export const metadata: Metadata = {
-  title: "All work | Arvind Guruprasad",
-  description: "Everything Arvind Guruprasad has built or led, with the limits written down.",
-};
+export const metadata: Metadata = pageMeta("All work | Arvind Guruprasad", "Everything Arvind Guruprasad has built or led, with the limits written down.", "/work");
 
 export default function WorkIndex() {
   const cases = WORK.filter((w) => w.kind !== "team");

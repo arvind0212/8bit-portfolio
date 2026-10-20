@@ -245,7 +245,7 @@ export const WORK: Work[] = [
       flowCaption: "Fig. 1 · The loop. Nothing touches your app without a yes.",
       notes: [],
       hard: [
-        { issue: "On first real use, setting it up was too fiddly.", fix: "I rebuilt the setup; it's now much simpler." },
+        { issue: "On first real use, setting it up was too fiddly.", fix: "Rebuilt the setup; it's now much simpler." },
       ],
       alternatives: [
         { option: "Always-on screen reading", why: "It would be convenient, but the island sees your screen, clipboard or audio only when you ask." },

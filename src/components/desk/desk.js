@@ -195,6 +195,7 @@ export function initDesk(page, { tune = false } = {}) {
     page.dataset.mode = 'site'; site.style.transform = ''; scene3.hidden = true;
     journey();
     scrollTo({ top: saved, behavior: 'instant' });
+    if (landing) { const go = landing; landing = null; requestAnimationFrame(() => go()); }
     try { sessionStorage.setItem(SEEN, '1'); } catch (e) { /* no storage */ }
   }
   function back() {
@@ -262,9 +263,16 @@ export function initDesk(page, { tune = false } = {}) {
   let endJourney = () => {};
   const journey = () => { endJourney(); endJourney = initJourney($('#jroot')); };
 
+  /* a link to a section (/#contact) or a return with Back lands where it points, once the site is in page flow */
+  const target = location.hash.length > 1 && site.querySelector(location.hash.replace(/[^#\w-]/g, ''));
+  const navType = performance.getEntriesByType('navigation')[0]?.type;
+  let backY = 0; try { backY = navType === 'back_forward' ? +sessionStorage.getItem(SEEN + '-y') || 0 : 0; } catch (e) { /* no storage */ }
+  let landing = target ? () => target.scrollIntoView({ behavior: 'instant' }) : backY ? () => scrollTo({ top: backY, behavior: 'instant' }) : null;
+  addEventListener('pagehide', () => { try { if (mode === 'site') sessionStorage.setItem(SEEN + '-y', String(scrollY)); } catch (e) { /* no storage */ } }, sig);
+
   size();
   let seen = false; try { seen = !!sessionStorage.getItem(SEEN); } catch (e) { /* no storage */ }
-  start({ build: tune || !seen });
+  start({ build: tune || (!seen && !landing) });
 
   const endTune = tune ? initDeskTune(page, S, DEF, {
     change(key) {

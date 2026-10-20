@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/meta";
 import Shell from "@/components/work/Shell";
 import TopicFilter from "@/components/site/TopicFilter";
 import { POSTS } from "@/components/site/writing";
 import "@/components/site/site.css";
 import "@/components/writing/read.css";
 
-export const metadata: Metadata = {
-  title: "Writing | Arvind Guruprasad",
-  description: "Notes from building with agents: clinical data, evaluation, harnesses and moving from consulting into building.",
-};
+export const metadata: Metadata = pageMeta("Writing | Arvind Guruprasad", "Notes from building with agents: clinical data, evaluation, harnesses and moving from consulting into building.", "/writing");
 
 export default function WritingIndex() {
   const long = POSTS.find((p) => p.long)!;
