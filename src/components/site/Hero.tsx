@@ -7,7 +7,7 @@ const HERO = {
   name: "I'm Arvind.",
   question: ["Curious where AI is taking us?"],
   answer: "So am I.",
-  line: ["I spent four years scoping AI with\u00a0clients.", "At Arkus\u00a0AI, I wired agents into clinical\u00a0systems."],
+  line: ["I spent four years scoping AI with\u00a0clients.", "At Arkus\u00a0AI, I built agent tools and their\u00a0evals."],
   cta: "Get in touch",
   more: "See my work",
 };
