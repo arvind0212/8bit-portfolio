@@ -37,11 +37,10 @@ const LINKS: [string, string, () => React.JSX.Element][] = [
 ];
 
 
-/* the page closes the way the hero opens (pill line, two-part heading) with the journey's Stockholm sprite on the right */
+/* the page closes the way the hero opens (pill line, two-part heading) with the journey's Stockholm sprite standing on one of the hero's rings */
 export default function ContactSection({ room }: { room: boolean }) {
   return (
     <section className="sec cx cxo" id="contact" aria-labelledby="h-contact">
-      <ContactSprite />
       <p className="cx-role"><span className="cx-pill"><i></i>{CONTACT.status}</span> <span className="cx-where">{CONTACT.where}</span></p>
       <h2 id="h-contact"><span>{CONTACT.title}</span> <em>{CONTACT.sub}</em></h2>
       {room && <div className="slot cslot" id="cslot" aria-hidden="true"></div>}
@@ -51,6 +50,7 @@ export default function ContactSection({ room }: { room: boolean }) {
           <li key={label}><a href={mailto(subject, body)} data-k={i}><i></i>{label}<span className="sr">, start an email</span><span aria-hidden="true">→</span></a></li>
         ))}
       </ul>
+      <ContactSprite />
       <p className="cx-other">{CONTACT.other}</p>
       <div className="cx-mail">
         <a href={mailto("Hello from your site")}><span className="cx-ic"><MailIcon /></span><span className="cx-v">{EMAIL}</span></a>
