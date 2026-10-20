@@ -41,6 +41,9 @@
 .rp .thead .hk2{display:block}
 .rp .tile.enter-top .thead{margin-top:auto;padding-top:var(--s-7);padding-bottom:var(--s-5)}
 .rp .tile.enter-top .out{margin-top:var(--s-3)}
+.rp .tile.w12.enter-top{flex-direction:row;align-items:center;min-height:300px}
+.rp .tile.w12.enter-top .thead{flex:1;margin:0;padding:var(--s-5)}
+.rp .tile.w12.enter-top .shot{order:1;flex:none;margin:0 calc(var(--s-7) + 40px) 0 0}
 .rp .tile.all{padding:var(--s-5);gap:var(--s-3);min-height:0}
 .rp .tile.all ul{list-style:none;margin:0;padding:0}
 .rp .tile.all li{font:var(--head-fw) calc(var(--t-body)*.95)/1.3 var(--head-ff);letter-spacing:-.01em;padding:var(--s-3) 0;border-top:1px solid var(--line)}
@@ -210,6 +213,9 @@
   .rp .bento{margin-top:var(--s-5);gap:var(--s-3)}
   .rp .tile.w5,.rp .tile.w6,.rp .tile.w7,.rp .tile.w12{grid-column:auto;min-height:330px}
   .rp .tile.all,.rp .tile.enter-top{min-height:0}
+  .rp .tile.w12.enter-top{flex-direction:column;align-items:stretch}
+  .rp .tile.w12.enter-top .shot{order:-1;margin:var(--s-3) auto 0}
+  .rp .tile.w12.enter-top .thead{margin-top:var(--s-4);padding:var(--s-5) calc(var(--s-4) + 24px) var(--s-5) var(--s-4)}
   .rp .tile.enter-top .thead{margin-top:var(--s-4);padding-top:var(--s-5)}
   .rp .tile.enter-top .shot{margin-top:var(--s-3)}
   .rp .thead{padding:var(--s-4) calc(var(--s-4) + 24px) 0 var(--s-4);gap:var(--s-1)}
