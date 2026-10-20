@@ -20,14 +20,14 @@ const CONTACT = {
 
 /* label, email subject, prompts in the email body */
 const PROBLEMS: [string, string, string][] = [
-  ["A role you're hiring for", "Role: AI engineering", "The company:\nYour role:\nThe role:\nLink to the posting (if there is one):"],
-  ["Agent tools", "Role: agent tools", "The company:\nYour role:\nWhat the agents need to do:"],
-  ["Evals and prompt workflow", "Role: evals and prompt workflow", "The company:\nYour role:\nHow you test it today:"],
-  ["AI on health data", "Role: AI on health data", "The company:\nYour role:\nThe data you work with:"],
+  ["A role you're hiring for", "Role: AI engineer", "The company:\nYour name and role:\nThe role you're hiring for:\nLink to the posting (if there is one):"],
+  ["Agent tools", "Role: AI engineer, agent tools", "The company:\nYour name and role:\nWhat the agents need to do:"],
+  ["Evals and prompt workflow", "Role: AI engineer, evals and prompt workflow", "The company:\nYour name and role:\nHow you test your AI today:"],
+  ["AI on health data", "Role: AI engineer, health data", "The company:\nYour name and role:\nThe data you work with:"],
 ];
 
 const mailto = (subject: string, body = "") =>
-  `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}${body ? "&body=" + encodeURIComponent(body + "\n") : ""}`;
+  `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}${body ? "&body=" + encodeURIComponent(body) : ""}`;
 
 const LINKS: [string, string, () => React.JSX.Element][] = [
   ["CV", CV, DocIcon],
@@ -36,7 +36,7 @@ const LINKS: [string, string, () => React.JSX.Element][] = [
 ];
 
 /* each problem lights a dot on the middle ring, on the arc facing its row */
-const DOTS = [267, 256, 243, 229];
+const DOTS = [269, 257, 245, 231];
 
 /* the page closes the way the hero opens: pill line, two-part heading, rings on the right; each problem row lights its dot on the rings */
 export default function ContactSection({ room }: { room: boolean }) {
@@ -61,7 +61,7 @@ export default function ContactSection({ room }: { room: boolean }) {
       </ul>
       <p className="cx-other">{CONTACT.other}</p>
       <div className="cx-mail">
-        <a href={mailto("From your site")}><span className="cx-ic"><MailIcon /></span><span className="cx-v">{EMAIL}</span></a>
+        <a href={mailto("Hello from your site")}><span className="cx-ic"><MailIcon /></span><span className="cx-v">{EMAIL}</span></a>
         <CopyEmail email={EMAIL} />
       </div>
       <ul className="cx-links">

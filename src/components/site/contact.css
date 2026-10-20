@@ -1,6 +1,6 @@
 /* contact: closes the page in the hero's language; rings on the right, each problem row lights its dot */
-.rp .cxo{position:relative;isolation:isolate;padding-bottom:var(--s-7);--o:clamp(520px,56vw,800px);--ring:#CDD5DC}
-.rp .cxr{position:absolute;z-index:-1;left:50%;top:0;bottom:0;width:100vw;transform:translateX(-50%);overflow:hidden;pointer-events:none;--cx:82%;--cy:46%;
+.rp .cxo{position:relative;isolation:isolate;padding-bottom:var(--s-8,96px);--o:clamp(520px,56vw,800px);--ring:#CDD5DC}
+.rp .cxr{position:absolute;z-index:-1;left:50%;top:0;bottom:0;width:100vw;transform:translateX(-50%);overflow:hidden;pointer-events:none;--cx:77%;--cy:46%;
   -webkit-mask-image:linear-gradient(90deg,transparent 30%,#000 58%),linear-gradient(transparent,#000 14%,#000 80%,transparent);mask-image:linear-gradient(90deg,transparent 30%,#000 58%),linear-gradient(transparent,#000 14%,#000 80%,transparent);-webkit-mask-composite:source-in;mask-composite:intersect}
 .rp .cxo-r,.rp .cxd,.rp .cxp{position:absolute;left:var(--cx);top:var(--cy);border-radius:50%;translate:-50% -50%}
 .rp .cxo-a{width:calc(var(--o)*.4);height:calc(var(--o)*.4)}
@@ -70,10 +70,10 @@
 .rp .sf-note a{padding-block:14px;color:var(--accent);text-decoration:none;white-space:nowrap}
 .rp .sf-note a:hover{text-decoration:underline;text-underline-offset:4px}
 
-@media (max-width:1199px){.rp .cxd{display:none}.rp .cx-list a[data-k]:not(:hover,:focus-visible) i{background:var(--line)}}
+@media (max-width:1199px){.rp .cxd{display:none}}
 @media (max-width:760px){
   .rp .cxo{padding-bottom:var(--s-6);--o:clamp(480px,140vw,600px)}
-  .rp .cxr{--cx:96%;--cy:12%;opacity:.45;-webkit-mask-image:linear-gradient(200deg,#000 25%,transparent 60%),linear-gradient(transparent,#000 18%);mask-image:linear-gradient(200deg,#000 25%,transparent 60%),linear-gradient(transparent,#000 18%)}
+  .rp .cxr{--cx:96%;--cy:12%;opacity:.7;-webkit-mask-image:linear-gradient(200deg,#000 25%,transparent 60%),linear-gradient(transparent,#000 18%);mask-image:linear-gradient(200deg,#000 25%,transparent 60%),linear-gradient(transparent,#000 18%)}
   .rp .cx-role{font-size:15.5px}
   .rp .cx-pill{padding:4px 11px 4px 9px}
   .rp .cxo h2{margin-top:var(--s-3);font-size:clamp(34px,9.4vw,40px);line-height:1.06}
