@@ -22,8 +22,8 @@ export default function Sections({ room, back }: { room: boolean; back?: ReactNo
             <li className="jcard" data-s="4" data-y="2025" data-to="–26" data-act="plugging in an agent">
               <div className="jmeta"><span className="jsr">2025 to 2026</span><span className="jlogos"><img src="/images/journey/arkus-ai.png" alt="Arkus AI" /></span></div>
               <h3>Founding AI engineer at Arkus AI.</h3>
-              <button type="button" className="jmore jdet" aria-expanded="false" aria-controls="jx-arkus">What I did <span aria-hidden="true">↓</span></button>
-              <div className="jx" id="jx-arkus"><div>
+              <button type="button" className="jmore jdet" aria-expanded="true" aria-controls="jx-arkus">Less <span aria-hidden="true">↓</span></button>
+              <div className="jx open" id="jx-arkus"><div>
               <ul className="jbul">
                 <li><b>Built the multi-agent framework</b> behind the builder: main, build and evaluation agents.</li>
                 <li><b>Gave them tools</b> for medical codes, papers and trials, and sandbox EHRs (Epic, AthenaOne, Kaddio).</li>
