@@ -450,4 +450,4 @@ export function initJourney(root) {
   const t1 = setTimeout(() => !busy && act(at), 400);
   return () => { alive = false; ac.abort(); ro.disconnect(); cancelAnimationFrame(raf); clearInterval(actT); clearTimeout(dwellT); clearTimeout(t1); made.forEach(e => e.remove()); };
 }
-export { sprite, render, walker, arm, adult, OUT, P, SW, SH };
+export { sprite, render, walker, arm, adult, paint, OUT, P, SW, SH };

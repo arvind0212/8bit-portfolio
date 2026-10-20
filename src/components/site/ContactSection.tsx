@@ -1,3 +1,4 @@
+import ContactSprite from "./ContactSprite";
 import CopyEmail from "./CopyEmail";
 import { DocIcon, GitHubIcon, LinkedInIcon, MailIcon } from "./Icons";
 import "./site.css";
@@ -21,9 +22,9 @@ const CONTACT = {
 /* label, email subject, prompts in the email body */
 const PROBLEMS: [string, string, string][] = [
   ["A role you're hiring for", "Role: AI engineer", "The company:\nYour name and role:\nThe role you're hiring for:\nLink to the posting (if there is one):"],
-  ["Agent tools", "Role: AI engineer, agent tools", "The company:\nYour name and role:\nWhat the agents need to do:"],
-  ["Evals and prompt workflow", "Role: AI engineer, evals and prompt workflow", "The company:\nYour name and role:\nHow you test your AI today:"],
+  ["My agent harness and software factory", "About your harness", "Your name:\nWhat you're building:\nWhat you'd like to know:"],
   ["AI on health data", "Role: AI engineer, health data", "The company:\nYour name and role:\nThe data you work with:"],
+  ["Fika or a coffee chat", "Fika?", "Your name:\nWhat you'd like to talk about:\nIn Stockholm or a video call:"],
 ];
 
 const mailto = (subject: string, body = "") =>
@@ -35,21 +36,12 @@ const LINKS: [string, string, () => React.JSX.Element][] = [
   ["GitHub", "https://github.com/arvind0212", GitHubIcon],
 ];
 
-/* each problem lights a dot on the middle ring, on the arc facing its row */
-const DOTS = [269, 257, 245, 231];
 
-/* the page closes the way the hero opens: pill line, two-part heading, rings on the right; each problem row lights its dot on the rings */
+/* the page closes the way the hero opens (pill line, two-part heading) with the journey's Stockholm sprite on the right */
 export default function ContactSection({ room }: { room: boolean }) {
   return (
     <section className="sec cx cxo" id="contact" aria-labelledby="h-contact">
-      <div className="cxr" aria-hidden="true">
-        <span className="cxp"></span>
-        <span className="cxp"></span>
-        {["a", "b", "c"].map((r) => <span key={r} className={"cxo-r cxo-" + r}><span className="cxl"></span></span>)}
-        {DOTS.map((a, i) => (
-          <span key={i} className="cxd cxo-b" style={{ "--a": a + "deg" } as React.CSSProperties}><i data-k={i}></i></span>
-        ))}
-      </div>
+      <ContactSprite />
       <p className="cx-role"><span className="cx-pill"><i></i>{CONTACT.status}</span> <span className="cx-where">{CONTACT.where}</span></p>
       <h2 id="h-contact"><span>{CONTACT.title}</span> <em>{CONTACT.sub}</em></h2>
       {room && <div className="slot cslot" id="cslot" aria-hidden="true"></div>}
