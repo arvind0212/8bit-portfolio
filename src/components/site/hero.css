@@ -35,7 +35,7 @@
 .rp .oh h1 .q{font-size:.7em;line-height:1.1;letter-spacing:-.026em}
 .rp .oh h1 .me{margin-bottom:.06em}
 .rp .oh h1 em{font-style:normal;color:var(--accent)}
-.rp .oh .value{margin-top:var(--s-5);font-size:calc(var(--t-lead)*1.03);color:var(--ink-2)}
+.rp .oh .value{margin-top:var(--s-5);font-size:calc(var(--t-lead)*1.13);color:var(--ink-2)}
 .rp .oh .value span{display:block;text-wrap:pretty}
 .rp .oh .value span:first-child{color:var(--ink)}
 .rp .oh .acts{margin-top:var(--s-6);justify-content:flex-start}
