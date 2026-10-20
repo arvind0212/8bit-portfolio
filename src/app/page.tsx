@@ -1,31 +1,40 @@
-// Import components
-import NavigationBar from "@/components/NavigationBar";
-import Footer from "@/components/Footer";
-import HeroSection from "@/app/(sections)/HeroSection";
-import AboutSection from "@/app/(sections)/AboutSection";
-import ProjectSection from "@/app/(sections)/ProjectSection";
-import SkillsSection from "@/app/(sections)/SkillsSection";
-import ExperienceSection from "@/app/(sections)/ExperienceSection";
-import ThesisSection from "@/app/(sections)/ThesisSection"; // Master's thesis highlight
-import ContactSection from "@/app/(sections)/ContactSection"; // Added import
+import type { Metadata } from "next";
+import { pageMeta, SITE } from "@/lib/meta";
+import DeskPage from "@/components/desk/DeskPage";
+
+const description = "Arvind Guruprasad, AI engineer in Stockholm. Curious where AI is taking us, I find out by building, then write down what I learn.";
+
+export const metadata: Metadata = pageMeta("Arvind Guruprasad | AI engineer in Stockholm", description, "/");
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${SITE}/#person`,
+      name: "Arvind Guruprasad",
+      jobTitle: "AI engineer",
+      url: SITE,
+      email: "mailto:arvindguruprasad33@gmail.com",
+      address: { "@type": "PostalAddress", addressLocality: "Stockholm", addressCountry: "Sweden" },
+      sameAs: ["https://www.linkedin.com/in/arvind-guruprasad-73479a142/", "https://github.com/arvind0212"],
+      alumniOf: [
+        { "@type": "CollegeOrUniversity", name: "Karolinska Institutet" },
+        { "@type": "CollegeOrUniversity", name: "KTH Royal Institute of Technology" },
+        { "@type": "CollegeOrUniversity", name: "Stockholm University" },
+        { "@type": "CollegeOrUniversity", name: "BMS College of Engineering" },
+      ],
+      knowsAbout: ["AI agents", "LLM evaluation", "Agentic AI", "Healthcare data", "Clinical data standards"],
+    },
+    { "@type": "WebSite", url: SITE, name: "Arvind Guruprasad", author: { "@id": `${SITE}/#person` } },
+  ],
+};
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Navigation Bar will be rendered here (potentially conditionally or within Hero initially) */}
-      <NavigationBar />
-
-      <main className="flex-grow">
-        <HeroSection />
-        <AboutSection />
-        <SkillsSection /> {/* Added Skills section */}
-        <ExperienceSection />
-        <ThesisSection /> {/* Master's thesis highlight + link to detailed brief */}
-        <ProjectSection />
-        <ContactSection /> {/* Added Contact section */}
-      </main>
-
-      <Footer />
-    </div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <DeskPage />
+    </>
   );
 }

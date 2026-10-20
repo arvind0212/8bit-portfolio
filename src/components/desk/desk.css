@@ -1,0 +1,60 @@
+/* the desk home: room scene, the screen layer that carries the site, and the tuning panel */
+.dk .scene{position:fixed;inset:0;z-index:1;overflow:hidden;background:var(--paper)}
+.dk .scene[hidden]{display:none}
+.dk .scene .gl{position:absolute;left:0;top:0;image-rendering:pixelated}
+.dk .scene .css3d{position:absolute;inset:0;pointer-events:none;z-index:2}
+.dk .scene .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.dk .screen{background:var(--paper)}
+.dk .dissolve{position:fixed;left:0;top:0;z-index:4;pointer-events:none;image-rendering:pixelated}
+.dk .site{transform-origin:0 0}
+.dk .site:focus,.dk .site [data-land]:focus{outline:none}
+
+.dk .backroom{margin-top:26px}
+
+.dk .skip{position:fixed;left:20px;bottom:20px;z-index:5;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent);backdrop-filter:blur(8px);font:var(--label-fw) calc(var(--label-fs)*var(--label-k))/1 var(--label-ff);letter-spacing:var(--label-ls);color:var(--grey);cursor:pointer}
+.dk .skip:hover{color:var(--ink)}
+.dk:not([data-mode=scene]) .skip{display:none}
+.dk .roomhint{position:fixed;left:50%;bottom:24px;z-index:5;transform:translateX(-50%);display:flex;align-items:center;gap:14px;padding:6px 6px 6px 18px;border-radius:999px;background:var(--ink);color:var(--paper);font:calc(var(--ui-fs)*.9) var(--ui-ff);white-space:nowrap;animation:dk-in .5s var(--ease) both}
+.dk .roomhint[hidden]{display:none}
+.dk .roomhint .coarse{display:none}
+@media (pointer:coarse){.dk .roomhint .fine{display:none}.dk .roomhint .coarse{display:inline}}
+.dk .roomhint button:focus-visible{outline-color:var(--paper)}
+.dk .roomhint button{min-height:40px;padding:0 16px;border:0;border-radius:999px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+@keyframes dk-in{from{opacity:0;transform:translate(-50%,10px)}}
+
+@media (max-width:760px){
+  .dk .roomhint{left:16px;right:16px;transform:none;justify-content:space-between;white-space:normal;animation-name:dk-in-m}
+  .dk .skip{left:16px;bottom:16px}
+}
+@keyframes dk-in-m{from{opacity:0;transform:translateY(10px)}}
+
+/* tuning panel */
+.dtune{position:fixed;right:16px;top:76px;z-index:100;width:316px;max-height:calc(100vh - 92px);display:flex;flex-direction:column;border-radius:12px;background:color-mix(in srgb,var(--card) 96%,transparent);border:1px solid var(--line);box-shadow:0 12px 40px rgba(31,26,21,.18);backdrop-filter:blur(10px);font:13px/1.3 var(--ff-text);color:var(--ink)}
+.dtune:not(.open){width:auto;background:transparent;border-color:transparent;box-shadow:none}
+.dtune .dt-head{display:flex;justify-content:flex-end;padding:6px}
+.dtune .dt-tog{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--ink);color:var(--paper);font:600 13px/1 var(--ff-text);cursor:pointer}
+.dtune:not(.open) .dt-body{display:none}
+.dtune .dt-body{overflow:auto;padding:0 14px 14px;overscroll-behavior:contain}
+.dtune .dt-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+.dtune .dt-btns button{min-height:34px;border-radius:8px;border:1px solid var(--line);background:#fff;font:500 12.5px/1 var(--ff-text);cursor:pointer}
+.dtune .dt-btns button:first-child{background:var(--accent);border-color:var(--accent);color:#fff}
+.dtune .dt-g{border-top:1px solid var(--line);padding:6px 0}
+.dtune summary{cursor:pointer;padding:6px 0;font:600 11.5px/1 var(--ff-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--grey)}
+.dtune .dt-row{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:5px 0}
+.dtune .dt-row input,.dtune .dt-row select{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+.dtune .dt-row.dt-mod .dt-l{color:var(--accent);font-weight:600}
+.dtune .dt-v{font:12px/1.3 var(--ff-mono);color:var(--grey)}
+.dtune select{font:inherit;padding:4px;border-radius:6px;border:1px solid var(--line);background:#fff}
+.dtune .dt-curve{padding:8px 0;border-top:1px dashed var(--line)}
+.dtune .dt-ct{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dtune .dt-svg{display:block;width:100%;height:120px;margin:4px 0}
+.dtune .dt-frame{fill:#fff;stroke:var(--line)}
+.dtune .dt-h{stroke:var(--grey);stroke-width:.8;stroke-dasharray:2 2}
+.dtune .dt-p{fill:none;stroke:var(--accent);stroke-width:2}
+.dtune .dt-cg{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px}
+.dtune .dt-cg input{width:100%;accent-color:var(--accent)}
+.dtune .dt-code{display:block;margin-top:4px;font:11.5px/1.3 var(--ff-mono);color:var(--grey)}
+@media (max-width:760px){
+  .dtune{left:8px;right:8px;top:auto;bottom:8px;width:auto;max-height:58vh}
+  .dtune:not(.open){left:auto;bottom:70px}
+}

@@ -1,28 +1,20 @@
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import type { Metadata } from "next";
+import Shell from "@/components/work/Shell";
+
+export const metadata: Metadata = { title: "Page not found | Arvind Guruprasad", robots: { index: false } };
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen text-center px-4">
-      {/* Placeholder for 404 Persona */}
-      {/* <div className="mb-8">
-        <Image
-          src="/images/persona-404.png" // TODO: Replace with actual path when available
-          alt="Confused 8-bit persona"
-          width={150} // Adjust size
-          height={150} // Adjust size
-          className="object-contain"
-        />
-      </div> */}
-
-      <h1 className="text-4xl md:text-6xl font-bold mb-4">404</h1>
-      <h2 className="text-2xl md:text-3xl font-semibold mb-6">Page Not Found</h2>
-      <p className="text-muted-foreground mb-8 max-w-md">
-        Oops! The page you are looking for does not seem to exist. Maybe it was moved or deleted.
-      </p>
-      <Button asChild>
-        <Link href="/">Go Back Home</Link>
-      </Button>
-    </div>
+    <Shell>
+      <section className="cs" aria-labelledby="h-404">
+        <p className="label">404</p>
+        <h1 id="h-404">This page <em>isn&apos;t here.</em></h1>
+        <p className="dek">The link may be old. Everything I&apos;ve built is on the home page.</p>
+        <p style={{ marginTop: "var(--s-6)", display: "flex", gap: "var(--s-5)", flexWrap: "wrap", alignItems: "center" }}>
+          <a className="btn" href="/">Go to the home page <span aria-hidden="true">→</span></a>
+          <a className="crumb-l" href="/work">See all work</a>
+        </p>
+      </section>
+    </Shell>
   );
 }
