@@ -14,22 +14,23 @@ const CONTACT = {
   where: "Stockholm · on site or remote in Europe",
   title: "Hiring an AI engineer?",
   sub: "Bring me the problem.",
-  pick: "Pick what your team needs. It starts an email.",
+  pick: "Pick one to start an email.",
   other: "Or write to me directly.",
 };
 
 /* label, email subject, prompts in the email body */
 const PROBLEMS: [string, string, string][] = [
-  ["An AI engineering role", "AI engineering role", "The company:\nThe role:\nLink to the posting:"],
-  ["Agents and their tools", "Role: agents and tools", "The company:\nWhat the agents need to do:"],
-  ["Evals and prompt workflow", "Role: evals", "The company:\nWhat you check today:"],
-  ["AI on health data", "Role: AI on health data", "The company:\nThe data:"],
+  ["A role you're hiring for", "Role: AI engineering", "The company:\nYour role:\nThe role:\nLink to the posting (if there is one):"],
+  ["Agent tools", "Role: agent tools", "The company:\nYour role:\nWhat the agents need to do:"],
+  ["Evals and prompt workflow", "Role: evals and prompt workflow", "The company:\nYour role:\nHow you test it today:"],
+  ["AI on health data", "Role: AI on health data", "The company:\nYour role:\nThe data you work with:"],
 ];
 
 const mailto = (subject: string, body = "") =>
   `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}${body ? "&body=" + encodeURIComponent(body + "\n") : ""}`;
 
 const LINKS: [string, string, () => React.JSX.Element][] = [
+  ["CV", CV, DocIcon],
   ["LinkedIn", LINKEDIN, LinkedInIcon],
   ["GitHub", "https://github.com/arvind0212", GitHubIcon],
 ];
@@ -59,12 +60,9 @@ export default function ContactSection({ room }: { room: boolean }) {
         ))}
       </ul>
       <p className="cx-other">{CONTACT.other}</p>
-      <div className="cx-acts">
       <div className="cx-mail">
         <a href={mailto("From your site")}><span className="cx-ic"><MailIcon /></span><span className="cx-v">{EMAIL}</span></a>
         <CopyEmail email={EMAIL} />
-      </div>
-      <a className="cx-cv" href={CV} target="_blank" rel="noopener noreferrer"><DocIcon />CV<span aria-hidden="true">↗</span></a>
       </div>
       <ul className="cx-links">
         {LINKS.map(([name, href, Icon]) => (
