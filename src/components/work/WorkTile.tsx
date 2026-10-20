@@ -32,10 +32,10 @@ export default function WorkTile({ w, span, h: H = "h3" }: { w: Work; span: numb
   const s = w.screen;
   const href = "/work/" + w.slug;
   return (
-    <li className={`tile w${span} t-${s.tone}` + (w.enter ? " enter-" + w.enter : "")}>
+    <li className={`tile w${span} t-${s.tone}` + (w.enter ? " enter-" + w.enter : "") + (w.soon ? " soon" : "")}>
       <div className="thead">
         <p className="trole">{w.tag} · {w.year}</p>
-        <H><a href={href}>{w.hook}{w.hookEm && <span className="hk2">{w.hookEm}</span>}</a></H>
+        <H>{w.soon ? <>{w.hook}{w.hookEm && <span className="hk2">{w.hookEm}</span>}</> : <a href={href}>{w.hook}{w.hookEm && <span className="hk2">{w.hookEm}</span>}</a>}</H>
         <p className="out"><b>{w.outcome.v}</b><span>{w.outcome.l}</span></p>
       </div>
       <div className="shot" aria-hidden="true">
@@ -46,7 +46,7 @@ export default function WorkTile({ w, span, h: H = "h3" }: { w: Work; span: numb
             : <div className={"sb " + s.kind} dangerouslySetInnerHTML={{ __html: s.html ?? "" }} />}
         </div>
       </div>
-      <span className="go" aria-hidden="true">→</span>
+      {w.soon ? <span className="soon-tag">Coming soon</span> : <span className="go" aria-hidden="true">→</span>}
     </li>
   );
 }
