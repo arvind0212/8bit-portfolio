@@ -79,7 +79,7 @@ export const WORK: Work[] = [
     case: {
       dek: "A controlled benchmark of three AI agent designs that reshape messy, synthetic hospital records into a research standard (OMOP), graded field by field against a locked answer key.",
       role: "Sole author",
-      when: "2026 · MSc, KI and KTH",
+      when: "2026 · MSc, KI, KTH and SU",
       team: "Supervised by Vladimir Li, Arkus AI",
       tldr: "Agents kept lab results almost perfectly intact and got medications right about 91% of the time, on synthetic data. The agents with tools scored highest but sometimes failed to finish; the simplest agent never failed. Passing a schema check told me nothing about whether the meaning survived.",
       stats: [

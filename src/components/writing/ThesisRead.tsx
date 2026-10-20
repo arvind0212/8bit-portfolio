@@ -59,7 +59,7 @@ export default function ThesisRead() {
           <div><dt>Author</dt><dd>Arvind Guruprasad</dd></div>
           <div><dt>Supervisor</dt><dd>Vladimir Li, Arkus AI</dd></div>
           <div><dt>Models</dt><dd>GPT-5.4 and Kimi-K2.6</dd></div>
-          <div><dt>Programme</dt><dd>MSc, KI and KTH</dd></div>
+          <div><dt>Programme</dt><dd>MSc, KI, KTH and SU</dd></div>
         </dl>
 
         <div className="tldr">
