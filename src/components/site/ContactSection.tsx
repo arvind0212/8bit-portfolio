@@ -11,22 +11,23 @@ export const LINKEDIN = "https://www.linkedin.com/in/arvind-guruprasad-73479a142
 /* the copy lives here so it is easy to swap */
 const CONTACT = {
   status: "Open to new roles",
-  where: "in Stockholm, on site or remote in Europe",
+  where: "Available now · Stockholm, on site or remote in Europe",
   title: "Bring me a problem.",
   sub: "Or a role to fill.",
-  pick: "Pick one and the email starts itself.",
+  pick: "Pick one to start an email.",
   other: "Something else? Write to me.",
 };
 
+/* label, email subject, prompts in the email body */
 const PROBLEMS: [string, string, string][] = [
-  ["A role on your team", "A role on our team", "We're hiring for an AI engineering role. Here's the team and the role:"],
-  ["An agent for a workflow", "An agent for a workflow", "We have a workflow we'd like an agent to take on. Here's what it is:"],
-  ["Evals for an AI product", "Evals for our AI product", "We ship an AI feature and can't tell if changes make it better. Here's the setup:"],
-  ["A first version of an AI idea", "A first version of an AI idea", "We have an AI idea and want a working first version. Here's the idea:"],
+  ["An AI engineering role", "An AI engineering role", "The team:\nThe role:"],
+  ["Agents that use real tools", "Agents for our workflow", "The workflow:\nThe tools and data it touches:"],
+  ["Evals for an AI feature", "Evals for our AI feature", "What the feature does:\nHow we check it today:"],
+  ["AI on health data", "AI on our health data", "The data:\nThe goal:"],
 ];
 
-const mailto = (subject: string, body: string) =>
-  `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Hi Arvind,\n\n${body}\n\n`)}`;
+const mailto = (subject: string, body = "") =>
+  `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Hi Arvind,\n\n${body}\n`)}`;
 
 const LINKS: [string, string, () => React.JSX.Element][] = [
   ["CV", CV, DocIcon],
@@ -34,8 +35,8 @@ const LINKS: [string, string, () => React.JSX.Element][] = [
   ["GitHub", "https://github.com/arvind0212", GitHubIcon],
 ];
 
-/* the dot each problem lights: ring, angle */
-const DOTS: [string, number][] = [["c", 212], ["b", 300], ["c", 18], ["a", 120]];
+/* each problem lights a dot on the middle ring, stepping down the right side in row order */
+const DOTS = [95, 107, 120, 134];
 
 /* the page closes the way the hero opens: pill line, two-part heading, rings on the right; each problem row lights its dot on the rings */
 export default function ContactSection({ room }: { room: boolean }) {
@@ -45,11 +46,11 @@ export default function ContactSection({ room }: { room: boolean }) {
         <span className="cxp"></span>
         <span className="cxp"></span>
         {["a", "b", "c"].map((r) => <span key={r} className={"cxo-r cxo-" + r}><span className="cxl"></span></span>)}
-        {DOTS.map(([r, a], i) => (
-          <span key={i} className={"cxd cxo-" + r} style={{ "--a": a + "deg" } as React.CSSProperties}><i data-k={i}></i></span>
+        {DOTS.map((a, i) => (
+          <span key={i} className="cxd cxo-b" style={{ "--a": a + "deg" } as React.CSSProperties}><i data-k={i}></i></span>
         ))}
       </div>
-      <p className="cx-role"><span className="cx-pill"><i></i>{CONTACT.status}</span> {CONTACT.where}</p>
+      <p className="cx-role"><span className="cx-pill"><i></i>{CONTACT.status}</span> <span className="cx-where">{CONTACT.where}</span></p>
       <h2 id="h-contact"><span>{CONTACT.title}</span> <em>{CONTACT.sub}</em></h2>
       {room && <div className="slot cslot" id="cslot" aria-hidden="true"></div>}
       <p className="cx-pick">{CONTACT.pick}</p>
@@ -60,7 +61,7 @@ export default function ContactSection({ room }: { room: boolean }) {
       </ul>
       <p className="cx-other">{CONTACT.other}</p>
       <div className="cx-mail">
-        <a href={"mailto:" + EMAIL}><span className="cx-ic"><MailIcon /></span><span className="cx-v">{EMAIL.split("@")[0]}<wbr />@{EMAIL.split("@")[1]}</span></a>
+        <a href={mailto("Hello from your site")}><span className="cx-ic"><MailIcon /></span><span className="cx-v">{EMAIL}</span></a>
         <CopyEmail email={EMAIL} />
       </div>
       <ul className="cx-links">
