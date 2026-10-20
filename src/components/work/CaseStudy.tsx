@@ -18,7 +18,7 @@ function Part({ n, title, children }: { n: string; title: string; children: Reac
 
 export default function CaseStudy({ w }: { w: Work }) {
   const c = w.case!;
-  const cases = WORK.filter((x) => x.kind !== "team");
+  const cases = WORK.filter((x) => x.kind !== "team" && !x.soon);
   const next = cases[(cases.indexOf(w) + 1) % cases.length];
   let n = 0;
   const num = () => String(++n).padStart(2, "0");

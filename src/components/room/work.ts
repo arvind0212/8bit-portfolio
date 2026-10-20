@@ -43,6 +43,8 @@ export type Screen = { file: string; flag: string; kind: "chart" | "code" | "ui"
 
 export type Work = {
   slug: string;
+  /* shown as a tile with no case page until it ships */
+  soon?: boolean;
   kind: "case" | "sketch" | "team";
   featured: boolean;
   tag: string;
@@ -204,6 +206,7 @@ export const WORK: Work[] = [
   },
   {
     slug: "ambient",
+    soon: true,
     kind: "sketch",
     featured: true,
     tag: "Prototype",

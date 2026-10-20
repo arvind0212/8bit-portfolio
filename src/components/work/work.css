@@ -22,6 +22,9 @@
 .rp .out span{font:400 var(--t-small)/1.3 var(--body-ff);color:var(--ink-2);max-width:20ch}
 .rp .go{position:absolute;top:var(--s-5);right:var(--s-5);z-index:2;font:500 18px/1 var(--label-ff);color:var(--accent);transition:transform var(--d-fast) var(--ease)}
 .rp .tile:hover .go{transform:translateX(4px)}
+.rp .soon-tag{position:absolute;top:var(--s-5);right:var(--s-5);z-index:2;padding:6px 10px;border:1px solid var(--line);border-radius:99px;background:var(--card);font:var(--label-fw) var(--t-label)/1 var(--label-ff);letter-spacing:var(--label-ls);text-transform:uppercase;color:var(--ink-2)}
+.rp .tile.soon{cursor:default}
+.rp .tile.soon:hover{transform:none;box-shadow:none}
 .rp .shot{margin:var(--s-5) var(--s-5) var(--s-5)}
 .rp .tile.enter-corner .shot{position:absolute;right:var(--s-5);bottom:var(--s-5);width:min(64%,440px);margin:0;transform:rotate(-2deg);transition:transform var(--d-slow) var(--ease)}
 .rp .tile.enter-corner:hover .shot{transform:rotate(0) translate(-8px,-10px)}
@@ -220,7 +223,8 @@
   .rp .tile.enter-top .shot{margin-top:var(--s-3)}
   .rp .thead{padding:var(--s-4) calc(var(--s-4) + 24px) 0 var(--s-4);gap:var(--s-1)}
   .rp .tile :is(h2,h3),.rp .tile.w7 :is(h2,h3),.rp .tile.w12 :is(h2,h3){font-size:var(--t-h3);line-height:1.2}
-  .rp .go{top:var(--s-4);right:var(--s-4)}
+  .rp .go,.rp .soon-tag{top:var(--s-4);right:var(--s-4)}
+  .rp .soon-tag{top:auto;bottom:var(--s-4)}
   .rp .out{margin-top:var(--s-3)}
   .rp .out b{font-weight:500;font-size:26px}
   .rp .out span{font-size:14px}

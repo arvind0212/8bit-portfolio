@@ -4,7 +4,7 @@ import { pageMeta } from "@/lib/meta";
 import CaseStudy from "@/components/work/CaseStudy";
 import { WORK } from "@/components/room/work";
 
-const cases = WORK.filter((w) => w.case);
+const cases = WORK.filter((w) => w.case && !w.soon);
 
 export function generateStaticParams() {
   return cases.map((w) => ({ slug: w.slug }));
