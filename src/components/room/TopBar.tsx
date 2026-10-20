@@ -43,12 +43,12 @@ export default function TopBar({ home = true, room = false }: { home?: boolean; 
   const to = home ? "#" : "/#";
   return (
     <header className={open ? "top open" : "top"}>
-      <a className="who" href={home ? "#top" : "/"} aria-label={home ? "Arvind Guruprasad, back to top" : "Arvind Guruprasad, home"}><i aria-hidden="true">AG</i><b>Arvind Guruprasad</b></a>
+      <a className="who" href={home ? "#top" : "/"}><i aria-hidden="true">AG</i><b>Arvind Guruprasad</b><span className="sr">{home ? ", back to top" : ", home"}</span></a>
       <button type="button" className="menu" aria-expanded={open} aria-controls="mainnav" onClick={() => setOpen(!open)}>{open ? "Close" : "Menu"}<i aria-hidden="true"></i></button>
       <nav aria-label="Main" id="mainnav" ref={nav} onClick={(e) => { if ((e.target as Element).closest("a")) setOpen(false); }}>
         {LINKS.map(([id, name, more]) => <a key={id} href={to + id} data-sec={home ? id : undefined}>{name}{more && <span className="more">{more}</span>}</a>)}
         {room && <span className="sep" aria-hidden="true"></span>}
-        {room && <a href="#room" data-act="room" className="toroom" aria-label="Step back into the room"><span aria-hidden="true">⌂</span> Room</a>}
+        {room && <a href={to + "room"} data-act={home ? "room" : undefined} className="toroom"><span aria-hidden="true">⌂</span> Room<span className="sr">: step back into the room</span></a>}
       </nav>
     </header>
   );

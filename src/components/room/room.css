@@ -53,6 +53,9 @@
 .rp .top nav a:hover{color:var(--ink);background:var(--paper2)}
 .rp .top nav a.on{color:var(--paper);background:var(--ink)}
 .rp .top nav .sep{width:1px;height:20px;margin:0 4px;background:var(--line)}
+.rp .top nav .toroom{color:var(--accent);font-weight:600}
+.rp .top nav .toroom span{font-size:1.1em;line-height:1}
+.rp .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .rp .top .menu{display:none}
 
 /* the scene: one fixed stage clipped to the room's current box (hero, dock or contact) */
@@ -194,6 +197,7 @@
   .rp .top nav a.on{color:var(--ink);background:var(--paper2)}
   .rp .top nav .more{display:inline}
   .rp .top nav .sep{width:auto;height:1px;margin:4px 8px}
+  .rp .top nav .toroom span{margin-right:8px}
   .rp .hero{padding-top:calc(var(--top) + var(--s-6))}
   .rp .hero .hi{font-size:var(--t-card)}.rp .hero .hi b{font-weight:600}
   .rp .btn{min-height:46px;padding:0 18px;font-weight:600;font-size:var(--t-ui)}

@@ -26,13 +26,13 @@ export default function DeskPage() {
         <p className="sr" id="roomdesc">A voxel model of Arvind&apos;s room in Stockholm builds itself, and the view moves into the monitor on his desk, where the site is.</p>
         <button type="button" className="skip" id="skip">Skip intro<span aria-hidden="true"> »</span></button>
         <div className="roomhint" id="roomhint" hidden>
-          <span>Click the monitor to sit back down.</span>
+          <span><span className="fine">Click</span><span className="coarse">Tap</span> the monitor to sit back down.</span>
           <button type="button" id="sitback">Back to the desk</button>
         </div>
       </div>
       <canvas className="dissolve" id="dissolve" hidden aria-hidden="true"></canvas>
       <div className="screen" id="screen">
-        <div className="site" id="site">
+        <div className="site" id="site" tabIndex={-1}>
           <TopBar room />
           <Tune />
           <Sections room={false} back={<p className="backroom"><a href="#room" data-act="room" className="read">Step back into the room<span aria-hidden="true"> ↖</span></a></p>} />
