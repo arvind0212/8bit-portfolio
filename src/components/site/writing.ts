@@ -25,8 +25,6 @@ export const POSTS: Post[] = [
     preview:
       '<p class="pk">Kept their meaning, best agent</p><div class="pm"><span>Lab results</span><b>~100%</b><i style="--w:100%"></i></div><div class="pm"><span>Medications</span><b>~91%</b><i style="--w:91%"></i></div>',
   },
-
-
   {
     slug: "the-harness",
     date: "Next",
@@ -58,3 +56,8 @@ export const POSTS: Post[] = [
       '<p class="pk">Build log</p><div class="pf"><span>Room</span><i>→</i><span>Monitor</span><i>→</i><span class="acc">Site</span></div>',
   },
 ];
+
+/* notes that are live; until one is, the index and home show only the long read */
+export const NOTES = POSTS.filter((p) => !p.long && p.live);
+
+export const NOTES_NEXT = "Short notes on building with agents are on the way.";

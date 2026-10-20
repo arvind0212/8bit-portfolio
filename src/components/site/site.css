@@ -39,6 +39,16 @@
 .rp .wr-topics button:hover{border-color:var(--ink-3);color:var(--ink)}
 .rp .wr-topics button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .rp .wr-topics button[aria-pressed=true] span{color:var(--paper);opacity:.7}
+/* the long read as a featured card: home while it is the only live post, and the top of /writing */
+.rp .feat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:var(--s-7);margin-top:var(--s-7);padding:var(--s-6);border-radius:16px;background:var(--card);box-shadow:0 0 0 1px var(--line);text-decoration:none;color:inherit;transition:transform var(--d-med) var(--ease),box-shadow var(--d-med) var(--ease)}
+.rp .feat:hover{transform:translateY(-4px);box-shadow:0 0 0 1px var(--line),0 18px 36px rgba(20,24,32,.10)}
+.rp .feat-c{display:grid;gap:var(--s-3)}
+.rp .feat .wc-meta{margin:0}
+.rp .feat :is(h2,h3){font:var(--head-fw) calc(var(--t-h3)*1.3)/1.1 var(--head-ff);font-variation-settings:var(--dvar);letter-spacing:var(--head-ls)}
+.rp .feat-c>p{font:400 var(--t-card)/1.55 var(--body-ff);color:var(--ink-2)}
+.rp .feat .read{margin-top:var(--s-2);font-weight:700}
+.rp .feat-art{aspect-ratio:4/3}
+.rp .wr-next{margin-top:var(--s-5);font:400 var(--t-card)/1.55 var(--body-ff);color:var(--ink-2)}
 .rp .post-tags{margin-top:var(--s-4);padding-top:0}
 .rp .post-body{margin-top:var(--s-7);padding-top:var(--s-6);border-top:1px solid var(--line);max-width:var(--measure);color:var(--ink-2)}
 
@@ -54,6 +64,9 @@
   .rp .wc-t{margin-top:var(--s-1);line-height:1.2}
   .rp .wc-d{font-size:var(--t-small)}
   .rp .wc-tags{padding-top:var(--s-3)}
-  .rp .wr-topics{flex-wrap:nowrap;overflow-x:auto;margin-inline:calc(-1*var(--gutter));padding-inline:var(--gutter);scrollbar-width:none}
+  .rp .feat{grid-template-columns:1fr;gap:var(--s-5);margin-top:var(--s-5);padding:var(--s-4)}
+  .rp .feat-art{order:-1;aspect-ratio:2/1}
+  .rp .feat :is(h2,h3){font-size:var(--t-h3);line-height:1.18}
+  .rp .wr-topics{flex-wrap:nowrap;overflow-x:auto;margin-inline:calc(-1*var(--gutter));padding-inline:var(--gutter);scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent)}
   .rp .wr-topics button{flex:none}
 }

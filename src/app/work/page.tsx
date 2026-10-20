@@ -18,7 +18,7 @@ export default function WorkIndex() {
         <h1 id="h-all">Everything, with the limits <em>written down.</em></h1>
         <p className="dek">Case studies I can show in full, each starting with the outcome.</p>
         <ol className="bento wgrid">
-          {cases.map((w, i) => <WorkTile key={w.slug} w={w} span={spans[i]} />)}
+          {cases.map((w, i) => <WorkTile key={w.slug} w={w} span={spans[i]} h="h2" />)}
         </ol>
         {team.length > 0 && (
           <div className="wsub">
